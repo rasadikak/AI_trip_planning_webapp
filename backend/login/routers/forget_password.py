@@ -5,12 +5,11 @@ from backend.login import database,orm_model,utils
 from datetime import datetime, timedelta
 from fastapi.responses import RedirectResponse
 import send_reset_email
+from backend.config import ALGORITHM2, SECRET_KEY2, ACCESS_TOKEN_EXPIRE_TIME2
 
 router= APIRouter(prefix='/forget_pw')
 
-ALGORITHM2='HS256'
-SECRET_KEY2='shdvxmx43d'
-ACCESS_TOKEN_EXPIRE_TIME2=15
+
 
 def create_token(data:dict):
     to_encode= data.copy()
@@ -37,29 +36,6 @@ def request_reset(email:str =Form(...),db:Session=Depends(database.get_db)):
 def reset_link(response:Response):
     return RedirectResponse(url='/frontend/home/password_forget.html', status_code= 302)
 #opens the html page for reset
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
