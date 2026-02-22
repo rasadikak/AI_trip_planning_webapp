@@ -14,7 +14,7 @@ SECRET_KEY= os.getenv("SECRET_KEY")
 #fo reset password
 ALGORITHM2=os.getenv("ALGORITHM2")
 SECRET_KEY2=os.getenv("SECRET_KEY2")
-ACCESS_TOKEN_EXPIRE_TIME2=os.getenv("ACCESS_TOKEN_EXPIRE_TIME2")
+ACCESS_TOKEN_EXPIRE_TIME2=int(os.getenv("ACCESS_TOKEN_EXPIRE_TIME2", "15"))
 
 
 
@@ -24,8 +24,18 @@ class Settings(BaseSettings):
     MAIL_FROM: str
     MAIL_PORT: int = 587
     MAIL_SERVER: str = "smtp.gmail.com"
-    MAIL_TLS: bool = True
-    MAIL_SSL: bool = False
+    MAIL_STARTTLS: bool = True
+    MAIL_SSL_TLS: bool = False
+     # Login JWT
+    SQLALCHEMY_DATABASE_URL: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    ALGORITHM: str
+    SECRET_KEY: str
+
+    # Reset password JWT
+    ALGORITHM2: str
+    SECRET_KEY2: str
+    ACCESS_TOKEN_EXPIRE_TIME2: int
 
     class Config:
         env_file = ".env"

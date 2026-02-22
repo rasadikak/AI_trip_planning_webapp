@@ -7,8 +7,8 @@ conf = ConnectionConfig(
     MAIL_FROM=settings.MAIL_FROM,          # sender email
     MAIL_PORT=settings.MAIL_PORT,          # port number (587 or 465)
     MAIL_SERVER=settings.MAIL_SERVER,      # smtp.gmail.com, etc.
-    MAIL_TLS=settings.MAIL_TLS,            # True or False
-    MAIL_SSL=settings.MAIL_SSL,            # True or False
+    MAIL_STARTTLS=settings.MAIL_STARTTLS,            # True or False
+    MAIL_SSL_TLS=settings.MAIL_SSL_TLS,            # True or False
     USE_CREDENTIALS=True                    # login required
 )
 
