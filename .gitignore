@@ -1,0 +1,7 @@
+.env
+my_notes.txt
+alembic.ini
+alembic/
+env/
+_pycache_/
+backend/alembic.ini
