@@ -1,13 +1,24 @@
 from fastapi import APIRouter, Depends, HTTPException,Form
-
+from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 from backend.login import database,orm_model,utils
+from datetime import datetime, timedelta
 
 router= APIRouter(prefix='/forget_pw')
 
+ALGORITHM2='HS256'
+SECRET_KEY2='shdvxmx43d'
+ACCESS_TOKEN_EXPIRE_TIME2=15
+
+def create_token(data:dict):
+    to_encode= data.copy()
+    expire_time= datetime.utcnow() + timedelta(minutes= ACCESS_TOKEN_EXPIRE_TIME2)
+    payload= to_encode.update({"exp":expire_time})
+    token= jwt.encode(payload,  SECRET_KEY2, algorithm=ALGORITHM2)
+    return token
 
 @router.post('/request_reset')
-def request_reset():
+def request_reset(email:str =Form(...)):
     pass
 #process sending email using jwt
 #forget_password.html -chnge password. email ekata ena link eken ynne mekata
