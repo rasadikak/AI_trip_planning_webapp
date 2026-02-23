@@ -13,12 +13,27 @@ router= APIRouter(prefix='/reset_pw')
 
 def create_token(data:dict):
     to_encode= data.copy()
-    
-    
     expire_time= datetime.utcnow() + timedelta(minutes= ACCESS_TOKEN_EXPIRE_TIME2)
     to_encode.update({"exp":expire_time})
     token= jwt.encode(to_encode,  SECRET_KEY2, algorithm=ALGORITHM2)
     return token
+
+
+
+
+
+def verify_reset_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY2, algorithms=[ALGORITHM2])
+        user_id = payload.get("user_id")
+        if not user_id:
+            raise HTTPException(400, "Invalid token")
+        return user_id
+    except JWTError:
+        raise HTTPException(400, "Token expired or invalid")  
+
+
+
 
 @router.post('/request_reset')
 async def request_reset(email:str =Form(...),db:Session=Depends(database.get_db)):
@@ -30,7 +45,7 @@ async def request_reset(email:str =Form(...),db:Session=Depends(database.get_db)
         print("user exists")
         token= create_token({"user_id": user.id})
         
-        print({"token":token})
+        #print({"token":token})
         reset_link=f"http://127.0.0.1:8000/reset_pw/reset_link?token={token}"
         await send_reset_email(email, reset_link)
 
@@ -39,9 +54,10 @@ async def request_reset(email:str =Form(...),db:Session=Depends(database.get_db)
 
 
 @router.get('/reset_link')
-def reset_link():
-    
-    return RedirectResponse(url='/frontend/home/password_forget.html', status_code= 302)
+def reset_link(token):
+    verify_token = verify_reset_token(token)
+    if verify_token:
+        return RedirectResponse(url=f'/frontend/home/password_forget.html?token={token}', status_code= 302)
 #opens the html page for reset
 
 
@@ -52,15 +68,17 @@ def reset_link():
 
 
 @router.post('/forget_pw')
-def forget_password(email:str=Form(...), new_password:str=Form(...),confirm_new_pw:str=Form(...) ,db:Session= Depends(database.get_db)):
+def forget_password(token:str=Form(...), new_password:str=Form(...),confirm_new_pw:str=Form(...) ,db:Session= Depends(database.get_db)):
     #print(email)
     #print(new_password)
     #print(confirm_new_pw)
     
-    
-    user= db.query(orm_model.User).filter(orm_model.User.email==email).first()
+    user_id = verify_reset_token(token) 
+    user= db.query(orm_model.User).filter(orm_model.User.id==user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail=f'user does not exist in db')
+    if new_password != confirm_new_pw:
+        raise HTTPException(400, detail="Passwords do not match")
     if user:
          if new_password== confirm_new_pw:
              
@@ -73,7 +91,7 @@ def forget_password(email:str=Form(...), new_password:str=Form(...),confirm_new_
              db.commit()
              db.refresh(user)
              print("congratssss")
-             return "password updated successfully"
+             return {"msg":"password updated successfully"}
          else:    
          
             raise HTTPException(status_code=400, detail=f'passwords are not similar')

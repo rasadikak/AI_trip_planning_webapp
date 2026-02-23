@@ -1,5 +1,6 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from backend.config import settings
+from fastapi import HTTPException
 
 conf = ConnectionConfig(
     MAIL_USERNAME=settings.MAIL_USERNAME,  # your email
@@ -27,4 +28,11 @@ async def send_reset_email(email: str, link: str):
     )
 
     fm = FastMail(conf)
-    await fm.send_message(message)
+    
+   
+    try:
+        await fm.send_message(message)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
+    
+         
