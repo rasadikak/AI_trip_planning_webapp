@@ -7,7 +7,7 @@ load_dotenv()
 SQLALCHEMY_DATABASE_URL= os.getenv("SQLALCHEMY_DATABASE_URL")
 
 #for login
-ACCESS_TOKEN_EXPIRE_MINUTES= os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+ACCESS_TOKEN_EXPIRE_MINUTES= int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 ALGORITHM= os.getenv("ALGORITHM")
 SECRET_KEY= os.getenv("SECRET_KEY")
 
@@ -16,6 +16,11 @@ ALGORITHM2=os.getenv("ALGORITHM2")
 SECRET_KEY2=os.getenv("SECRET_KEY2")
 ACCESS_TOKEN_EXPIRE_TIME2=int(os.getenv("ACCESS_TOKEN_EXPIRE_TIME2", "15"))
 
+#for email verification
+
+ALGORITHM3=os.getenv("ALGORITHM3")
+SECRET_KEY3=os.getenv("SECRET_KEY3")
+ACCESS_TOKEN_EXPIRE_MINUTES3=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES3", "30"))
 
 
 class Settings(BaseSettings):
@@ -36,6 +41,11 @@ class Settings(BaseSettings):
     ALGORITHM2: str
     SECRET_KEY2: str
     ACCESS_TOKEN_EXPIRE_TIME2: int
+
+    #email verification jwt
+    ALGORITHM3: str
+    SECRET_KEY3: str
+    ACCESS_TOKEN_EXPIRE_MINUTES3: int
 
     class Config:
         env_file = ".env"

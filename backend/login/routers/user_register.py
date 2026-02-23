@@ -4,8 +4,8 @@ from backend.login import database, orm_model, schemas
 from sqlalchemy.orm import Session
 from backend.login import utils
 from typing import List
-from fastapi.responses import JSONResponse
-
+from fastapi.responses import JSONResponse, RedirectResponse
+from backend.login.routers import email_verify_for_signup 
 
 
 router= APIRouter(prefix='/register', tags=['register'])
@@ -42,7 +42,7 @@ def validate_user(name: str= Form(...), email: str= Form(...),password: str= For
 
 
 @router.post('/', status_code= status.HTTP_200_OK, response_model= schemas.UserResponse)
-def create_user(db:Session=Depends(database.get_db),user=Depends(validate_user)):
+async def create_user(db:Session=Depends(database.get_db),user=Depends(validate_user)):
     print("before")
     hashed_pw= utils.hash(user['password'])
     print("pw hashed suucessfully")
@@ -51,8 +51,11 @@ def create_user(db:Session=Depends(database.get_db),user=Depends(validate_user))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    if new_user.is_verified== False:
+        await email_verify_for_signup.send_mail(new_user.email,db)
+        print("sent mail successufully")
     print("after")
-    return new_user
+    return RedirectResponse(url='/frontend/home/check_your_mail.html', status_code=302)
     
     
 

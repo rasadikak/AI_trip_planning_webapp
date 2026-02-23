@@ -6,10 +6,8 @@ from fastapi import HTTPException, status, Depends, APIRouter
 from backend.login import database, orm_model
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
+from backend.config import ACCESS_TOKEN_EXPIRE_MINUTES3, SECRET_KEY3,ALGORITHM3
 
-ACCESS_TOKEN_EXPIRE_MINUTES3=30
-SECRET_KEY3= 'dsvhks438s'
-ALGORITHM3='HS256'
 
 
 router= APIRouter(prefix='/verify_mail')
@@ -93,4 +91,4 @@ def verify_mail(token: str,db:Session=Depends(database.get_db)):
   db.commit()
 
 
-  return RedirectResponse(url='/frontend/home/login.html', status_code=302, detail=f'user redirected succefully')
+  return RedirectResponse(url='/frontend/home/login.html', status_code=302)
