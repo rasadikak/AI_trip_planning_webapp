@@ -10,7 +10,7 @@ from backend.config import ACCESS_TOKEN_EXPIRE_MINUTES3, SECRET_KEY3,ALGORITHM3
 
 
 
-router= APIRouter(prefix='/verify_mail')
+router= APIRouter(prefix='/verify_mail_in_signup')
 
 conf = ConnectionConfig(
     MAIL_USERNAME=settings.MAIL_USERNAME,  # your email
@@ -74,7 +74,7 @@ async def send_mail(email:str, db:Session=Depends(database.get_db)):
     token= create_token({"user_id": user_id})
     
     
-    link=f"http://127.0.0.1:8000/verify_mail?token={token}"
+    link=f"http://127.0.0.1:8000/verify_mail_in_signup?token={token}"
     
     await send_email_verify_for_signup(email, link)
     return "verify link sent sucesfully"
