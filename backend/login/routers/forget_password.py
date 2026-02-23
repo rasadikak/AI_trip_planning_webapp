@@ -13,6 +13,8 @@ router= APIRouter(prefix='/reset_pw')
 
 def create_token(data:dict):
     to_encode= data.copy()
+    
+    
     expire_time= datetime.utcnow() + timedelta(minutes= ACCESS_TOKEN_EXPIRE_TIME2)
     to_encode.update({"exp":expire_time})
     token= jwt.encode(to_encode,  SECRET_KEY2, algorithm=ALGORITHM2)
@@ -27,6 +29,7 @@ async def request_reset(email:str =Form(...),db:Session=Depends(database.get_db)
     if user:
         print("user exists")
         token= create_token({"user_id": user.id})
+        
         print({"token":token})
         reset_link=f"http://127.0.0.1:8000/reset_pw/reset_link?token={token}"
         await send_reset_email(email, reset_link)
@@ -37,6 +40,7 @@ async def request_reset(email:str =Form(...),db:Session=Depends(database.get_db)
 
 @router.get('/reset_link')
 def reset_link():
+    
     return RedirectResponse(url='/frontend/home/password_forget.html', status_code= 302)
 #opens the html page for reset
 
@@ -69,6 +73,7 @@ def forget_password(email:str=Form(...), new_password:str=Form(...),confirm_new_
              db.commit()
              db.refresh(user)
              print("congratssss")
+             return "password updated successfully"
          else:    
          
             raise HTTPException(status_code=400, detail=f'passwords are not similar')
