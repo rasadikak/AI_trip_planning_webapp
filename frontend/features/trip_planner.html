@@ -95,7 +95,8 @@
     <!-- Image-Based Destination Search -->
     <section>
       <h2>Find Destination from Image</h2>
-      <input type="file" id="destImage" accept="image/*">
+      <form id="ImageSearchForm" method="POST" enctype='multipart/form-data' action=
+      <input type="file" id="destImage" accept=".jpg, .png, .jpeg" required>
       <br><br>
       <button>Search</button>
       <div id="imageResult"></div>
