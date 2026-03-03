@@ -4,6 +4,7 @@ from backend.login import orm_model, database,utils
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from backend.login import oauth2
+from fastapi.responses import RedirectResponse
 
 router= APIRouter(prefix='/login', tags=['login'])
 
@@ -25,7 +26,8 @@ def login( user_credintials: OAuth2PasswordRequestForm = Depends(), db:Session= 
                 if user.is_verified== True:
                    access_token= oauth2.create_token({"user_id":user.id})
                 
-                   return {"access_token": access_token, "token_type":"bearer"}
+                   #return {"access_token": access_token, "token_type":"bearer"}
+                   return RedirectResponse(url=f'/frontend/features/trip_planner.html', status_code= 302)
          
            
     
