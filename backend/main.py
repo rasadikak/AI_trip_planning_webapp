@@ -2,7 +2,7 @@ import logging
 from fastapi import FastAPI, APIRouter
 from backend.login.routers import user_register,user_login, forget_password, signout, email_verify_for_signup,email_verify_for_login
 from fastapi.staticfiles import StaticFiles
-from backend.features.img_search import img_search
+from backend.features.img_search import search_img
 
 app = FastAPI()
 router = APIRouter(prefix="/test")
@@ -17,7 +17,7 @@ app.include_router(email_verify_for_signup.router)
 app.include_router(email_verify_for_login.router)
 app.include_router(signout.router)
 
-app.include_router(img_search.router)
+app.include_router(search_img.router)
 app.include_router(router)
 
 
