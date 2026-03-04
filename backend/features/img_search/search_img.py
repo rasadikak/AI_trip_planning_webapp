@@ -14,6 +14,12 @@ model.eval()
 
 index= faiss.read_index("image_index.faiss")
 
+
+
+all_labels = torch.load("backend/features/img_search/img_labels.pt")
+all_labels = all_labels.tolist()  # convert to Python list
+print(all_labels)
+
 #clip is a pytorch based model
 
 router= APIRouter(prefix='/img_based_search')
@@ -29,10 +35,12 @@ async def img_based_search(img:UploadFile= File()):
         embedding= embedding/embedding.norm(dim=-1, keepdim=True)
     embedding= embedding.cpu().numpy()
     D,I= index.search(embedding, k=3)
-    return {
-        "distances": D.tolist(),
-        "indices": I.tolist()
-    }
+
+
+    indices= I.to_list()
+    img_id=indices.find('image_embeddings.pt')
+    photos =img_id.find('image_labels.pt')
+    
     
     # .pt files are PyTorch tensors — not FAISS index. so we use .faiss file
     #in notebook, we use torch.cat because fasii does not accept list of tensors, it accepts single 2D array:

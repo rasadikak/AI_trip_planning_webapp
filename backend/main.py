@@ -8,6 +8,7 @@ app = FastAPI()
 router = APIRouter(prefix="/test")
 
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+app.mount("/dataset", StaticFiles(directory="backend/features/img_search/dataset"), name='dataset')
 
 
 app.include_router(user_register.router)
