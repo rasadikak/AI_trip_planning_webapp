@@ -1,13 +1,8 @@
-from fastapi import FastAPI, APIRouter, File, UploadFile
+from fastapi import APIRouter
 
-            
+router= APIRouter(prefix='/image_search', tags=['image_search'])
 
-router= APIRouter(prefix='/img_based_search',tags=['img_based_search'])
-
-router.post('/')
-def img_based_search():
-    print("hiii")
-    return 'hi'
-  
-
-   
+router.get('/')
+def image_search():
+    print('immm')
+    return 'hhhss'
