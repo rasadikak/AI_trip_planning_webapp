@@ -7,11 +7,22 @@
     </head>
     <body>
         <form id = 'LoginForm' action="http://127.0.0.1:8000/login" method="POST">
-            email<input type="email" name="username" id="email"><br>
-            password<input type="password" name="password" id="password"><br>
+            email<input type="email" name="username" id="email" required><br>
+            password<input type="password" name="password" id="password" required><br>
             <a href="request_reset_pw.html">forget password?</a><br>
             <a href="/frontend/home/verify_mail.html">didnt verify your email, then verify here</a><br>
             <input type="submit" name="login">
         </form>
+
+        <script>
+            document.getElementById('LoginForm').addEventListener('submit', function(event){
+                let email= document.getElementById('email').value;
+                let password= document.getElementById('password').value;
+                if (email=='' || password==''){
+                    event.preventDefault(); 
+                    alert('email and password can not be empty');
+                }
+            });
+        </script>
     </body>
 </html>

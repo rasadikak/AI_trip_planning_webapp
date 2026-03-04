@@ -7,10 +7,20 @@
     </head>
     <body>
         <form id = 'RequestResetPassword' action="http://127.0.0.1:8000/reset_pw/request_reset" method="POST">
-            email<input type="email" name="email" id="email"><br>
+            email<input type="email" name="email" id="email" required><br>
             
             
             <input type="submit" name="login">
         </form>
+              <script>
+                document.getElementById('RequestResetPassword').addEventListener('submit', function(event){
+                let email= document.getElementById('email').value;
+                
+                if (email=='' ){
+                    event.preventDefault();
+                    alert('email can not be empty');
+                }
+            });
+        </script>
     </body>
 </html>
