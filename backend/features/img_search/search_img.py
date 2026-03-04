@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, File, UploadFile
 import torch
 import clip
 import faiss
+import os
 
 
 from PIL import Image  #python imaging library, used for open img, resize img preprocess etc
@@ -14,10 +15,22 @@ model.eval()
 
 index= faiss.read_index("image_index.faiss")
 
+dataset_folder = "backend/features/img_search/dataset"
+file_paths=[]
+
+for root, dirs, files in os.walk(dataset_folder):
+    for file in files:
+        if file.endswith(("jpg","jpeg","png")):
+            rel_path= os.path.relpath(os.path.join(root, file), dataset_folder)
+            file_paths.append(rel_path)
+
+print(file_paths[2])
+
+
 
 
 all_labels = torch.load("backend/features/img_search/img_labels.pt")
-all_labels = all_labels.tolist()  # convert to Python list
+all_labels = all_labels.tolist()  
 print(all_labels)
 
 #clip is a pytorch based model
@@ -37,9 +50,14 @@ async def img_based_search(img:UploadFile= File()):
     D,I= index.search(embedding, k=3)
 
 
-    indices= I.to_list()
-    img_id=indices.find('image_embeddings.pt')
-    photos =img_id.find('image_labels.pt')
+    results=[]
+    for idx in I[0]:
+        results.append({
+            "label": all_labels[idx],
+            "image_url": f"/dataset/{file_paths[idx]}"  # use relative path
+        })
+    print(results)
+    return {"results":results}
     
     
     # .pt files are PyTorch tensors — not FAISS index. so we use .faiss file
