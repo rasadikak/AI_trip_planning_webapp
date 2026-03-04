@@ -5,5 +5,5 @@ alembic/
 env/
 _pycache_/
 backend/alembic.ini
-
-
+mycode.txt
+*.faiss
