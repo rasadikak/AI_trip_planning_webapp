@@ -13,7 +13,9 @@ model,preprocess= clip.load('ViT-B/32', device=device)
 model.eval()
 
 
-index= faiss.read_index("image_index.faiss")
+
+index_path = os.path.join(os.path.dirname(__file__), "image_index.faiss")
+index = faiss.read_index(index_path)
 
 dataset_folder = "backend/features/img_search/dataset"
 file_paths=[]
@@ -28,8 +30,8 @@ print(file_paths[2])
 
 
 
-
-all_labels = torch.load("backend/features/img_search/img_labels.pt")
+all_labels=os.path.join(os.path.dirname(__file__), "img_labels.pt")
+all_labels = torch.load(all_labels)
 all_labels = all_labels.tolist()  
 print(all_labels)
 
