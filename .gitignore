@@ -5,6 +5,5 @@ alembic/
 env/
 _pycache_/
 backend/alembic.ini
-backend/features/img_search/image_embeddings.pt
-backend/features/img_search/image_labels.pt
-backend/features/img_search/image_index.faiss
+
+
