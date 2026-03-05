@@ -8,9 +8,9 @@ url = "https://nominatim.openstreetmap.org/search"
 router= APIRouter(prefix='/map', tags=['map'])
 
 with open('backend/features/map/sri_lanka_places.json','r', encoding='utf-8') as file:
-    print("ok 1")
+    #print("ok 1")
     places= json.load(file)
-    print("ok 1")
+    #print("ok 1")
 
 @router.get('/')
 def map(dest_name:str):
