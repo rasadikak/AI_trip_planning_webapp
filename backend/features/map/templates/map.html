@@ -18,7 +18,7 @@
     {% for place in destinations %}
         <div class="destination">
             <strong>{{ place.name }}</strong>
-            <button onclick="showMap('{{ place.lat }}','{{ place.lng }}', '{{ place.name }}')">
+            <button onclick="fetchLocation('{{ place.name }}')">
                 Show on Map
             </button>
         </div>

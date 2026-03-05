@@ -1,6 +1,18 @@
 let map;
 let marker;
 
+
+async function fetchLocation(destName) {
+
+    const response = await fetch(`/map?dest_name=${encodeURIComponent(destName)}`);
+    const data = await response.json();
+
+    const lat = parseFloat(data.lat);
+    const lon = parseFloat(data.lon);
+
+    showMap(lat, lon, data.name);
+}
+
 function showMap(lat, lng, placeName) {
 
     // Show map section
