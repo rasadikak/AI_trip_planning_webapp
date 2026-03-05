@@ -2,15 +2,15 @@ import logging
 from fastapi import FastAPI, APIRouter
 from backend.login.routers import user_register,user_login, forget_password, signout, email_verify_for_signup,email_verify_for_login
 from fastapi.staticfiles import StaticFiles
-from backend.features.img_search import search_img
+from backend.features.searchImage import search_img
 from backend.features.map import map
-from backend.features.pdf_generator import pdf
+from backend.features.pdf import pdf
 
 app = FastAPI()
 router = APIRouter(prefix="/test")
 
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
-app.mount("/dataset", StaticFiles(directory="backend/features/img_search/dataset"), name='dataset')
+app.mount("/dataset", StaticFiles(directory="backend/features/searchImage/dataset"), name='dataset')
 app.mount("/backend", StaticFiles(directory="backend"), name="backend")
 app.mount("/static", StaticFiles(directory="backend/features/map/static"), name="static")
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-router= APIRouter(prefix='/image_search', tags=['image_search'])
+router= APIRouter(prefix='/searchImage', tags=['searchImage'])
 
 router.get('/')
 def image_search():
