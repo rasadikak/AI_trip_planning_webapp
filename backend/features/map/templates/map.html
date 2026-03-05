@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Trip Result</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <!-- my CSS -->
+    <link rel="stylesheet" href="/static/map.css">
+</head>
+<body>
+
+    
+
+    
+    {% for place in destinations %}
+        <div class="destination">
+            <strong>{{ place.name }}</strong>
+            <button onclick="showMap('{{ place.lat }}','{{ place.lng }}', '{{ place.name }}')">
+                Show on Map
+            </button>
+        </div>
+    {% endfor %}
+
+    <!-- Map Section -->
+    <div id="map-section">
+        <h3 id="map-title"></h3>
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- my JS -->
+    <script src="/static/map.js"></script>
+
+</body>
+</html>
