@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from backend.features.searchImage import search_img
 from backend.features.map import map
 from backend.features.pdf import pdf
+from backend.features.profile import profile
 
 app = FastAPI()
 router = APIRouter(prefix="/test")
@@ -24,6 +25,7 @@ app.include_router(signout.router)
 app.include_router(search_img.router)
 app.include_router(map.router)
 app.include_router(pdf.router)
+app.include_router(profile.router)
 app.include_router(router)
 
 
