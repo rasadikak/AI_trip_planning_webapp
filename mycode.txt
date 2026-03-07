@@ -42,7 +42,7 @@ if isinstance(all_labels, torch.Tensor):
 
 router= APIRouter(prefix='/img_based_search',tags=['img_based_search'])
 
-router.post('/')
+@router.post('/')
 async def img_based_search(img:UploadFile= File()):
     print("hiii")
     img_bytes= await img.read()

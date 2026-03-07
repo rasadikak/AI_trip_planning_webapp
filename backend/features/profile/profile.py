@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 router= APIRouter(prefix='/profile', tags=['profile'])
 
-router.get('/')
+@router.get('/')
 def profile():
     print('prof')
     return 'prof'
