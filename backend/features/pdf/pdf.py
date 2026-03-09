@@ -12,29 +12,30 @@ def pdf_generate(data:str):
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     
-    pdf.set_font("Arial", "b", 18)
+    pdf.add_font('DejaVu', '', 'fonts/dejavu-sans/DejaVuSans.ttf', uni=True)
+    pdf.set_font('DejaVu', 'B', 18)
     pdf.cell(0, 10, "AI Generated Travel Plan", 0, 1, "C")
     pdf.ln(5)
 
-    lines= data.split("/n")
+    lines= data.split("\n")
     for line in lines:
                 # headings
         if line.startswith("##"):
-            pdf.set_font("Arial", "B", 14)
+            pdf.set_font('DejaVu', "B", 14)
             pdf.ln(5)
             pdf.cell(0, 10, line.replace("##", ""), ln=True)
 
         # sub headings
         elif line.startswith("#"):
-            pdf.set_font("Arial", "B", 12)
+            pdf.set_font('DejaVu', "B", 12)
             pdf.ln(3)
             pdf.cell(0, 8, line.replace("#", ""), ln=True)
 
         else:  #normal text
-            pdf.set_font("Arial", "", 11)
+            pdf.set_font('DejaVu', "", 11)
             pdf.multi_cell(0, 8, line)
     
-    pdf_output= pdf.output(dest="S").encode("latin-1")
+    pdf_output= pdf.output(dest="S").encode("utf-8")
 
     return io.BytesIO(pdf_output)
 
