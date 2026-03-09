@@ -2,6 +2,7 @@ from fastapi import APIRouter, FastAPI, HTTPException
 from fpdf import FPDF
 from fastapi.responses import StreamingResponse
 import io
+import os
 
 router= APIRouter(prefix='/pdf', tags=['pdf'])
 
@@ -11,8 +12,9 @@ def pdf_generate(data:str):
     pdf= FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    
-    pdf.add_font('DejaVu', '', 'fonts/dejavu-sans/DejaVuSans.ttf', uni=True)
+
+    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'DejaVuSans.ttf')
+    pdf.add_font('DejaVu', '', font_path, uni=True)
     pdf.set_font('DejaVu', 'B', 18)
     pdf.cell(0, 10, "AI Generated Travel Plan", 0, 1, "C")
     pdf.ln(5)
