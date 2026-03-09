@@ -21,14 +21,15 @@ def login( user_credintials: OAuth2PasswordRequestForm = Depends(), db:Session= 
             raise HTTPException(status_code= 400, detail=f'wrong password') 
     if not user.is_verified:
         raise HTTPException(status_code=403, detail="Email not verified")
-    if user:
-          if verify_pw == True:
-                if user.is_verified== True:
-                   access_token= oauth2.create_token({"user_id":user.id})
+    
+    access_token= oauth2.create_token({"user_id":user.id})
                 
                    #return {"access_token": access_token, "token_type":"bearer"}
-                   return RedirectResponse(url=f'/frontend/features/trip_planner.html', status_code= 302)
-         
+    response= RedirectResponse(url=f'/frontend/features/trip_planner.html', status_code= 302)
+    response.set_cookie(key="user_name", value=user.name)
+    response.set_cookie(key="user_email", value=user.email)
+    return response
+                  
            
     
 
