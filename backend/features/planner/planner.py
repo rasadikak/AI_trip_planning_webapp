@@ -6,7 +6,7 @@ import ollama
 
 client= ollama.Client()
 
-model= "deepseek-r1:1.5b"
+model= "mistral:7b"
 
 
 
@@ -31,7 +31,7 @@ def trip_planner(destinationType:str= Form(...),
     print(food_pref_string)
     
     question = f"""
-You are an expert Sri Lanka travel planner ✈️🌴.
+You are a professional Sri Lanka travel planner ✈️🌴 specializing in creating detailed, realistic travel itineraries.
 
 Trip Details:
 - Destination Type(s): {destinationType} 🏖️🌄🏙️
@@ -41,41 +41,119 @@ Trip Details:
 - Accommodation Preference: {accommodation} 🏨🏠
 - Food Preference: {food_pref_string} 🍽️
 
-Instructions:
-1️⃣ Suggest multiple destinations in Sri Lanka matching the selected destination types.
-2️⃣ Create 2–3 alternative itineraries for the trip (so the user can choose).
-3️⃣ For each day in each itinerary:
-   • Include activities with **specific locations**.
-   • Include food suggestions with **restaurant names and dishes**.
-   • Include accommodation suggestions with **specific hotel names or areas**.
-4️⃣ Include **important travel tips**: safety, local customs, transport, peak times.
-5️⃣ Make the plan realistic for {numPeople} travelers.
-6️⃣ Output in a structured Markdown format, using emojis for readability.
+IMPORTANT RULES:
+- Only suggest **REAL locations in Sri Lanka**.
+- Do NOT invent fake cities, beaches, or restaurants.
+- Prefer **well-known tourist destinations** and **popular local places**.
+- All prices must be **approximate and written in Sri Lankan Rupees (LKR)**.
+  Example: (Approx. 3000 LKR)
+- Ensure the itinerary is **realistic for {numDays} days**.
+- Activities should consider **travel distance and time**.
 
-Output Example:
+Instructions:
+
+1️⃣ Suggest **2–3 alternative itineraries** so the traveler can choose.
+
+2️⃣ Each itinerary should focus on **destinations that match the selected destination types**.
+
+3️⃣ For each day include:
+
+Morning 🌅  
+- Activities with **specific attractions or beaches**
+
+Afternoon ☀️  
+- Activities such as sightseeing, markets, cultural sites, wildlife, or water sports
+
+Evening 🌙  
+- Relaxing activities such as sunset viewpoints, beach walks, nightlife, or cultural shows
+
+4️⃣ Food Suggestions 🍽️  
+Include:
+- **Restaurant name**
+- **Popular dish**
+- Approximate price (LKR)
+
+Example:
+- **Dewmini Roti Shop – Mirissa**  
+  Dish: Chocolate Banana Roti  
+  Price: (Approx. 1200 LKR)
+
+5️⃣ Accommodation Suggestions 🏨  
+Include:
+- **Hotel or guesthouse name**
+- Area/location
+- Approximate price range
+- Google Maps link
+- Official website if available
+
+Example:
+- **Paradise Beach Club – Mirissa**  
+  📍 Mirissa Beach  
+  💰 (Approx. 18,000 LKR per night)  
+  🗺 Google Maps: https://maps.google.com/?q=Paradise+Beach+Club+Mirissa  
+  🌐 Website: https://www.paradisebeachclub.lk
+
+6️⃣ Add **transport suggestions** between destinations.
+
+Example:
+- Tuk-tuk (10 minutes)  
+- Train from Colombo to Galle (2 hours)  
+- Boat ride to whale watching area
+
+7️⃣ Add **important travel tips** including:
+- Safety tips
+- Best time to visit attractions
+- Local customs
+- Transport advice
+- Weather considerations
+- Booking tips for hotels or tours
+
+8️⃣ Use **structured Markdown formatting with headings, bullet points, and emojis** so it looks good in both web pages and PDFs.
+
+Output Format:
 
 ## Itinerary 1 🗺️
+
 ### Trip Summary
-Destination: Mirissa, Southern Coast 🏖️
+Destination: [Main destination] 🌴  
+Best For: [Beach / Nature / Adventure / Culture]
+
+---
 
 ### Day 1 📅
-- Activities:
-- Food:
-- Accommodation:
+
+Morning 🌅
+- Activity
+
+Afternoon ☀️
+- Activity
+
+Evening 🌙
+- Activity
+
+Food 🍽️
+- Restaurant suggestion
+
+Accommodation 🏨
+- Hotel suggestion with links
+
+---
 
 ### Day 2 📅
-- Activities:
-- Food:
-- Accommodation:
+(Same structure)
 
-Travel Tips 💡
+---
+
+### Travel Tips 💡
 - Tip 1
 - Tip 2
+- Tip 3
 
 ---
 
 ## Itinerary 2 🗺️
-...
+(Same structure)
+
 """
     response= client.generate(model=model, prompt=question)
     reply= response.response

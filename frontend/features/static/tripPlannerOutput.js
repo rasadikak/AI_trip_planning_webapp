@@ -18,7 +18,7 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
         const result = await response.json();
         console.log(result)
         // result["trip plan"] matches your Python return key
-        resultDiv.innerHTML = `<pre style="white-space: pre-wrap; font-family: inherit;">${result["trip_plan"]}</pre>`;
+        resultDiv.innerHTML = marked.parse(data["trip plan"]);
         console.log("5")
     } catch (error) {
         resultDiv.innerHTML = "Error: " + error.message;
