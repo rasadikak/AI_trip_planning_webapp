@@ -21,11 +21,11 @@
     <section>
       <h2>Plan Your Trip</h2>
 
-      <form id="tripForm" method="POST">
+      <form id="tripForm" method="POST" name="tripForm" action="http://127.0.0.1:8000/trip_planner/">
 
         <div>
           <label>Destination Type</label><br>
-          <select id="destinationType">
+          <select id="destinationType" name="destinationType">
             <option value="">Select</option>
             <option value="beach">Beach & Coastal</option>
             <option value="upcountry">Hill Country & Nature</option>
@@ -39,7 +39,7 @@
 
         <div>
           <label>Budget</label><br>
-          <select id="budget">
+          <select id="budget" name="budget">
             <option value="">Select</option>
             <option value="low">Low</option>
             <option value="mid">Mid</option>
@@ -51,21 +51,21 @@
 
         <div>
           <label>Number of Days</label><br>
-          <input type="number" id="numDays" min="1" max="30" placeholder="e.g., 3">
+          <input type="number" id="numDays" min="1" max="30" placeholder="e.g., 3" name="numDays">
         </div>
 
         <br>
 
         <div>
           <label>Number of People</label><br>
-          <input type="number" id="numPeople" min="1" max="20" placeholder="e.g., 2">
+          <input type="number" id="numPeople" min="1" max="20" placeholder="e.g., 2"  name="numPeople">
         </div>
 
         <br>
 
         <div>
           <label>Accommodation Type</label><br>
-          <select id="accommodation">
+          <select id="accommodation" name="accommodation">
             <option value="">Select</option>
             <option value="hotel">Hotel</option>
             <option value="tents">Tents / Camping</option>
@@ -76,21 +76,49 @@
 
         <br>
 
+        
         <div>
-          <label>Food Preference</label><br>
-          <select id="foodPreference">
-            <option value="">Select</option>
-            <option value="traditional">Traditional</option>
-            <option value="spicy">Spicy / Halal</option>
-            <option value="expensive">Fine Dining</option>
-          </select>
-        </div>
+  <label>Food Preferences 🍽️</label><br>
+
+  <input type="checkbox" name="foodPreference" value="traditional" id="food_traditional">
+  <label for="food_traditional">Sri Lankan Traditional</label><br>
+
+  <input type="checkbox" name="foodPreference" value="seafood" id="food_seafood">
+  <label for="food_seafood">Seafood</label><br>
+
+  <input type="checkbox" name="foodPreference" value="spicy" id="food_spicy">
+  <label for="food_spicy">Spicy Food</label><br>
+
+  <input type="checkbox" name="foodPreference" value="vegetarian" id="food_vegetarian">
+  <label for="food_vegetarian">Vegetarian</label><br>
+
+  <input type="checkbox" name="foodPreference" value="vegan" id="food_vegan">
+  <label for="food_vegan">Vegan</label><br>
+
+  <input type="checkbox" name="foodPreference" value="halal" id="food_halal">
+  <label for="food_halal">Halal</label><br>
+
+  <input type="checkbox" name="foodPreference" value="street_food" id="food_street_food">
+  <label for="food_street_food">Street Food</label><br>
+
+  <input type="checkbox" name="foodPreference" value="international" id="food_international">
+  <label for="food_international">International Cuisine</label><br>
+
+  <input type="checkbox" name="foodPreference" value="fine_dining" id="food_fine_dining">
+  <label for="food_fine_dining">Fine Dining</label><br>
+
+  <input type="checkbox" name="foodPreference" value="fast_food" id="food_fast_food">
+  <label for="food_fast_food">Fast Food</label><br>
+</div>
 
         <br>
 
         <button type="submit">Plan Trip</button>
 
       </form>
+      <div id="tripResult">
+
+      </div>
     </section>
 
     <hr>
@@ -146,6 +174,7 @@
 
   
   <script src="static/refreshPage.js"></script>
+  <script src="static/tripPlannerOutput.js"></script>
    <script src="static/outputImage.js"></script>
 </body>
 </html>

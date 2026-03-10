@@ -1,6 +1,6 @@
 from fastapi import APIRouter,Form
-import llm
 
+from typing import List
 
 import ollama
 
@@ -24,7 +24,11 @@ def trip_planner(destinationType:str= Form(...),
                     budget:str=Form(...),
                     numDays:int=Form(...) ,
                     numPeople:int=Form(...),accommodation:str=Form(...),
-                    foodPreference:str=Form(...)):
+                    foodPreference:List[str]=Form([])):
+    
+    print(foodPreference)
+    food_pref_string= ", ".join(foodPreference)
+    print(food_pref_string)
     
     question = f"""
 You are an expert Sri Lanka travel planner ✈️🌴.
@@ -35,7 +39,7 @@ Trip Details:
 - Number of Days: {numDays} 📅
 - Number of Travelers: {numPeople} 👥
 - Accommodation Preference: {accommodation} 🏨🏠
-- Food Preference: {foodPreference} 🍽️
+- Food Preference: {food_pref_string} 🍽️
 
 Instructions:
 1️⃣ Suggest multiple destinations in Sri Lanka matching the selected destination types.
@@ -76,4 +80,4 @@ Travel Tips 💡
     response= client.generate(model=model, prompt=question)
     reply= response.response
     print(reply)
-    return reply
+    return {"trip_plan":reply}
