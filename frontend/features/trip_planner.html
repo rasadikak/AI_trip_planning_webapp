@@ -139,11 +139,12 @@
     <!-- Chatbot Section -->
     <section>
       <h2>AI Chatbot</h2>
-
-      <textarea id="chatInput" rows="4" cols="50" placeholder="Ask me about your trip..."></textarea>
+      <form id="chatForm" action="http://127.0.0.1:8000/chatbot/" method="POST" name="chatForm" >
+      <textarea id="chatInput" name="chatInput" rows="4" cols="50" placeholder="Ask me about your trip..."></textarea>
       <br><br>
 
-      <button>Send</button>
+      <input type="submit" value="send">
+      </form>
 
       <div id="chatOutput"></div>
     </section>

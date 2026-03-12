@@ -22,6 +22,7 @@ ALGORITHM3=os.getenv("ALGORITHM3")
 SECRET_KEY3=os.getenv("SECRET_KEY3")
 ACCESS_TOKEN_EXPIRE_MINUTES3=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES3", "30"))
 
+HF_TOKEN=os.getenv("HF_TOKEN")
 
 class Settings(BaseSettings):
     MAIL_USERNAME: str
@@ -46,6 +47,8 @@ class Settings(BaseSettings):
     ALGORITHM3: str
     SECRET_KEY3: str
     ACCESS_TOKEN_EXPIRE_MINUTES3: int
+
+    HF_TOKEN:str
 
     class Config:
         env_file = ".env"
