@@ -51,7 +51,7 @@ def chatbot(chatInput:str=Form(...)):
 
     response=completion.choices[0].message.content
     print(response)
-    return response
+    return {"response": response}
 
 
 
