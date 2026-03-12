@@ -16,7 +16,7 @@ document.getElementById("chatForm").addEventListener("submit", async function(e)
         if (!reponse.ok) throw new Error("Server responded with an error");
         const result= await response.json();
         console.log(result);
-        resultDiv.innerHTML= marked.parse()
+        resultDiv.innerHTML= marked.parse(result.response)
     }
     catch(error){
         resultDiv.innerHTML= "Error:" + error.message;
