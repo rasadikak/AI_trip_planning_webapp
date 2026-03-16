@@ -5,6 +5,10 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
     console.log("2");
     resultDiv.innerHTML = "Creating your Sri Lankan adventure... Please wait. 🐘"; // Loading state
     console.log("3");
+
+     // allow browser to repaint
+    await new Promise(resolve => setTimeout(resolve, 50));
+    
     try {
         const formData = new FormData(e.target);
         console.log("4");

@@ -46,7 +46,7 @@ def map(dest_name:str):
 map_tool= Tool(
     name="map",
     func=map,
-    description="use this tool to get directions  between  locations in Sri Lanka. Input should be a single city name"
+    description="Use this ONLY once per itinerary to verify the main city destination. Input: single city name."
 )
 
 tools= [map_tool]
@@ -191,14 +191,27 @@ Do not add any extra words, punctuation, or new lines.
 Example:
 Action: map
 Action Input: Colombo
+
+IMPORTANT: When you have completed the itineraries and are ready to provide the result to the traveler,
+ you MUST start your final response with the exact words 'Final Answer:' followed by the Markdown content.
+ NOTE: You only need to use the 'map' tool to verify the main city for each itinerary. 
+You do not need to use it for every restaurant or attraction.
 """
     
     
 
     agent = create_react_agent(llm, tools, prompt)
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+    agent_executor = AgentExecutor(
+        agent=agent,
+        tools=tools,
+        verbose=True,
+        handle_parsing_errors=True,
+        max_iterations=25,
+        max_execution_time=300,
+        early_stopping_method="generate" # Tells it to try and finish the answer if it hits the limit
+    )
     response = agent_executor.invoke({"input": question})
-    return {"response":response}
+    return {"response": response["output"]}
     
 
 

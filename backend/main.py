@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from backend.login.routers import user_register,user_login, forget_password, signout, email_verify_for_signup,email_verify_for_login
 from fastapi.staticfiles import StaticFiles
 from backend.features.searchImage import search_img
@@ -13,6 +14,19 @@ from backend.features.chatbot import chatbot
 
 app = FastAPI()
 router = APIRouter(prefix="/test")
+
+
+
+
+
+#It stops the "Instant Error" in the browser
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # Allows your frontend to talk to your backend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 app.mount("/dataset", StaticFiles(directory="backend/features/searchImage/dataset"), name='dataset')
