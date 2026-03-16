@@ -8,7 +8,7 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
     try {
         const formData = new FormData(e.target);
         console.log("4");
-        const response = await fetch("http://127.0.0.1:8000/trip_planner/", {
+        const response = await fetch("http://127.0.0.1:8000/planner_api/", {
             method: "POST",
             body: formData
         });
@@ -18,7 +18,7 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
         const result = await response.json();
         console.log(result)
         // result["trip plan"] matches your Python return key
-        resultDiv.innerHTML = marked.parse(data["trip plan"]);
+        resultDiv.innerHTML = marked.parse(result["response"]);
         console.log("5")
     } catch (error) {
         resultDiv.innerHTML = "Error: " + error.message;

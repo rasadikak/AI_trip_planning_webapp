@@ -25,7 +25,7 @@ def trip_planner_api(destinationType:str= Form(...),
                     numDays:int=Form(...) ,
                     numPeople:int=Form(...),accommodation:str=Form(...),
                     foodPreference:List[str]=Form([])): 
-    
+    print("api loaded")
     print(foodPreference)
     food_pref_string= ", ".join(foodPreference)
     print(food_pref_string)
