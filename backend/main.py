@@ -7,6 +7,8 @@ from backend.features.map import map
 from backend.features.pdf import pdf
 from backend.features.profile import profile
 from backend.features.planner import planner
+from backend.features.planner import planner
+from backend.features.planner import planner_api
 from backend.features.chatbot import chatbot
 
 app = FastAPI()
@@ -29,7 +31,9 @@ app.include_router(map.router)
 app.include_router(pdf.router)
 app.include_router(profile.router)
 app.include_router(planner.router)
+app.include_router(planner_api.router)
 app.include_router(chatbot.router)
+
 app.include_router(router)
 
 

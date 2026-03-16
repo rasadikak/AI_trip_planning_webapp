@@ -1,35 +1,35 @@
-from fastapi import APIRouter,Form
-
+from fastapi import APIRouter, Form
+from  dotenv import load_dotenv
+import requests
+import os
+from backend.config import HF_TOKEN
+from openai import OpenAI
 from typing import List
 
-import ollama
-
-client= ollama.Client()
-
-model= "mistral:7b"
+load_dotenv()
 
 
 
+url ="https://router.huggingface.co/v1"
+print(url)
 
 
 
+model="meta-llama/Llama-3.1-8B-Instruct:novita"
 
-
-
-
-router= APIRouter(prefix='/trip_planner', tags=['trip_planner'])
+router= APIRouter(prefix="/planner_api", tags=['planner_api'])
 
 @router.post('/')
-def trip_planner_llm(destinationType:str= Form(...),
+def trip_planner_api(destinationType:str= Form(...),
                     budget:str=Form(...),
                     numDays:int=Form(...) ,
                     numPeople:int=Form(...),accommodation:str=Form(...),
-                    foodPreference:List[str]=Form([])):
+                    foodPreference:List[str]=Form([])): 
     
     print(foodPreference)
     food_pref_string= ", ".join(foodPreference)
     print(food_pref_string)
-    
+
     question = f"""
 You are a professional Sri Lanka travel planner ✈️🌴 specializing in creating detailed, realistic travel itineraries.
 
@@ -155,7 +155,61 @@ Accommodation 🏨
 (Same structure)
 
 """
-    response= client.generate(model=model, prompt=question)
-    reply= response.response
-    print(reply)
-    return {"trip_plan":reply}
+
+    client = OpenAI(
+       base_url= url,
+       api_key=HF_TOKEN,
+    )
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=[
+        {
+    "role": "system",
+    "content": (
+        "You are an expert Sri Lanka travel planning assistant used in an AI Trip Planner web application. "
+        "Your primary task is to generate detailed and realistic travel itineraries based on user inputs such as "
+        "destination type, budget level, number of days, number of travelers, accommodation preference, and food preference.\n\n"
+
+        "Your responsibilities:\n"
+        "- Create well-structured travel itineraries for Sri Lanka.\n"
+        "- Recommend real tourist destinations, attractions, restaurants, and accommodations.\n"
+        "- Ensure the trip plan is realistic for the given number of days.\n"
+        "- Consider travel time and distance between locations.\n"
+        "- Provide practical suggestions for transportation, food, accommodation, and activities.\n\n"
+
+        "Strict rules:\n"
+        "1. Only suggest REAL locations in Sri Lanka. Never invent places.\n"
+        "2. Ensure the plan matches the user's selected destination types (beach, hill country, wildlife, cultural, city, etc.).\n"
+        "3. Prices must be approximate and written in Sri Lankan Rupees (LKR).\n"
+        "4. Include restaurants with dishes and estimated prices.\n"
+        "5. Include accommodation suggestions with approximate price ranges.\n"
+        "6. Include transport suggestions between locations.\n"
+        "7. Include useful travel tips such as safety, weather, and local customs.\n"
+        "8. Format responses clearly using Markdown headings, bullet points, and emojis.\n\n"
+
+        "Output requirements:\n"
+        "- Generate 2–3 alternative trip itineraries.\n"
+        "- Each itinerary must include daily activities for morning, afternoon, and evening.\n"
+        "- Include food recommendations and accommodation suggestions.\n"
+        "- Ensure the response is visually structured so it can be displayed on a website or exported to a PDF.\n\n"
+
+        "Your goal is to create practical, enjoyable, and realistic Sri Lanka travel plans for tourists."
+    )
+},
+
+        {
+            
+            "role": "user",
+            "content": question
+        }
+    ],
+)
+
+    response=completion.choices[0].message.content
+    print(response)
+    return {"response": response}
+
+
+
+#im using open ai Llama 3.1 8B Instruct model 
