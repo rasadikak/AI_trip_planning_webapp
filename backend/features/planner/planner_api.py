@@ -9,7 +9,7 @@ from langchain_huggingface import HuggingFaceEndpoint
 from langchain_classic.agents import AgentExecutor, create_react_agent
 from langchain_classic import hub
 from langchain_core.tools import Tool
-from langchain.prompts import PromptTemplate
+#from langchain.prompts import PromptTemplate
 
 load_dotenv()
 
