@@ -9,6 +9,7 @@ from langchain_huggingface import HuggingFaceEndpoint
 from langchain_classic.agents import AgentExecutor, create_react_agent
 from langchain_classic import hub
 from langchain_core.tools import Tool
+from langchain_huggingface import ChatHuggingFace
 #from langchain.prompts import PromptTemplate
 
 load_dotenv()
@@ -16,14 +17,16 @@ load_dotenv()
 router= APIRouter(prefix="/planner_api", tags=['planner_api'])
 
 url ="https://router.huggingface.co/v1"
-llm="meta-llama/Llama-3.1-8B-Instruct:novita"
 
-llm = HuggingFaceEndpoint(
+
+base_llm = HuggingFaceEndpoint(
     repo_id="meta-llama/Llama-3.1-8B-Instruct",
     huggingfacehub_api_token=HF_TOKEN,
     temperature=0.7,
-    max_new_tokens=1024
+    max_new_tokens=2048,
+    provider="novita" # Explicitly specifying the provider often helps
 )
+llm = ChatHuggingFace(llm=base_llm)
 #template = """
 #You are a professional Sri Lanka travel planner ✈️🌴.
 #Plan realistic itineraries for the given trip request.
