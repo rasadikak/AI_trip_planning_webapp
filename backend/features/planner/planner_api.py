@@ -5,8 +5,8 @@ import os
 from backend.config import HF_TOKEN
 from openai import OpenAI
 from typing import List
-from langchain.agents import Tool, initialize_agent
-
+from langchain.agents import  initialize_agent
+from langchain.tools import Tool
 from langchain.llms import HuggingFaceHub
 
 load_dotenv()
@@ -19,7 +19,7 @@ llm="meta-llama/Llama-3.1-8B-Instruct:novita"
 llm = HuggingFaceHub(
     repo_id="meta-llama/Llama-3.1-8B-Instruct",
     model_kwargs={"temperature": 0.7, "max_new_tokens": 1024},
-    huggingfacehub_api_token="YOUR_HF_TOKEN"
+    huggingfacehub_api_token= HF_TOKEN
 )
 
 
