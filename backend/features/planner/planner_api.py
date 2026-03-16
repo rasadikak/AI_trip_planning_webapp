@@ -25,9 +25,9 @@ llm = HuggingFaceHub(
 
 
 
-def map():
+def map(dest_name:str):
     map_url= "http://localhost:8000/map/"
-    map_response= requests.get(map_url, params={"dest_name":"<destination name>"})
+    map_response= requests.get(map_url, params={"dest_name":"{dest_name}"})
     return map_response.json()
 
 map_tool= Tool(
@@ -93,11 +93,6 @@ Include:
 - **Popular dish**
 - Approximate price (LKR)
 
-Example:
-- **Dewmini Roti Shop – Mirissa**  
-  Dish: Chocolate Banana Roti  
-  Price: (Approx. 1200 LKR)
-
 5️⃣ Accommodation Suggestions 🏨  
 Include:
 - **Hotel or guesthouse name**
@@ -106,21 +101,21 @@ Include:
 - Google Maps link
 - Official website if available
 
-Example:
-- **Paradise Beach Club – Mirissa**  
-  📍 Mirissa Beach  
-  💰 (Approx. 18,000 LKR per night)  
-  🗺 Google Maps: https://maps.google.com/?q=Paradise+Beach+Club+Mirissa  
-  🌐 Website: https://www.paradisebeachclub.lk
+6️⃣ For each **destination in the itinerary**, include a clickable **local map link** using this format:  
+http://localhost:8000/map/?dest_name=DESTINATION_NAME
 
-6️⃣ Add **transport suggestions** between destinations.
+Example:
+- Destination: Colombo
+  Map: http://localhost:8000/map/?dest_name=Colombo
+
+7️⃣ Add **transport suggestions** between destinations.
 
 Example:
 - Tuk-tuk (10 minutes)  
 - Train from Colombo to Galle (2 hours)  
 - Boat ride to whale watching area
 
-7️⃣ Add **important travel tips** including:
+8️⃣ Add **important travel tips** including:
 - Safety tips
 - Best time to visit attractions
 - Local customs
@@ -128,7 +123,7 @@ Example:
 - Weather considerations
 - Booking tips for hotels or tours
 
-8️⃣ Use **structured Markdown formatting with headings, bullet points, and emojis** so it looks good in both web pages and PDFs.
+9️⃣ Use **structured Markdown formatting with headings, bullet points, and emojis** so it looks good in both web pages and PDFs.
 
 Output Format:
 
@@ -136,6 +131,7 @@ Output Format:
 
 ### Trip Summary
 Destination: [Main destination] 🌴  
+Map: http://localhost:8000/map/?dest_name=[Main destination]  
 Best For: [Beach / Nature / Adventure / Culture]
 
 ---
@@ -157,6 +153,8 @@ Food 🍽️
 Accommodation 🏨
 - Hotel suggestion with links
 
+Map Link for the destination: http://localhost:8000/map/?dest_name=[destination]
+
 ---
 
 ### Day 2 📅
@@ -173,9 +171,7 @@ Accommodation 🏨
 
 ## Itinerary 2 🗺️
 (Same structure)
-
 """
-
     
     
 
