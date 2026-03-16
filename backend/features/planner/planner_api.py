@@ -5,19 +5,36 @@ import os
 from backend.config import HF_TOKEN
 from openai import OpenAI
 from typing import List
+from langchain.agents import Tool, initilalize_agent
+from langchain.chat_models import ChatOpenAI
 
 load_dotenv()
 
-
+router= APIRouter(prefix="/planner_api", tags=['planner_api'])
 
 url ="https://router.huggingface.co/v1"
-print(url)
+llm="meta-llama/Llama-3.1-8B-Instruct:novita"
+
+llm=ChatOpenAI(model="https://router.huggingface.co/v1",
+               temperature=0.7,
+               openai_api_key=HF_TOKEN)
 
 
 
-model="meta-llama/Llama-3.1-8B-Instruct:novita"
 
-router= APIRouter(prefix="/planner_api", tags=['planner_api'])
+def map():
+    map_url= "http://localhost:8000/map/"
+    map_response= requests.get(map_url, params={"dest_name":"<destination name>"})
+    return map_response.json()
+
+map_tool= Tool(
+    name="map",
+    func=map,
+    description="use this tool to get directions  between  locations in Sri Lanka. input should be in the format: origin, destination"
+)
+
+tools= [map_tool]
+
 
 @router.post('/')
 def trip_planner_api(destinationType:str= Form(...),
@@ -25,7 +42,7 @@ def trip_planner_api(destinationType:str= Form(...),
                     numDays:int=Form(...) ,
                     numPeople:int=Form(...),accommodation:str=Form(...),
                     foodPreference:List[str]=Form([])): 
-    print("api loaded")
+    
     print(foodPreference)
     food_pref_string= ", ".join(foodPreference)
     print(food_pref_string)
@@ -156,59 +173,14 @@ Accommodation 🏨
 
 """
 
-    client = OpenAI(
-       base_url= url,
-       api_key=HF_TOKEN,
-    )
+    
+    
 
-    completion = client.chat.completions.create(
-        model=model,
-        messages=[
-        {
-    "role": "system",
-    "content": (
-        "You are an expert Sri Lanka travel planning assistant used in an AI Trip Planner web application. "
-        "Your primary task is to generate detailed and realistic travel itineraries based on user inputs such as "
-        "destination type, budget level, number of days, number of travelers, accommodation preference, and food preference.\n\n"
 
-        "Your responsibilities:\n"
-        "- Create well-structured travel itineraries for Sri Lanka.\n"
-        "- Recommend real tourist destinations, attractions, restaurants, and accommodations.\n"
-        "- Ensure the trip plan is realistic for the given number of days.\n"
-        "- Consider travel time and distance between locations.\n"
-        "- Provide practical suggestions for transportation, food, accommodation, and activities.\n\n"
-
-        "Strict rules:\n"
-        "1. Only suggest REAL locations in Sri Lanka. Never invent places.\n"
-        "2. Ensure the plan matches the user's selected destination types (beach, hill country, wildlife, cultural, city, etc.).\n"
-        "3. Prices must be approximate and written in Sri Lankan Rupees (LKR).\n"
-        "4. Include restaurants with dishes and estimated prices.\n"
-        "5. Include accommodation suggestions with approximate price ranges.\n"
-        "6. Include transport suggestions between locations.\n"
-        "7. Include useful travel tips such as safety, weather, and local customs.\n"
-        "8. Format responses clearly using Markdown headings, bullet points, and emojis.\n\n"
-
-        "Output requirements:\n"
-        "- Generate 2–3 alternative trip itineraries.\n"
-        "- Each itinerary must include daily activities for morning, afternoon, and evening.\n"
-        "- Include food recommendations and accommodation suggestions.\n"
-        "- Ensure the response is visually structured so it can be displayed on a website or exported to a PDF.\n\n"
-
-        "Your goal is to create practical, enjoyable, and realistic Sri Lanka travel plans for tourists."
-    )
-},
-
-        {
-            
-            "role": "user",
-            "content": question
-        }
-    ],
-)
-
-    response=completion.choices[0].message.content
-    print(response)
-    return {"response": response}
+    agent= initilalize_agent(tools,llm, agent="zero-shot-react-description", verbose=True)
+    response= agent.run(question)
+    return {"response":response}
+    
 
 
 
