@@ -5,8 +5,9 @@ import os
 from backend.config import HF_TOKEN
 from openai import OpenAI
 from typing import List
-from langchain.agents import Tool, initilalize_agent
-from langchain.chat_models import ChatOpenAI
+from langchain.agents import Tool, initialize_agent
+
+from langchain.llms import HuggingFaceHub
 
 load_dotenv()
 
@@ -15,9 +16,11 @@ router= APIRouter(prefix="/planner_api", tags=['planner_api'])
 url ="https://router.huggingface.co/v1"
 llm="meta-llama/Llama-3.1-8B-Instruct:novita"
 
-llm=ChatOpenAI(model="https://router.huggingface.co/v1",
-               temperature=0.7,
-               openai_api_key=HF_TOKEN)
+llm = HuggingFaceHub(
+    repo_id="meta-llama/Llama-3.1-8B-Instruct",
+    model_kwargs={"temperature": 0.7, "max_new_tokens": 1024},
+    huggingfacehub_api_token="YOUR_HF_TOKEN"
+)
 
 
 
@@ -177,7 +180,7 @@ Accommodation 🏨
     
 
 
-    agent= initilalize_agent(tools,llm, agent="zero-shot-react-description", verbose=True)
+    agent= initialize_agent(tools,llm, agent="zero-shot-react-description", verbose=True)
     response= agent.run(question)
     return {"response":response}
     
