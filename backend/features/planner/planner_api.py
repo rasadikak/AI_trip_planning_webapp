@@ -5,9 +5,10 @@ import os
 from backend.config import HF_TOKEN
 from openai import OpenAI
 from typing import List
-from langchain.agents import  initialize_agent
-from langchain.tools import Tool
+from langchain.agents import AgentExecutor, ZeroShotAgent, Tool
+
 from langchain.llms import HuggingFaceHub
+from langchain.prompts import PromptTemplate
 
 load_dotenv()
 
@@ -21,9 +22,18 @@ llm = HuggingFaceHub(
     model_kwargs={"temperature": 0.7, "max_new_tokens": 1024},
     huggingfacehub_api_token= HF_TOKEN
 )
+template = """
+You are a professional Sri Lanka travel planner ✈️🌴.
+Plan realistic itineraries for the given trip request.
+Include **clickable map links** for every destination: http://localhost:8000/map/?dest_name=DESTINATION_NAME
 
+{input}
+"""
 
-
+prompt = PromptTemplate(
+    template=template,
+    input_variables=["input"]
+)
 
 def map(dest_name:str):
     map_url= "http://localhost:8000/map/"
@@ -175,9 +185,14 @@ Map Link for the destination: http://localhost:8000/map/?dest_name=[destination]
     
     
 
-
-    agent= initialize_agent(tools,llm, agent="zero-shot-react-description", verbose=True)
-    response= agent.run(question)
+    agent = ZeroShotAgent(
+            tools=[map_tool],  # add more tools here later
+            llm=llm,
+            prompt=prompt,
+            verbose=True
+    )
+    agent_executor = AgentExecutor(agent=agent, tools=tools)
+    response = agent_executor.run(question)
     return {"response":response}
     
 
