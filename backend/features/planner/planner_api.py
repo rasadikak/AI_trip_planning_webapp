@@ -7,7 +7,7 @@ from backend.config import HF_TOKEN
 from typing import List
 from langchain_huggingface import HuggingFaceEndpoint
 from langchain_classic.agents import AgentExecutor, create_react_agent
-from langchain import hub
+from langchain_classic import hub
 from langchain.tools import Tool
 from langchain.prompts import PromptTemplate
 
