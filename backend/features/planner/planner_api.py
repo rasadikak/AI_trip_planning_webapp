@@ -38,8 +38,9 @@ llm = ChatHuggingFace(llm=base_llm)
 prompt = hub.pull("hwchase17/react")
 
 def map(dest_name:str):
+    clean_name = dest_name.split('\n')[0].replace('Observ', '').strip()
     map_url= "http://localhost:8000/map/"
-    map_response= requests.get(map_url, params={"dest_name":dest_name})
+    map_response= requests.get(map_url, params={"dest_name":clean_name})
     return map_response.json()
 
 map_tool= Tool(
@@ -183,6 +184,13 @@ Map Link for the destination: http://localhost:8000/map/?dest_name=[destination]
 
 ## Itinerary 2 🗺️
 (Same structure)
+
+CRITICAL TOOL RULE: 
+When using the map tool, provide ONLY the city name as the Action Input. 
+Do not add any extra words, punctuation, or new lines.
+Example:
+Action: map
+Action Input: Colombo
 """
     
     
