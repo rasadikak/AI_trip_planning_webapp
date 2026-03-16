@@ -3,11 +3,12 @@ from  dotenv import load_dotenv
 import requests
 import os
 from backend.config import HF_TOKEN
-from openai import OpenAI
+
 from typing import List
-from langchain.agents import  ZeroShotAgent, Tool
-from langchain.agents.executor import AgentExecutor
-from langchain.llms import HuggingFaceHub
+from langchain_huggingface import HuggingFaceEndpoint
+from langchain.agents import AgentExecutor, create_react_agent
+from langchain import hub
+from langchain.tools import Tool
 from langchain.prompts import PromptTemplate
 
 load_dotenv()
@@ -17,33 +18,31 @@ router= APIRouter(prefix="/planner_api", tags=['planner_api'])
 url ="https://router.huggingface.co/v1"
 llm="meta-llama/Llama-3.1-8B-Instruct:novita"
 
-llm = HuggingFaceHub(
+llm = HuggingFaceEndpoint(
     repo_id="meta-llama/Llama-3.1-8B-Instruct",
-    model_kwargs={"temperature": 0.7, "max_new_tokens": 1024},
-    huggingfacehub_api_token= HF_TOKEN
+    huggingfacehub_api_token=HF_TOKEN,
+    temperature=0.7,
+    max_new_tokens=1024
 )
-template = """
-You are a professional Sri Lanka travel planner ✈️🌴.
-Plan realistic itineraries for the given trip request.
-Include **clickable map links** for every destination: http://localhost:8000/map/?dest_name=DESTINATION_NAME
+#template = """
+#You are a professional Sri Lanka travel planner ✈️🌴.
+#Plan realistic itineraries for the given trip request.
+#Include **clickable map links** for every destination: http://localhost:8000/map/?dest_name=DESTINATION_NAME
 
-{input}
-"""
+#{input}
+#"""
 
-prompt = PromptTemplate(
-    template=template,
-    input_variables=["input"]
-)
+prompt = hub.pull("hwchase17/react")
 
 def map(dest_name:str):
     map_url= "http://localhost:8000/map/"
-    map_response= requests.get(map_url, params={"dest_name":"{dest_name}"})
+    map_response= requests.get(map_url, params={"dest_name":dest_name})
     return map_response.json()
 
 map_tool= Tool(
     name="map",
     func=map,
-    description="use this tool to get directions  between  locations in Sri Lanka. input should be in the format: origin, destination"
+    description="use this tool to get directions  between  locations in Sri Lanka. Input should be a single city name"
 )
 
 tools= [map_tool]
@@ -185,14 +184,9 @@ Map Link for the destination: http://localhost:8000/map/?dest_name=[destination]
     
     
 
-    agent = ZeroShotAgent(
-            tools=[map_tool],  # add more tools here later
-            llm=llm,
-            prompt=prompt,
-            verbose=True
-    )
-    agent_executor = AgentExecutor(agent=agent, tools=tools)
-    response = agent_executor.run(question)
+    agent = create_react_agent(llm, tools, prompt)
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+    response = agent_executor.invoke({"input": question})
     return {"response":response}
     
 
