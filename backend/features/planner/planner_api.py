@@ -5,8 +5,8 @@ import os
 from backend.config import HF_TOKEN
 from openai import OpenAI
 from typing import List
-from langchain.agents import AgentExecutor, ZeroShotAgent, Tool
-
+from langchain.agents import  ZeroShotAgent, Tool
+from langchain.agents.executor import AgentExecutor
 from langchain.llms import HuggingFaceHub
 from langchain.prompts import PromptTemplate
 
