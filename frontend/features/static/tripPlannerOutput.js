@@ -32,7 +32,7 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
 document.getElementById("tripResult").addEventListener("click", function(e){
     if (e.target.tagName== 'A' && e.target.href.includes("dest_name")){
         e.preventDefault();
-        const url= new url(e.target.href);
+        const url= new URL(e.target.href);
         const dest_name= url.searchParams.get("dest_name");
         console.log(dest_name);
         if (typeof fetchLocation=="function"){

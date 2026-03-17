@@ -23,7 +23,7 @@ base_llm = HuggingFaceEndpoint(
     repo_id="meta-llama/Llama-3.1-8B-Instruct",
     huggingfacehub_api_token=HF_TOKEN,
     temperature=0.7,
-    max_new_tokens=2048,
+    max_new_tokens=4096,
     provider="novita" # Explicitly specifying the provider often helps
 )
 llm = ChatHuggingFace(llm=base_llm)
@@ -85,7 +85,7 @@ IMPORTANT RULES:
 
 Instructions:
 
-1️⃣ Suggest **2–3 alternative itineraries** so the traveler can choose.
+1️⃣ Suggest **2  itineraries** so the traveler can choose.
 
 2️⃣ Each itinerary should focus on **destinations that match the selected destination types**.
 
@@ -208,7 +208,7 @@ You do not need to use it for every restaurant or attraction.
         handle_parsing_errors=True,
         max_iterations=25,
         max_execution_time=300,
-        early_stopping_method="generate" # Tells it to try and finish the answer if it hits the limit
+        
     )
     response = agent_executor.invoke({"input": question})
     return {"response": response["output"]}

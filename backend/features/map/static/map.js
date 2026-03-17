@@ -4,7 +4,7 @@ let marker;
 
 async function fetchLocation(destName) {
 
-    const response = await fetch(`/map?dest_name=${encodeURIComponent(destName)}`);
+    const response = await fetch(`http://127.0.0.1:8000/map?dest_name=${encodeURIComponent(destName)}`);
     const data = await response.json();
 
     const lat = parseFloat(data.lat);

@@ -1,32 +1,56 @@
 from fastapi import APIRouter, FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.templating import Jinja2Templates
+from starlette.requests import Request
 import json
 import requests
-
+import os
 
 url = "https://nominatim.openstreetmap.org/search"
 
 router= APIRouter(prefix='/map', tags=['map'])
 
-with open('backend/features/map/sri_lanka_places.json','r', encoding='utf-8') as file:
-    #print("ok 1")
-    places= json.load(file)
-    #print("ok 1")
+# Setup Jinja2 templates
+templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
+templates = Jinja2Templates(directory=templates_dir)
 
-@router.get('/')
-def map(dest_name:str):
-    print(dest_name)
+with open('backend/features/map/sri_lanka_places.json','r', encoding='utf-8') as file:
+    places= json.load(file)
+
+def get_location_data(dest_name: str):
+    """Fetch location data for a destination"""
     for place in places:
         if place['name'].lower() == dest_name.lower():
-            print(place)
             return place
-        
-    else:
-         params={"q":dest_name, "format":"json","limit":1}   
-         response= requests.get(url, params=params, headers={"User-Agent": "trip-app"})
-         print(response.json())
-         data=response.json()
-         if data:
-              place= data[0] #i added this because api may return list of results
-              return {"name":place["name"], "lat":place["lat"] , "lon":place["lon"]}
-         else:
-              raise HTTPException(status_code=404, detail="Destination not found")
+    
+    # If not found locally, search via Nominatim API
+    params = {"q": dest_name, "format": "json", "limit": 1}   
+    response = requests.get(url, params=params, headers={"User-Agent": "trip-app"})
+    data = response.json()
+    if data:
+        place = data[0]
+        return {"name": place["name"], "lat": place["lat"], "lng": place["lon"]}
+    
+    return None
+
+@router.get('/', response_class=HTMLResponse)
+async def map(request: Request, dest_name: str):
+    """Serve interactive map with the destination"""
+    print(f"Map request for: {dest_name}")
+    
+    location = get_location_data(dest_name)
+    
+    if not location:
+        raise HTTPException(status_code=404, detail="Destination not found")
+    
+    # Prepare destinations list for template (single destination)
+    destinations = [location]
+    
+    # Render template with location data
+    return templates.TemplateResponse("map.html", {
+        "request": request,
+        "destinations": destinations,
+        "initial_dest": location['name'],
+        "initial_lat": location['lat'],
+        "initial_lng": location['lng']
+    })

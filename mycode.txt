@@ -88,3 +88,12 @@ async def img_based_search(img:UploadFile= File()):
 
 #I = [[25, 100, 7]]
 #That means:Most similar image = image 25, Second = image 100, Third = image 7
+
+tools = [
+    map_tool,
+    weather_tool,
+    budget_tool,
+    transport_tool,
+    food_tool,
+    hotel_tool
+]
