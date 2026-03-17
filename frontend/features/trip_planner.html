@@ -155,7 +155,7 @@
     <!-- Trip Plan Output -->
     <section>
       <h2>Your Trip Plan</h2>
-      <form id="pdfForm" action="http://127.0.0.1:8000/pdf/" method="POST">
+      <form id="pdfForm" >
         <div id="tripOutputPDF"></div>
         <br>
         <input type="submit" value="Download PDF">
@@ -179,6 +179,7 @@
   
   <script src="static/refreshPage.js"></script>
   <script src="static/tripPlannerOutput.js"></script>
+  <script src="backend/features/pdf/static/pdf.js"></script>
    <script src="/frontend/features/static/chatbotOutput.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
