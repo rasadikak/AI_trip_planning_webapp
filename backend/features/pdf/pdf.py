@@ -59,7 +59,7 @@ def pdf_generate(data:str):
 @router.post('/')
 async def download_pdf(request: PDFRequest):
     pdf_data= pdf_generate(request.text)
-    #text_from_frontend= requests.get("http://127.0.0.1:8000/frontend/features/trip_planner.html")
+    
     return StreamingResponse(pdf_data, media_type="application/pdf," 
            headers={"Content-Disposition":"attachment; filename=trip_plan.pdf "}                  
     )
