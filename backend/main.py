@@ -31,7 +31,7 @@ app.add_middleware(
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 app.mount("/dataset", StaticFiles(directory="backend/features/searchImage/dataset"), name='dataset')
 app.mount("/backend", StaticFiles(directory="backend"), name="backend")
-app.mount("/static", StaticFiles(directory="backend/features/map/static"), name="static")
+
 
 app.include_router(user_register.router)
 app.include_router(user_login.router)

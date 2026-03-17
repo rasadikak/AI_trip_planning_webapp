@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Trip Planner</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="static/map.css" />
 </head>
 <body>
 
@@ -170,7 +172,7 @@
     <h2>Map View</h2>
     <div id="map-section" style="display:none;">
         <h3 id="map-title"></h3>
-        <div id="map"></div>
+        <div id="map" style="height: 400px; width: 100%;">
     </div>
     <p id="map-placeholder">Click a destination link above to view on map.</p>
 </section>
@@ -185,5 +187,8 @@
   <script src="static/pdf.js"></script>
    <script src="/frontend/features/static/chatbotOutput.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="static/map.js"></script>
+
 </body>
 </html>
