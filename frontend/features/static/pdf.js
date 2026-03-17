@@ -1,4 +1,5 @@
-document.getElementById("pdfForm").addEventListener("submit", async function(e){
+document.addEventListener("DOMContentLoaded", function() {
+ document.getElementById("pdfForm").addEventListener("submit", async function(e){
     console.log("PDF form submitted");
     e.preventDefault();
     console.log("Fetching trip plan text for PDF generation...");
@@ -42,4 +43,4 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e){
 
 
 
-});
+})});
