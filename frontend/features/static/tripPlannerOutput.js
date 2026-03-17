@@ -43,3 +43,23 @@ document.getElementById("tripResult").addEventListener("click", function(e){
         }
     }
 });
+
+
+
+function attachMapLinks() {
+    const tripResult = document.getElementById("tripResult");
+    const links = tripResult.querySelectorAll('a[href*="localhost:8000/map"]');
+    
+    links.forEach(link => {
+        link.addEventListener("click", function(e) {
+            e.preventDefault();
+            const url = new URL(this.href);
+            const destName = url.searchParams.get("dest_name");
+            if (destName) {
+                fetchLocation(destName);
+                // Scroll to map section
+                document.getElementById("map").scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    });
+}

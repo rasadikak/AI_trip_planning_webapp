@@ -1,73 +1,88 @@
-from fastapi import APIRouter, FastAPI, HTTPException
+from fastapi import APIRouter
 from fpdf import FPDF
 from fastapi.responses import StreamingResponse
 import io
 import os
-import requests
+import re
 from pydantic import BaseModel
 
 class PDFRequest(BaseModel):
-    text:str
+    text: str
 
-router= APIRouter(prefix='/pdf', tags=['pdf'])
+router = APIRouter(prefix='/pdf', tags=['pdf'])
 
+# Path check
 emoji_font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'NotoEmoji-Regular.ttf')
 print("Emoji font path:", emoji_font_path)
 print("Exists:", os.path.exists(emoji_font_path))
 
-def pdf_generate(data:str):
- 
-    pdf= FPDF()
+emoji_pattern = re.compile(
+    "["
+    u"\U0001F300-\U0001FFFF"
+    u"\U00002700-\U000027BF"
+    u"\U0001F900-\U0001F9FF"
+    u"\U00002600-\U000026FF"
+    "]+", flags=re.UNICODE
+)
+
+def write_mixed_line(pdf, line, base_font, base_style, base_size):
+    segments = re.split(
+        r'([\U0001F300-\U0001FFFF\U00002700-\U000027BF\U0001F900-\U0001F9FF\U00002600-\U000026FF]+)',
+        line
+    )
+    for segment in segments:
+        if not segment:
+            continue
+        if emoji_pattern.search(segment):
+            pdf.set_font('NotoEmoji', '', base_size)
+        else:
+            pdf.set_font(base_font, base_style, base_size)
+        pdf.write(8, segment)
+    pdf.ln()
+
+def pdf_generate(data: str):
+    pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
     font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'DejaVuSans.ttf')
     pdf.add_font('DejaVu', '', font_path, uni=True)
+
     font_path2 = os.path.join(os.path.dirname(__file__), 'fonts', 'DejaVuSans-Bold.ttf')
     pdf.add_font('DejaVu', 'B', font_path2, uni=True)
 
+    pdf.add_font('NotoEmoji', '', emoji_font_path, uni=True)
+
+    # Title
     pdf.set_font('DejaVu', 'B', 18)
     pdf.cell(0, 10, "AI Generated Travel Plan", 0, 1, "C")
     pdf.ln(5)
 
-    lines= data.split("\n")
+    lines = data.split("\n")
     for line in lines:
-        line = line.strip()  # remove extra spaces
-        if not line:  # skip empty lines
-            continue # headings
+        line = line.strip()
+        if not line:
+            continue
+
         if line.startswith("##"):
-            pdf.set_font('DejaVu', "B", 14)
             pdf.ln(5)
-            pdf.cell(pdf.epw, 10, line.replace("##", "").strip(), new_x="LMARGIN", new_y="NEXT")
-
-        # sub headings
+            write_mixed_line(pdf, line.replace("##", "").strip(), 'DejaVu', 'B', 14)
         elif line.startswith("#"):
-            pdf.set_font('DejaVu', "B", 12)
             pdf.ln(3)
-            pdf.cell(pdf.epw, 8, line.replace("#", "").strip(), new_x="LMARGIN", new_y="NEXT")
+            write_mixed_line(pdf, line.replace("#", "").strip(), 'DejaVu', 'B', 12)
+        else:
+            write_mixed_line(pdf, line, 'DejaVu', '', 11)
 
-        else:  #normal text
-            pdf.set_font('DejaVu', "", 11)
-            pdf.multi_cell(pdf.epw, 8, line, new_x="LMARGIN", new_y="NEXT")
-    
-    pdf_output = pdf.output() 
+    pdf_output = pdf.output()
     return io.BytesIO(pdf_output)
- 
-   
-#dest="S" → do NOT save to a file, instead return the PDF as a string.
 
-#.encode("utf-8") → converts that string into bytes (binary data).
 
 @router.post('/')
 async def download_pdf(request: PDFRequest):
     print("api loaded")
-    pdf_data= pdf_generate(request.text)
-    print(pdf_data)
-    print("ok 1")
-    return StreamingResponse(pdf_data, media_type="application/pdf" ,
-           headers={"Content-Disposition":"attachment; filename=trip_plan.pdf"}                  
+    pdf_data = pdf_generate(request.text)
+    return StreamingResponse(
+        pdf_data,
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=trip_plan.pdf"}
     )
-
-#"Content-Disposition" ->download the file
-#StreamingResponse(...) ->This is a FastAPI response type that sends a file or data stream to the browser.
-#BytesIO creates a file-like object in memory.
