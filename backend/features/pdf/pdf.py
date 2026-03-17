@@ -3,6 +3,7 @@ from fpdf import FPDF
 from fastapi.responses import StreamingResponse
 import io
 import os
+import requests
 
 router= APIRouter(prefix='/pdf', tags=['pdf'])
 
@@ -53,24 +54,8 @@ def pdf_generate(data:str):
 
 @router.get('/')
 def download_pdf():
-    llm_output = """
-# Sri Lanka Trip Plan
+    llm_output = requests.get("http://localhost:8000/planner_api/").text
 
-## Day 1 – Colombo
-Visit Gangaramaya Temple
-Walk around Galle Face Green
-Try local street food
-
-## Day 2 – Kandy
-Visit Temple of the Tooth
-Explore Kandy Lake
-Watch cultural dance show
-
-## Day 3 – Ella
-Hike Little Adam's Peak
-Visit Nine Arches Bridge
-Enjoy tea plantations
-"""
     pdf_file= pdf_generate(llm_output)
     return StreamingResponse(
         pdf_file,

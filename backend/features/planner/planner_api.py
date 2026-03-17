@@ -107,7 +107,7 @@ TOOL USAGE RULES
 INSTRUCTIONS
 ----------------------------
 
-1️⃣ Generate **2-3  itineraries**.
+1️⃣ Generate **exact 1  itinerary**.
 
 2️⃣ Each day must include:
 
@@ -190,5 +190,4 @@ IMPORTANT
     
 
 
-
-#im using open ai Llama 3.1 8B Instruct model 
+ 
