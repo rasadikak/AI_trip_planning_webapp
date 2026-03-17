@@ -155,9 +155,11 @@
     <!-- Trip Plan Output -->
     <section>
       <h2>Your Trip Plan</h2>
-      <div id="tripOutput"></div>
-      <br>
-      <button>Download PDF</button>
+      <form id="pdfForm" action="http://127.0.0.1:8000/pdf/" method="GET">
+        <div id="tripOutputPDF"></div>
+        <br>
+        <input type="submit" value="Download PDF">
+      </form>
     </section>
 
     <hr>
