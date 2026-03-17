@@ -24,8 +24,9 @@ base_llm = HuggingFaceEndpoint(
     huggingfacehub_api_token=HF_TOKEN,
     temperature=0.7,
     max_new_tokens=4096,
-    provider="novita" # Explicitly specifying the provider often helps
+    provider="novita" 
 )
+
 llm = ChatHuggingFace(llm=base_llm)
 #template = """
 #You are a professional Sri Lanka travel planner ✈️🌴.
@@ -106,7 +107,7 @@ TOOL USAGE RULES
 INSTRUCTIONS
 ----------------------------
 
-1️⃣ Generate **EXACTLY 1 itinerary**.
+1️⃣ Generate **2-3  itineraries**.
 
 2️⃣ Each day must include:
 
@@ -181,7 +182,7 @@ IMPORTANT
         verbose=True,
         handle_parsing_errors=True,
         max_iterations=25,
-        max_execution_time=300,
+        max_execution_time=300
         
     )
     response = agent_executor.invoke({"input": question})
