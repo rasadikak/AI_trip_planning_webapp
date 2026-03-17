@@ -54,3 +54,15 @@ async def map(request: Request, dest_name: str):
         "initial_lat": location['lat'],
         "initial_lng": location['lng']
     })
+
+@router.get('/json/')
+def map_json(dest_name: str):
+    """Return location data as JSON (for API/LLM agent use)"""
+    print(f"Map JSON request for: {dest_name}")
+    
+    location = get_location_data(dest_name)
+    
+    if not location:
+        raise HTTPException(status_code=404, detail="Destination not found")
+    
+    return location

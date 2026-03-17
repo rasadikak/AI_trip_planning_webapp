@@ -24,6 +24,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES3=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES3", "30")
 
 HF_TOKEN=os.getenv("HF_TOKEN")
 
+WEATHER_API=os.getenv("WEATHER_API")
+
 class Settings(BaseSettings):
     MAIL_USERNAME: str
     MAIL_PASSWORD: str
@@ -49,6 +51,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES3: int
 
     HF_TOKEN:str
+
+    WEATHER_API:str
 
     class Config:
         env_file = ".env"

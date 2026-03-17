@@ -2,7 +2,7 @@ from fastapi import APIRouter, Form
 from  dotenv import load_dotenv
 import requests
 import os
-from backend.config import HF_TOKEN
+from backend.config import HF_TOKEN, WEATHER_API
 
 from typing import List
 from langchain_huggingface import HuggingFaceEndpoint
@@ -37,9 +37,9 @@ llm = ChatHuggingFace(llm=base_llm)
 
 prompt = hub.pull("hwchase17/react")
 
-def map(dest_name:str):
+def weather(dest_name:str):
     clean_name = dest_name.split('\n')[0].replace('Observ', '').strip()
-    map_url= "http://localhost:8000/map/"
+    map_url= "http://localhost:8000/map/json/"
     map_response= requests.get(map_url, params={"dest_name":clean_name})
     return map_response.json()
 
