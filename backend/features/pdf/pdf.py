@@ -63,7 +63,7 @@ async def download_pdf(request: PDFRequest):
     print(pdf_data)
     print("ok 1")
     return StreamingResponse(pdf_data, media_type="application/pdf" ,
-           headers={"Content-Disposition":"attachment; filename=trip_plan.pdf "}                  
+           headers={"Content-Disposition":"attachment; filename=trip_plan.pdf"}                  
     )
 
 #"Content-Disposition" ->download the file
