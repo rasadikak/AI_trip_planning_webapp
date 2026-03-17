@@ -58,8 +58,10 @@ def pdf_generate(data:str):
 
 @router.post('/')
 async def download_pdf(request: PDFRequest):
+    print("api loaded")
     pdf_data= pdf_generate(request.text)
-    
+    print(pdf_data)
+    print("ok 1")
     return StreamingResponse(pdf_data, media_type="application/pdf" ,
            headers={"Content-Disposition":"attachment; filename=trip_plan.pdf "}                  
     )
