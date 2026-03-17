@@ -4,6 +4,10 @@ from fastapi.responses import StreamingResponse
 import io
 import os
 import requests
+from pydantic import BaseModel
+
+class PDFRequest(BaseModel):
+    text:str
 
 router= APIRouter(prefix='/pdf', tags=['pdf'])
 
@@ -52,18 +56,12 @@ def pdf_generate(data:str):
 
 #.encode("utf-8") → converts that string into bytes (binary data).
 
-@router.get('/')
-def download_pdf():
-    llm_output = requests.get("http://localhost:8000/planner_api/").text
-    print(llm_output)
-
-    pdf_file= pdf_generate(llm_output)
-    return StreamingResponse(
-        pdf_file,
-        media_type="application/pdf",
-        headers={
-            "Content-Disposition": "attachment; filename=trip_plan.pdf"
-        }
+@router.post('/')
+async def download_pdf(request: PDFRequest):
+    pdf_data= pdf_generate(request.text)
+    #text_from_frontend= requests.get("http://127.0.0.1:8000/frontend/features/trip_planner.html")
+    return StreamingResponse(pdf_data, media_type="application/pdf," 
+           headers={"Content-Disposition":"attachment; filename=trip_plan.pdf "}                  
     )
 
 #"Content-Disposition" ->download the file
