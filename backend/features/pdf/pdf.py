@@ -11,7 +11,9 @@ class PDFRequest(BaseModel):
 
 router= APIRouter(prefix='/pdf', tags=['pdf'])
 
-
+emoji_font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'NotoEmoji-Regular.ttf')
+print("Emoji font path:", emoji_font_path)
+print("Exists:", os.path.exists(emoji_font_path))
 
 def pdf_generate(data:str):
  

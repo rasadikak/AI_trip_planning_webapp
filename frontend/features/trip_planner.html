@@ -26,7 +26,7 @@
 
         <div>
           <label>Destination Type</label><br>
-          <select id="destinationType" name="destinationType">
+          <select id="destinationType" name="destinationType" required>
             <option value="">Select</option>
             <option value="beach">Beach & Coastal</option>
             <option value="upcountry">Hill Country & Nature</option>
@@ -40,7 +40,7 @@
 
         <div>
           <label>Budget</label><br>
-          <select id="budget" name="budget">
+          <select id="budget" name="budget" required>
             <option value="">Select</option>
             <option value="low">Low</option>
             <option value="mid">Mid</option>
@@ -52,21 +52,21 @@
 
         <div>
           <label>Number of Days</label><br>
-          <input type="number" id="numDays" min="1" max="30" placeholder="e.g., 3" name="numDays">
+          <input type="number" id="numDays" min="1" max="30" placeholder="e.g., 3" name="numDays" required>
         </div>
 
         <br>
 
         <div>
           <label>Number of People</label><br>
-          <input type="number" id="numPeople" min="1" max="20" placeholder="e.g., 2"  name="numPeople">
+          <input type="number" id="numPeople" min="1" max="20" placeholder="e.g., 2"  name="numPeople" required>
         </div>
 
         <br>
 
         <div>
           <label>Accommodation Type</label><br>
-          <select id="accommodation" name="accommodation">
+          <select id="accommodation" name="accommodation" required>
             <option value="">Select</option>
             <option value="hotel">Hotel</option>
             <option value="tents">Tents / Camping</option>
@@ -81,7 +81,7 @@
         <div>
   <label>Food Preferences 🍽️</label><br>
 
-  <input type="checkbox" name="foodPreference" value="traditional" id="food_traditional">
+  <input type="checkbox" name="foodPreference" value="traditional" id="food_traditional" >
   <label for="food_traditional">Sri Lankan Traditional</label><br>
 
   <input type="checkbox" name="foodPreference" value="seafood" id="food_seafood">
