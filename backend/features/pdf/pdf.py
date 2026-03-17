@@ -60,7 +60,7 @@ def pdf_generate(data:str):
 async def download_pdf(request: PDFRequest):
     pdf_data= pdf_generate(request.text)
     
-    return StreamingResponse(pdf_data, media_type="application/pdf," 
+    return StreamingResponse(pdf_data, media_type="application/pdf" ,
            headers={"Content-Disposition":"attachment; filename=trip_plan.pdf "}                  
     )
 
