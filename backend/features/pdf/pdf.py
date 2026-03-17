@@ -55,6 +55,7 @@ def pdf_generate(data:str):
 @router.get('/')
 def download_pdf():
     llm_output = requests.get("http://localhost:8000/planner_api/").text
+    print(llm_output)
 
     pdf_file= pdf_generate(llm_output)
     return StreamingResponse(
