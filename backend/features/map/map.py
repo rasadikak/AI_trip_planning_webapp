@@ -27,6 +27,6 @@ def map(dest_name:str):
          data=response.json()
          if data:
               place= data[0] #i added this because api may return list of results
-              return {"name":place["name"], "lat":place["lat"] , "lng":place["lon"]}
+              return {"name":place["name"], "lat":place["lat"] , "lon":place["lon"]}
          else:
               raise HTTPException(status_code=404, detail="Destination not found")

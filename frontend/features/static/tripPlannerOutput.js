@@ -28,3 +28,18 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
         resultDiv.innerHTML = "Error: " + error.message;
     }
 });
+
+document.getElementById("tripResult").addEventListener("click", function(e){
+    if (e.target.tagName== 'A' && e.target.href.includes("dest_name")){
+        e.preventDefault();
+        const url= new url(e.target.href);
+        const dest_name= url.searchParams.get("dest_name");
+        console.log(dest_name);
+        if (typeof fetchLocation=="function"){
+            fetchLocation(dest_name);
+
+        }else{
+            console.error("fetchLocation function not found! Make sure map.js is loaded.");
+        }
+    }
+});
