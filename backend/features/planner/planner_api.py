@@ -54,18 +54,10 @@ weather_tool= Tool(
 
 
 
-def budget(transport:int, accommodation:int, food:int, activities:int):
-    total= transport + accommodation + food + activities
-    return f"Approximate total trip cost: {total} LKR"
 
-budget_tool= Tool(
-    name="budget",
-    func=budget,
-    description="Use this to calculate an approximate total trip cost in Sri Lankan Rupees (LKR) based on the costs of transport, accommodation, food, and activities. Input: transport cost, accommodation cost, food cost, activities cost (all in LKR)."
-)
     
 
-tools= [weather_tool, budget_tool]
+tools= [weather_tool]
 
 
 @router.post('/')
@@ -82,7 +74,7 @@ def trip_planner_api(destinationType:str= Form(...),
     question = f"""
 You are a professional Sri Lanka travel planner ✈️🌴.
 
-Create detailed, realistic travel itineraries based on the given trip details.
+Create a **detailed, realistic itinerary** based on the given trip details.
 
 Trip Details:
 - Destination Type(s): {destinationType}
@@ -98,81 +90,80 @@ IMPORTANT RULES
 - Only suggest REAL locations in Sri Lanka 🇱🇰
 - Do NOT invent fake places, hotels, or restaurants
 - Keep plans realistic for {numDays} days
-- All prices must be in LKR (Approximate)
+- Include **approximate costs in LKR** for:
+  - Accommodation
+  - Food
+  - Activities
+  - Transport
 - Consider travel time between locations
 
 ----------------------------
 TOOL USAGE RULES
 ----------------------------
-- Use the "weather" tool ONLY ONCE per itinerary to get current weather of the MAIN destination
-- Use the "budget" tool to estimate total trip cost
+- Use the **weather** tool **ONLY ONCE** for the main destination to summarize current weather
 
 ----------------------------
 INSTRUCTIONS
 ----------------------------
 
-1. Generate EXACTLY 2 itineraries
+1️⃣ Generate **EXACTLY 1 itinerary**.
 
-2. Each itinerary must match the selected destination type(s)
-
-3. For EACH DAY include:
+2️⃣ Each day must include:
 
 Morning 🌅  
-- Activities (specific places)
+- Activities (specific places) with approximate cost
 
 Afternoon ☀️  
-- Activities (markets, sightseeing, nature, etc.)
+- Activities (markets, sightseeing, nature, cultural sites, etc.) with approximate cost
 
 Evening 🌙  
-- Relaxing or cultural activities
+- Relaxing or cultural activities with approximate cost
 
-4. Food 🍽️  
+3️⃣ Food 🍽️  
 - Restaurant name  
 - Popular dish  
 - Approximate price (LKR)
 
-5. Accommodation 🏨  
+4️⃣ Accommodation 🏨  
 - Hotel name  
 - Location  
-- Price range  
+- Price range (per night in LKR)  
 - Google Maps link  
 - Website (if available)
 
-6. Map Links (IMPORTANT)  
-For EVERY destination include:
-http://localhost:8000/map/?dest_name=DESTINATION_NAME
+5️⃣ Map Links 📍  
+- Include clickable map link for **every destination**:  
+  http://localhost:8000/map/?dest_name=DESTINATION_NAME
 
-7. Transport 🚗  
-Mention travel method and time
+6️⃣ Transport 🚗  
+- For **each segment between destinations**, provide **at least 2–3 travel options**:  
+  - Bus, Train, Tuk-tuk, Taxi, or Boat (if applicable)  
+  - Include **approximate cost** in LKR per person or per group  
+  - Include **average travel time**  
+  Example:
+    - Bus from Colombo to Galle: 2.5 hours, ~LKR 150 per person  
+    - Train from Colombo to Galle: 2 hours, ~LKR 200 per person  
+    - Taxi from Colombo to Galle: 2 hours, ~LKR 3500 per car
 
-8. Weather 🌦️  
-- Use the weather tool and summarize the weather briefly
+7️⃣ Weather 🌦️  
+- Use the weather tool to summarize the current weather briefly
 
-9. Budget 💰  
-- Use the budget tool to estimate total cost
-
-10. Travel Tips 💡  
-- Safety  
-- Best time to visit  
+8️⃣ Travel Tips 💡  
+- Safety tips  
+- Best time to visit attractions  
 - Local customs  
 - Transport advice  
-- Booking tips  
+- Booking tips
 
 ----------------------------
 OUTPUT FORMAT
 ----------------------------
 
-Start with EXACTLY:
+- Start the response **exactly** with:
 
 Final Answer:
 
-Then:
-
-## Itinerary 1 🗺️
-(Full structured plan)
-
-## Itinerary 2 🗺️
-(Full structured plan)
+- Then provide the full itinerary in **clean, structured Markdown**, with headings, bullet points, and emojis.
 
 ----------------------------
 IMPORTANT
