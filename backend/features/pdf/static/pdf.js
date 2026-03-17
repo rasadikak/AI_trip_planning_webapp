@@ -11,7 +11,7 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e){
         const response = await fetch("http://127.0.0.1:8000/pdf/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: tripText }) // This matches your PDFRequest class
+            body: JSON.stringify({ text: text }) // This matches your PDFRequest class
         });
         if (!response.ok) throw new Error("Backend failed to generate PDF");
         const blob = await response.blob();
