@@ -37,19 +37,35 @@ llm = ChatHuggingFace(llm=base_llm)
 
 prompt = hub.pull("hwchase17/react")
 
+
+
+
 def weather(dest_name:str):
     clean_name = dest_name.split('\n')[0].replace('Observ', '').strip()
-    map_url= "http://localhost:8000/map/json/"
-    map_response= requests.get(map_url, params={"dest_name":clean_name})
-    return map_response.json()
+    url = f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={clean_name}"
+    response = requests.get(url)
+    return response.json()
 
-map_tool= Tool(
-    name="map",
-    func=map,
-    description="Use this ONLY once per itinerary to verify the main city destination. Input: single city name."
+weather_tool= Tool(
+    name="weather",
+    func=weather,
+    description="Use this ONLY once per itinerary to verify the main city destination. input: destination name. Output: current weather data for that location (temperature, condition, etc.)"
 )
 
-tools= [map_tool]
+
+
+def budget(transport:int, accommodation:int, food:int, activities:int):
+    total= transport + accommodation + food + activities
+    return f"Approximate total trip cost: {total} LKR"
+
+budget_tool= Tool(
+    name="budget",
+    func=budget,
+    description="Use this to calculate an approximate total trip cost in Sri Lankan Rupees (LKR) based on the costs of transport, accommodation, food, and activities. Input: transport cost, accommodation cost, food cost, activities cost (all in LKR)."
+)
+    
+
+tools= [weather_tool, budget_tool]
 
 
 @router.post('/')
@@ -64,138 +80,105 @@ def trip_planner_api(destinationType:str= Form(...),
     print(food_pref_string)
 
     question = f"""
-You are a professional Sri Lanka travel planner ✈️🌴 specializing in creating detailed, realistic travel itineraries.
+You are a professional Sri Lanka travel planner ✈️🌴.
+
+Create detailed, realistic travel itineraries based on the given trip details.
 
 Trip Details:
-- Destination Type(s): {destinationType} 🏖️🌄🏙️
-- Budget Level: {budget} 💰
-- Number of Days: {numDays} 📅
-- Number of Travelers: {numPeople} 👥
-- Accommodation Preference: {accommodation} 🏨🏠
-- Food Preference: {food_pref_string} 🍽️
+- Destination Type(s): {destinationType}
+- Budget Level: {budget}
+- Number of Days: {numDays}
+- Number of Travelers: {numPeople}
+- Accommodation Preference: {accommodation}
+- Food Preference: {food_pref_string}
 
-IMPORTANT RULES:
-- Only suggest **REAL locations in Sri Lanka**.
-- Do NOT invent fake cities, beaches, or restaurants.
-- Prefer **well-known tourist destinations** and **popular local places**.
-- All prices must be **approximate and written in Sri Lankan Rupees (LKR)**.
-  Example: (Approx. 3000 LKR)
-- Ensure the itinerary is **realistic for {numDays} days**.
-- Activities should consider **travel distance and time**.
+----------------------------
+IMPORTANT RULES
+----------------------------
+- Only suggest REAL locations in Sri Lanka 🇱🇰
+- Do NOT invent fake places, hotels, or restaurants
+- Keep plans realistic for {numDays} days
+- All prices must be in LKR (Approximate)
+- Consider travel time between locations
 
-Instructions:
+----------------------------
+TOOL USAGE RULES
+----------------------------
+- Use the "weather" tool ONLY ONCE per itinerary to get current weather of the MAIN destination
+- Use the "budget" tool to estimate total trip cost
 
-1️⃣ Suggest **2  itineraries** so the traveler can choose.
+----------------------------
+INSTRUCTIONS
+----------------------------
 
-2️⃣ Each itinerary should focus on **destinations that match the selected destination types**.
+1. Generate EXACTLY 2 itineraries
 
-3️⃣ For each day include:
+2. Each itinerary must match the selected destination type(s)
+
+3. For EACH DAY include:
 
 Morning 🌅  
-- Activities with **specific attractions or beaches**
+- Activities (specific places)
 
 Afternoon ☀️  
-- Activities such as sightseeing, markets, cultural sites, wildlife, or water sports
+- Activities (markets, sightseeing, nature, etc.)
 
 Evening 🌙  
-- Relaxing activities such as sunset viewpoints, beach walks, nightlife, or cultural shows
+- Relaxing or cultural activities
 
-4️⃣ Food Suggestions 🍽️  
-Include:
-- **Restaurant name**
-- **Popular dish**
+4. Food 🍽️  
+- Restaurant name  
+- Popular dish  
 - Approximate price (LKR)
 
-5️⃣ Accommodation Suggestions 🏨  
-Include:
-- **Hotel or guesthouse name**
-- Area/location
-- Approximate price range
-- Google Maps link
-- Official website if available
+5. Accommodation 🏨  
+- Hotel name  
+- Location  
+- Price range  
+- Google Maps link  
+- Website (if available)
 
-6️⃣ For each **destination in the itinerary**, include a clickable **local map link** using this format:  
+6. Map Links (IMPORTANT)  
+For EVERY destination include:
 http://localhost:8000/map/?dest_name=DESTINATION_NAME
 
-Example:
-- Destination: Colombo
-  Map: http://localhost:8000/map/?dest_name=Colombo
+7. Transport 🚗  
+Mention travel method and time
 
-7️⃣ Add **transport suggestions** between destinations.
+8. Weather 🌦️  
+- Use the weather tool and summarize the weather briefly
 
-Example:
-- Tuk-tuk (10 minutes)  
-- Train from Colombo to Galle (2 hours)  
-- Boat ride to whale watching area
+9. Budget 💰  
+- Use the budget tool to estimate total cost
 
-8️⃣ Add **important travel tips** including:
-- Safety tips
-- Best time to visit attractions
-- Local customs
-- Transport advice
-- Weather considerations
-- Booking tips for hotels or tours
+10. Travel Tips 💡  
+- Safety  
+- Best time to visit  
+- Local customs  
+- Transport advice  
+- Booking tips  
 
-9️⃣ Use **structured Markdown formatting with headings, bullet points, and emojis** so it looks good in both web pages and PDFs.
+----------------------------
+OUTPUT FORMAT
+----------------------------
 
-Output Format:
+Start with EXACTLY:
+
+Final Answer:
+
+Then:
 
 ## Itinerary 1 🗺️
-
-### Trip Summary
-Destination: [Main destination] 🌴  
-Map: http://localhost:8000/map/?dest_name=[Main destination]  
-Best For: [Beach / Nature / Adventure / Culture]
-
----
-
-### Day 1 📅
-
-Morning 🌅
-- Activity
-
-Afternoon ☀️
-- Activity
-
-Evening 🌙
-- Activity
-
-Food 🍽️
-- Restaurant suggestion
-
-Accommodation 🏨
-- Hotel suggestion with links
-
-Map Link for the destination: http://localhost:8000/map/?dest_name=[destination]
-
----
-
-### Day 2 📅
-(Same structure)
-
----
-
-### Travel Tips 💡
-- Tip 1
-- Tip 2
-- Tip 3
-
----
+(Full structured plan)
 
 ## Itinerary 2 🗺️
-(Same structure)
+(Full structured plan)
 
-CRITICAL TOOL RULE: 
-When using the map tool, provide ONLY the city name as the Action Input. 
-Do not add any extra words, punctuation, or new lines.
-Example:
-Action: map
-Action Input: Colombo
-
-IMPORTANT: When you have completed the itineraries and are ready to provide the result to the traveler,
- you MUST start your final response with the exact words 'Final Answer:' followed by the Markdown content.
- NOTE: You only need to use the 'map' tool to verify the main city for each itinerary. 
-You do not need to use it for every restaurant or attraction.
+----------------------------
+IMPORTANT
+----------------------------
+- DO NOT include Thought, Action, Observation
+- ONLY return clean Markdown
 """
     
     
