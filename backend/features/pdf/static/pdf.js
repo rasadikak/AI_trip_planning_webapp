@@ -1,7 +1,7 @@
 document.getElementById("pdfForm").addEventListener("submit", async function(e){
     e.preventDefault();
     const text= document.getElementById("tripResult").innerText;
-    if (!tripText || tripText.length < 10) {
+    if (!text || text.length < 10) {
         alert("Please generate a trip plan first!");
         return;
     }
