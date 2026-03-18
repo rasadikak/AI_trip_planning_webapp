@@ -21,7 +21,7 @@ class User(Base):
 class chatHistory(Base):
     __tablename__='chatHistory'
     id= Column(Integer, unique=True, index=True, autoincrement=True,nullable=False,primary_key=True)
-    user_id= Column(Integer,nullable=False, ForeignKey("users.id",ondelete="CASCADE"))
+    user_id= Column(Integer, ForeignKey("users.id",ondelete="CASCADE"), nullable=False)
     role=Column(String, nullable=False)
     content= Column(Text,nullable=False)
     created_at= Column(TIMESTAMP(timezone=True),nullable=False, server_default=text("now()"))
