@@ -140,17 +140,48 @@
     <hr>
 
     <!-- Chatbot Section -->
-    <section>
-      <h2>AI Chatbot</h2>
-      <form id="chatForm" action="http://127.0.0.1:8000/chatbot/" method="POST" name="chatForm" >
-      <textarea id="chatInput" name="chatInput" rows="4" cols="50" placeholder="Ask me about your trip..."></textarea>
-      <br><br>
+<section id="chatbot-section">
+    <div id="chat-container">
+        <div id="chat-header">
+            <span id="chat-icon">🌴</span>
+            <div>
+                <h2>Sri Lanka Travel Assistant</h2>
+                <span id="chat-status">Online</span>
+            </div>
+            <button id="clear-chat-btn" onclick="clearChat()">Clear Chat</button>
+        </div>
 
-      <input type="submit" value="send">
-      </form>
+        <div id="chatBox">
+            <!-- Welcome message -->
+            <div class="message bot-message">
+                <div class="avatar bot-avatar">🌴</div>
+                <div class="bubble bot-bubble">
+                    <p>Ayubowan! 👋 I'm your Sri Lanka Travel Assistant.</p>
+                    <p>Ask me anything about traveling in Sri Lanka — destinations, food, transport, hotels, and more!</p>
+                </div>
+            </div>
+        </div>
 
-      <div id="chatOutput"></div>
-    </section>
+        <div id="chat-input-area">
+            <textarea
+                id="chatInput"
+                placeholder="Ask about Sri Lanka travel..."
+                rows="1"
+                onkeydown="handleChatKey(event)"
+                oninput="autoResize(this)"
+            ></textarea>
+            <button id="send-btn" onclick="sendChat()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+        <p id="chat-hint">Press Enter to send · Shift+Enter for new line</p>
+    </div>
+</section>
 
     <hr>
 

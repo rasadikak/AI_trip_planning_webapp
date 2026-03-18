@@ -1,40 +1,107 @@
-console.log("page loaded ");
+async function sendChat() {
+    const input = document.getElementById("chatInput");
+    const chatBox = document.getElementById("chatBox");
+    const sendBtn = document.getElementById("send-btn");
+    const userText = input.value.trim();
 
-document.addEventListener("DOMContentLoaded", function(){
+    if (!userText) return;
 
-document.getElementById("chatForm").addEventListener("submit", async function(e){
-    console.log("1 ok");
-    e.preventDefault();
-    console.log("2 ok");
+    // Add user bubble
+    appendMessage("user", userText);
+    input.value = "";
+    input.style.height = "auto";
+    chatBox.scrollTop = chatBox.scrollHeight;
 
-    const resultDiv = document.getElementById("chatOutput");
-    console.log("3 ok");
+    // Disable send button while waiting
+    sendBtn.disabled = true;
 
-    resultDiv.innerHTML = "Thinking... Please wait. 🤔";
-    console.log("4 ok");
+    // Add thinking animation
+    const thinkingId = "thinking_" + Date.now();
+    chatBox.innerHTML += `
+        <div class="message bot-message" id="${thinkingId}">
+            <div class="avatar bot-avatar">🌴</div>
+            <div class="bubble bot-bubble thinking-bubble">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
 
-    try{
+    try {
         const formdata = new FormData();
-        formdata.append("chatInput", document.getElementById("chatInput").value);
+        formdata.append("chatInput", userText);
 
-        const response = await fetch("http://127.0.0.1:8000/chatbot/",{
-            method:"POST",
+        const response = await fetch("http://127.0.0.1:8000/chatbot/", {
+            method: "POST",
             body: formdata
         });
 
-        console.log(response);
-
-        if (!response.ok) throw new Error("Server responded with an error");
-
+        if (!response.ok) throw new Error("Server error");
         const result = await response.json();
-        console.log(result);
 
-        resultDiv.innerHTML = marked.parse(result.response);
+        // Remove thinking dots
+        document.getElementById(thinkingId)?.remove();
 
-    }catch(error){
-        resultDiv.innerHTML = "Error: " + error.message;
+        // Add bot response
+        appendMessage("bot", result.response);
+
+    } catch (error) {
+        document.getElementById(thinkingId)?.remove();
+        appendMessage("bot", "Sorry, something went wrong. Please try again.");
     }
 
-});
+    sendBtn.disabled = false;
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-});
+function appendMessage(role, text) {
+    const chatBox = document.getElementById("chatBox");
+    const isUser = role === "user";
+
+    const div = document.createElement("div");
+    div.className = `message ${isUser ? "user-message" : "bot-message"}`;
+
+    const avatar = document.createElement("div");
+    avatar.className = `avatar ${isUser ? "user-avatar" : "bot-avatar"}`;
+    avatar.innerText = isUser ? "You" : "🌴";
+
+    const bubble = document.createElement("div");
+    bubble.className = `bubble ${isUser ? "user-bubble" : "bot-bubble"}`;
+    bubble.innerHTML = isUser ? escapeHtml(text) : marked.parse(text);
+
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function handleChatKey(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendChat();
+    }
+}
+
+function autoResize(textarea) {
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+}
+
+function clearChat() {
+    const chatBox = document.getElementById("chatBox");
+    chatBox.innerHTML = `
+        <div class="message bot-message">
+            <div class="avatar bot-avatar">🌴</div>
+            <div class="bubble bot-bubble">
+                <p>Chat cleared! How can I help you with your Sri Lanka trip? 🌴</p>
+            </div>
+        </div>`;
+}
