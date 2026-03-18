@@ -25,7 +25,7 @@ document.getElementById("ImageSearchForm").addEventListener("submit", async func
         console.log("ok 7");
     
     
-        data.forEach(item=>{
+        data.results.forEach(item=>{
 
             const div = document.createElement("div");
             div.style.display = "inline-block";
