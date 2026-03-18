@@ -1,9 +1,12 @@
-from fastapi import APIRouter, Form
+from fastapi import APIRouter, Form, Depends
 from  dotenv import load_dotenv
+from sqlalchemy.orm import Session
 import requests
 import os
 from backend.config import HF_TOKEN
 from openai import OpenAI
+from backend.login import database,orm_model, oauth2
+from backend.login.routers import user_login
 
 load_dotenv()
 
@@ -14,7 +17,7 @@ model="meta-llama/Llama-3.1-8B-Instruct:novita"
 
 router= APIRouter(prefix="/chatbot", tags=['chatbot'])
 
-conversation_history=[]
+
 
 messages=[]
 
@@ -46,17 +49,27 @@ system_prompt={
 }
 
 @router.post('/')
-def chatbot(chatInput:str=Form(...)): 
+def chatbot(db:Session=Depends((database.get_db)),chatInput:str=Form(...),  current_user =Depends(oauth2.get_current_user)): 
     
+
+    db_history=db.query(orm_model.chatHistory).filter(orm_model.chatHistory.user_id==current_user.id).order_by(orm_model.chatHistory.created_at.asc()).limit(20).all()
+    
+    history_messages = [
+        {"role": row.role, "content": row.content}
+        for row in db_history   #converts rows of db query into a list of dictionaries with 'role' and 'content' keys
+    ]
+
     print(chatInput)
 
-    conversation_history.append({
+    history_messages.append({
         "role": "user",
         "content": chatInput
-        
     })
 
-    messages = [system_prompt] + conversation_history
+   
+
+    messages = [system_prompt] + history_messages
+    
 
     client = OpenAI(
        base_url= url,
@@ -73,11 +86,13 @@ def chatbot(chatInput:str=Form(...)):
 
     response=completion.choices[0].message.content
 
-    conversation_history.append({
-        "role": "assistant",
-        "content": response
-    })
+    
 
+    user_content=orm_model.chatHistory(user_id= current_user.id, role="user", content=chatInput)
+    assistant_content=orm_model.chatHistory(user_id= current_user.id, role="assistant", content=response)
+    db.add(user_content)
+    db.add(assistant_content)
+    db.commit()
     
     
     
