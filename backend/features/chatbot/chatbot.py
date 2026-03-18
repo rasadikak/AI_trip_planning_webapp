@@ -10,30 +10,17 @@ load_dotenv()
 
 
 url ="https://router.huggingface.co/v1"
-print(url)
-
-
-
 model="meta-llama/Llama-3.1-8B-Instruct:novita"
 
 router= APIRouter(prefix="/chatbot", tags=['chatbot'])
 
-@router.post('/')
-def chatbot(chatInput:str=Form(...)): 
-    
-    print(chatInput)
+conversation_history=[]
 
-    client = OpenAI(
-       base_url= url,
-       api_key=HF_TOKEN,
-    )
+messages=[]
 
-    completion = client.chat.completions.create(
-        model=model,
-        messages=[
-        {
-    "role": "system",
-    "content": (
+system_prompt={
+         "role": "system",
+         "content": (
         "You are an AI travel assistant for Sri Lanka used in an AI Trip Planner web application. "
         "Your main responsibility is to answer users' questions about traveling in Sri Lanka. "
         
@@ -56,17 +43,44 @@ def chatbot(chatInput:str=Form(...)):
         "5. Keep responses friendly, helpful, and easy to understand.\n"
         "6. Prefer short explanations (3–6 sentences) unless the user asks for more details."
     )
-},
+}
 
-        {
-            
-            "role": "user",
-            "content": chatInput
-        }
-    ],
-)
+@router.post('/')
+def chatbot(chatInput:str=Form(...)): 
+    
+    print(chatInput)
+
+    conversation_history.append({
+        "role": "user",
+        "content": chatInput
+        
+    })
+
+    messages = [system_prompt] + conversation_history
+
+    client = OpenAI(
+       base_url= url,
+       api_key=HF_TOKEN
+    )
+
+    
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=messages
+       
+    )
 
     response=completion.choices[0].message.content
+
+    conversation_history.append({
+        "role": "assistant",
+        "content": response
+    })
+
+    
+    
+    
     print(response)
     return {"response": response}
 
