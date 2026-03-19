@@ -2,7 +2,7 @@ from fastapi import FastAPI,APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend.login import database,orm_model, oauth2
 
-router= APIRouter(prefix=['favDestination'], tags=['favDestination'])
+router= APIRouter(prefix='/favDestination', tags=['favDestination'])
 
 @router.post('/')
 def add_fav_destination(destination:str, 
