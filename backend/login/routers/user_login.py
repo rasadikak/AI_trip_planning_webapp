@@ -27,9 +27,9 @@ def login( user_credintials: OAuth2PasswordRequestForm = Depends(), db:Session= 
     response= RedirectResponse(url=f'/frontend/features/trip_planner.html', status_code= 302) 
     response.set_cookie(key="access_token", value=f"bearer {access_token}", httponly=True)          
     #return {"access_token": access_token, "token_type":"bearer"}
-    #response= RedirectResponse(url=f'/frontend/features/trip_planner.html', status_code= 302)
-    #response.set_cookie(key="user_name", value=user.name)
-    #response.set_cookie(key="user_email", value=user.email)
+    
+    response.set_cookie(key="user_name", value=user.name)
+    response.set_cookie(key="user_email", value=user.email)
     return response
                   
            
