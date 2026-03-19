@@ -252,3 +252,23 @@ document.getElementById("chatForm").addEventListener("submit", async function(e)
 });
 
 });
+
+What each page should show:
+saved_plans.html — list of saved plans:
+
+Show destination name + date saved
+Click to expand and view full plan
+Re-download as PDF button
+Delete plan button
+
+favourite_places.html — list of favourite places:
+
+Show destination name + date saved
+Click destination → opens map
+Delete from favourites button
+
+travel_calendar.html — calendar with trips:
+
+Date picker to add a trip date
+List of upcoming trips
+Email reminder settings

@@ -33,3 +33,15 @@ def saved_plans(destination:str=Form(...),
     print("ok final")
     return {"message": f"plan is saved"}
     
+
+
+
+
+@router.get('/get')
+def get_savedPlans(db:Session=Depends(database.get_db),
+                        current_user= Depends(oauth2.current_user_cookie)):
+    print("get saved destinations api loaded")
+    user_id= current_user.id
+    plans= db.query(orm_model.savedPlans).filter(orm_model.savedPlans.user_id==user_id)
+    print(plans)
+    return {"response":plans}
