@@ -41,7 +41,7 @@ def get_favDestinations(db:Session=Depends(database.get_db),
                         current_user= Depends(oauth2.current_user_cookie)):
     print("get fav destination api loaded")
     user_id= current_user.id
-    destinations= db.query(orm_model.favouritePlaces).filter(orm_model.favouritePlaces.user_id==user_id)
+    destinations= db.query(orm_model.favouritePlaces).filter(orm_model.favouritePlaces.user_id==user_id).all()
     print(destinations)
     if destinations:
         return {"response":destinations}
@@ -49,18 +49,21 @@ def get_favDestinations(db:Session=Depends(database.get_db),
 
 
 
-@router.delete('/delete/{id}')
-def del_favDestinations(db:Session=Depends(database.get_db),
-                        dest_id:id=Form(...)):
-    print("delete fav destination api loaded")
+@router.delete('/{fav_id}')
+def delete_fav_destination(
+    fav_id: int,
+    db: Session = Depends(database.get_db),
+    current_user = Depends(oauth2.current_user_cookie)
+):
+    fav = db.query(orm_model.favouritePlaces)\
+        .filter(
+            orm_model.favouritePlaces.id == fav_id,
+            orm_model.favouritePlaces.user_id == current_user.id
+        ).first()
 
+    if not fav:
+        raise HTTPException(status_code=404, detail="Not found")
 
-    
-
-    destination= db.query(orm_model.favouritePlaces).filter(orm_model.favouritePlaces.id==dest_id)
-    print(destination)
-    if not destination:
-        return HTTPException(status_code=404, detail=f'destination not found in db')
-    db.delete(destination)
+    db.delete(fav)
     db.commit()
-    return {"msg":"favourite destination deleted succeesfully"}
+    return {"message": "Deleted successfully"}

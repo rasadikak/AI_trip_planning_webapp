@@ -1,48 +1,63 @@
-//this page includes favourite destinations 
+document.addEventListener("DOMContentLoaded", async function() {
+    console.log("page loaded");
+    const favList = document.getElementById("favList");
 
-document.addEventListener("DOMContentLoaded", async function(e){
-    try{
-        const mainDiv= document.getElementById("favList");
+    try {
+        const response = await fetch("http://127.0.0.1:8000/favDestination/get", {
+            method: "GET",
+            credentials: "include"
+        });
+        console.log("response received:", response.status);
 
-        const formdata= new FormData(e.target);
+        if (!response.ok) throw new Error("Failed to load: " + response.status);
 
-        const response= await fetch("http://127.0.0.1.8000/favDestination/get",{
-         "body": formdata,
-         "method": "GET",
-         "credentials":"include"
-         });
-        const data= response.json();
+        const data = await response.json();
+        console.log("data:", data);
 
-        if(data!= null){
+        if (!data || !data.response || data.response.length === 0) {
+            favList.innerHTML = "<p>No favourite destinations saved yet.</p>";
+            return;
+}
 
-            console.log(data);
+        favList.innerHTML = "";
 
-            mainDiv.appendChild(data);
-            const del_button= document.createElement('button');
-            const id= data['id'];
-            const del_response= await fetch("http://127.0.0.1.8000/favDestination/delete/{id}",{
-                "body": formdata,
-                "method": "GET",
-                "credentials":"include"
-         });
-         const del_data= del_response.json();
-        }
-        
-            
-        
+        data.response.forEach(item => {
+            console.log("item:", item);
+            const div = document.createElement("div");
+            div.style.border = "1px solid #ccc";
+            div.style.padding = "10px";
+            div.style.marginBottom = "10px";
 
+            div.innerHTML = `
+                <h3>📍 ${item.destination}</h3>
+                <p> Saved on:${new Date(item.created_at).toLocaleDateString()}</p>
+                <button onclick="deleteFavourite(${item.id})">🗑️ Remove</button>
+            `;
 
+            favList.appendChild(div);
+        });
 
-
-
-
-        }catch(error){
-            const no_destDiv= document.createElement("div");
-            const para= document.createElement("p");
-            para.innerText= "no favourite destinations has been saved";
-            no_destDiv.appendChild(para);
-        }
-
-
-
+    } catch (error) {
+        console.error("Error:", error);
+        favList.innerHTML = "<p>Error loading favourites: " + error.message + "</p>";
+    }
 });
+
+async function deleteFavourite(fav_id) {
+    console.log("deleting:", fav_id);
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/favDestination/${fav_id}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+        console.log("delete response:", response.status);
+
+        if (!response.ok) throw new Error("Failed to delete");
+
+        alert("Removed from favourites!");
+        location.reload(); 
+
+    } catch (error) {
+        alert("Error: " + error.message);
+    }
+}
