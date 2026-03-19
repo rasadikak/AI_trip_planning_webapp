@@ -27,3 +27,10 @@ class chatHistory(Base):
     created_at= Column(TIMESTAMP(timezone=True),nullable=False, server_default=text("now()"))
     user = relationship("User", back_populates="chat_history")
     
+
+class favouritePlaces(Base):
+    __tablename__='favourite_places'
+    id= Column(Integer, unique=True, index=True, autoincrement=True,nullable=False,primary_key=True)
+    user_id= Column(Integer, ForeignKey("users.id",ondelete="CASCADE"), nullable=False)
+    destination= Column(String,nullable=True)
+    created_at= Column(TIMESTAMP(timezone=True),nullable=False, server_default=text("now()"))
