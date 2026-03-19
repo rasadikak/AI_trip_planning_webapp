@@ -11,7 +11,7 @@ from backend.features.profile import profile
 
 from backend.features.planner import planner_api
 from backend.features.chatbot import chatbot
-from backend.features.tripManagement import favDestination
+from backend.features.tripManagement import favDestination, savePlan
 
 app = FastAPI()
 router = APIRouter(prefix="/test")
@@ -49,6 +49,7 @@ app.include_router(profile.router)
 app.include_router(planner_api.router)
 app.include_router(chatbot.router)
 app.include_router(favDestination.router)
+app.include_router(savePlan.router)
 
 app.include_router(router)
 

@@ -1,11 +1,11 @@
-from fastapi import FastAPI,APIRouter, Depends, HTTPException
+from fastapi import FastAPI,APIRouter, Depends, HTTPException,Form
 from sqlalchemy.orm import Session
 from backend.login import database,orm_model, oauth2
 
 router= APIRouter(prefix='/favDestination', tags=['favDestination'])
 
 @router.post('/')
-def add_fav_destination(destination:str, 
+def add_fav_destination(destination:str=Form(...), 
                         db:Session=Depends(database.get_db), 
                         current_user=Depends(oauth2.current_user_cookie)):
     
