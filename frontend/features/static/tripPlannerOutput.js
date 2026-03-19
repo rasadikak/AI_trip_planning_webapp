@@ -77,7 +77,7 @@ async function saveDestination(dest_name){
     try{
         const formData= new FormData();
         formData.append("destination", destination);
-        const response= await fetch("http://127.0.0.1:8000/favDestination",{
+        const response= await fetch("http://127.0.0.1:8000/favDestination/",{
             method:"POST",
             body:formData,
             credentials:"include"
@@ -95,6 +95,23 @@ async function saveDestination(dest_name){
 }
 
 
-async function savePlan(result, destination){
-    
+async function savePlan(plan, destination){
+    try{
+        const formData= new FormData();
+        formData.append("destination", destination);
+        formData.append("plan", plan);
+        const response= await fetch("http://127.0.0.1:8000/savedPlans/",{
+            method:"POST",
+            body:formData,
+            credentials:"include"
+        });
+
+        if(!response.ok){
+            throw new Error("Error:", Error);
+        }else{
+            alert("plan is saved!")
+        }
+    }catch(error){
+        alert("Error saving plan: " + error.message);
+    }
 }
