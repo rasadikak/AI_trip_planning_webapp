@@ -42,10 +42,14 @@ prompt = hub.pull("hwchase17/react")
 
 
 def weather(dest_name:str):
-    clean_name = dest_name.split('\n')[0].replace('Observ', '').strip()
-    url = f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={clean_name}"
-    response = requests.get(url)
-    return response.json()
+    try:
+        clean_name = dest_name.split('\n')[0].replace('Observ', '').strip()
+        url = f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={clean_name}"
+        response = requests.get(url)
+        return response.json()
+    except Exception as e:
+        print(f"Error fetching weather data for {dest_name}: {e}")
+        return {"error": str(e)}
 
 weather_tool= Tool(
     name="weather",

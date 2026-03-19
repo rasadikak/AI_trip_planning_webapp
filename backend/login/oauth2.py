@@ -1,6 +1,6 @@
 from jose import JWTError, jwt
 from backend.login import  database, orm_model
-
+from fastapi import Cookie
 from fastapi import Depends, HTTPException,status
 from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
@@ -48,6 +48,34 @@ def current_user( token:str=Depends(oauth2_scheme), db:Session= Depends(database
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found"
         )
+    return user
+
+
+
+
+def current_user_cookie(
+    access_token: str = Cookie(default=None),
+    db: Session = Depends(database.get_db)
+):
+    if not access_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not logged in — no token cookie found"
+        )
+    
+    # Remove "bearer " prefix that was added when setting the cookie
+    token = access_token.replace("bearer ", "")
+    
+    user_id = verify_token(token)
+    
+    user = db.query(orm_model.User).filter(orm_model.User.id == user_id).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found"
+        )
+    
     return user
 
 

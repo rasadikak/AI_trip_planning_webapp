@@ -49,8 +49,8 @@ system_prompt={
 }
 
 @router.post('/')
-def chatbot(db:Session=Depends((database.get_db)),chatInput:str=Form(...),  current_user =Depends(oauth2.current_user)): 
-    
+def chatbot(db:Session=Depends((database.get_db)),chatInput:str=Form(...),  current_user =Depends(oauth2.current_user_cookie)): 
+    print(current_user.id)
 
     db_history=db.query(orm_model.chatHistory).filter(orm_model.chatHistory.user_id==current_user.id).order_by(orm_model.chatHistory.created_at.asc()).limit(20).all()
     
@@ -102,3 +102,5 @@ def chatbot(db:Session=Depends((database.get_db)),chatInput:str=Form(...),  curr
 
 
 #im using open ai Llama 3.1 8B Instruct model 
+
+

@@ -45,7 +45,8 @@ async function sendChat() {
 
         const response = await fetch("http://127.0.0.1:8000/chatbot/", {
             method: "POST",
-            body: formdata
+            body: formdata,
+            credentials: "include" // Include cookies for authentication
         });
         console.log("Response received:", response.status, response.ok);
 

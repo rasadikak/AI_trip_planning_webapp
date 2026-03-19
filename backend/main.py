@@ -22,7 +22,7 @@ router = APIRouter(prefix="/test")
 #It stops the "Instant Error" in the browser
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allows your frontend to talk to your backend
+    allow_origins=["http://127.0.0.1:8000", "http://localhost:8000"], # Allows your frontend to talk to your backend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
