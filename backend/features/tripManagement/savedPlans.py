@@ -42,6 +42,20 @@ def get_savedPlans(db:Session=Depends(database.get_db),
                         current_user= Depends(oauth2.current_user_cookie)):
     print("get saved destinations api loaded")
     user_id= current_user.id
-    plans= db.query(orm_model.savedPlans).filter(orm_model.savedPlans.user_id==user_id)
+    plans= db.query(orm_model.savedPlans).filter(orm_model.savedPlans.user_id==user_id).all()
     print(plans)
     return {"response":plans}
+
+
+
+
+
+@router.delete('/delete/{plan_id}')
+def deletePlan(db:Session=Depends(database.get_db),
+                current_user= Depends(oauth2.current_user_cookie),
+                plan_id:int=Form(...)):
+    user_id= current_user.id
+    deleted_plan= db.query(orm_model.savedPlans).filter(orm_model.savedPlans.id==plan_id).first()
+    db.delete(deleted_plan)
+    db.commit()
+    return {"response":"plan deleted successfully"}
