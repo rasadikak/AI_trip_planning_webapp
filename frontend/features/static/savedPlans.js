@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async function(e){
                 <div>${marked.parse(item.plan)}</div>
                 <p> ${new Date(item.created_at).toLocaleDateString()}</p>
                 <button onclick="deletePlan(${item.id})">🗑️ Remove plan</button>
+                
             `;
 
         planList.appendChild(div);

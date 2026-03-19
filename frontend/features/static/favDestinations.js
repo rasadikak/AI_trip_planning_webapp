@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 <h3>📍 ${item.destination}</h3>
                 <p> Saved on:${new Date(item.created_at).toLocaleDateString()}</p>
                 <button onclick="deleteFavourite(${item.id})">🗑️ Remove</button>
+                
             `;
 
             favList.appendChild(div);
