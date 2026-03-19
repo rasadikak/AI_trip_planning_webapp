@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoader', async function(e){
+document.addEventListener('DOMContentLoaded', async function(e){
     try{
 
     e.preventDefault();
     const formdata=new FormData(e.target);
-    const response= await fetch('http://127.0.0.1:8000/savedPlans',{
+    const response= await fetch('http://127.0.0.1:8000/savedPlans/get',{
         "method":"GET",
         "credentials":"include"
     });
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoader', async function(e){
 }
 
     const planList = document.getElementById("planList");
-    planList.innerText="";
+    planList.innerHTML="";
 
     data.response.forEach(item=>{
         const div= document.createElement("div");
