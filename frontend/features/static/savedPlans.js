@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function(e){
     try{
 
-    e.preventDefault();
-    const formdata=new FormData(e.target);
+   
     const response= await fetch('http://127.0.0.1:8000/savedPlans/get',{
         "method":"GET",
         "credentials":"include"
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async function(e){
 
         div.innerHTML = `
                 <h3>📍 ${item.destination}</h3>
-                <p> ${item.plan}</p>
+                <div>${marked.parse(item.plan)}</div>
                 <p> ${new Date(item.created_at).toLocaleDateString()}</p>
                 <button onclick="deletePlan(${item.id})">🗑️ Remove plan</button>
             `;
