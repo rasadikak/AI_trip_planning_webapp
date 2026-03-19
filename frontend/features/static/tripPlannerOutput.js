@@ -73,6 +73,23 @@ document.getElementById("tripResult").addEventListener("DOMContentLoaded", async
 
 
 
-function saveDestination(dest_name){
-    pass
+async function saveDestination(dest_name){
+    try{
+        const formData= new FormData();
+        formData.append(dest_name);
+        const response= await fetch("http://127.0.0.1:8000/favDestination",{
+            method:"POST",
+            body:formData,
+            credentials:"include"
+        });
+
+        if(!response.ok){
+            throw new Error("Error:", Error);
+        }else{
+            alert("Destination saved to favourites!")
+        }
+    }catch(e){
+        alert("Error saving destination: " + error.message);
+    }
+    
 }
