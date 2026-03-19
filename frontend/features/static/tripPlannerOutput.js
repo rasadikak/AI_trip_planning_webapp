@@ -23,7 +23,30 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
         console.log(result)
         // result["trip plan"] matches your Python return key
         resultDiv.innerHTML = marked.parse(result["response"]);
-        console.log("5")
+        console.log("5");
+
+        const firstLine = result["response"].split('\n').find(line => line.trim() !== '');
+        const destination = firstLine.replace(/[#*]/g, '').trim();
+        console.log("Destination:", destination);
+
+        
+        const buttonDiv = document.createElement("div");
+        buttonDiv.style.marginTop = "20px";
+        buttonDiv.style.display = "flex";
+        buttonDiv.style.gap = "10px";
+
+        const favouriteButton = document.createElement("button");
+        favouriteButton.innerText = "⭐ Save Destination";
+        favouriteButton.onclick = () => saveDestination(destination);
+
+        const savePlanButton = document.createElement("button");
+        savePlanButton.innerText = "💾 Save Plan";   
+        savePlanButton.onclick = () => savePlan(result["response"], destination);
+
+        buttonDiv.appendChild(favouriteButton);
+        buttonDiv.appendChild(savePlanButton);
+        resultDiv.appendChild(buttonDiv);
+
     } catch (error) {
         resultDiv.innerHTML = "Error: " + error.message;
     }
@@ -46,37 +69,14 @@ document.getElementById("tripResult").addEventListener("click", function(e){
 
 
 
-document.getElementById("tripResult").addEventListener("DOMContentLoaded", async function(e){
-    e.preventDefault();
 
-    // Extract destination from response (first heading or first line)
-    const firstLine = result["response"].split('\n').find(line => line.trim() !== '');
-    const destination = firstLine.replace(/[#*]/g, '').trim();
-    console.log(destination);
-
-    const buttonDiv= document.createElement("div");
-    buttonDiv.style.marginTop = "20px";
-    buttonDiv.style.display = "flex";
-    buttonDiv.style.gap = "10px";
-
-    const favouriteButton= document.createElement("button");
-    favouriteButton.innerText="⭐ Save Destination";
-    favouriteButton.onclick = () => {saveDestination(destination)}
-
-    const savePlanButton= document.createElement("button");
-    favouriteButton.innerText="💾 Save Plan";
-
-    resultDiv.appendChild(buttonDiv);
-    buttonDiv.appendChild(favouriteButton);
-    buttonDiv.appendChild(savePlanButton);
-});
 
 
 
 async function saveDestination(dest_name){
     try{
         const formData= new FormData();
-        formData.append(dest_name);
+        formData.append("destination", destination);
         const response= await fetch("http://127.0.0.1:8000/favDestination",{
             method:"POST",
             body:formData,
@@ -88,8 +88,13 @@ async function saveDestination(dest_name){
         }else{
             alert("Destination saved to favourites!")
         }
-    }catch(e){
+    }catch(error){
         alert("Error saving destination: " + error.message);
     }
+    
+}
+
+
+async function savePlan(result, destination){
     
 }

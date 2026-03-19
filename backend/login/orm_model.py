@@ -34,3 +34,12 @@ class favouritePlaces(Base):
     user_id= Column(Integer, ForeignKey("users.id",ondelete="CASCADE"), nullable=False)
     destination= Column(String,nullable=True)
     created_at= Column(TIMESTAMP(timezone=True),nullable=False, server_default=text("now()"))
+
+
+
+class savedPlans(Base):
+    __tablename__='saved_plan'
+    id= Column(Integer, unique=True, index=True, autoincrement=True,nullable=False,primary_key=True)
+    user_id= Column(Integer, ForeignKey("users.id",ondelete="CASCADE"), nullable=False)
+    plan= Column(Text,nullable=True)
+    created_at= Column(TIMESTAMP(timezone=True),nullable=False, server_default=text("now()"))
