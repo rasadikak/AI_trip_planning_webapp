@@ -7,13 +7,13 @@ document.getElementById("weather_form").addEventListener("submit", async functio
     const resultDiv=document.getElementById("weather-result");
     console.log("weather 1");
     try{
-    const place = document.getElementById("weather-input");
+    const place = document.getElementById("weather-input").value.trim();
     print(place)
-    if (!place){throw new error("first input a place")}
+    if (!place){throw new Error("first input a place")}
     console.log("weather 2");
     const formdata= new FormData(e.target);
     console.log("weather 3");
-    formdata.append(place);
+    formdata.append("place",place);
     const response =await fetch("http://127.0.0.1:8000/weather/",{
         "method":"POST",
         "body": formdata
