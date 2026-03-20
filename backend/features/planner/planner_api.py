@@ -137,8 +137,10 @@ Evening 🌙
 - Website (if available)
 
 5️⃣ Map Links 📍  
-- Include clickable map link for **every destination**:  
-  http://localhost:8000/map/?dest_name=DESTINATION_NAME
+- Include clickable map link for **every PLACE/DESTINATION only**
+- Do NOT add map links for hotels, restaurants, or businesses
+- Only real geographic locations like beaches, towns, parks, temples
+- Example: http://localhost:8000/map/?dest_name=Mirissa Beach
 
 6️⃣ Transport 🚗  
 - For **each segment between destinations**, provide **at least 2–3 travel options**:  

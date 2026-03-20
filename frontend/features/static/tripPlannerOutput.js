@@ -61,17 +61,26 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
     }
 });
 
-document.getElementById("tripResult").addEventListener("click", function(e){
-    if (e.target.tagName== 'A' && e.target.href.includes("dest_name")){
+document.getElementById("tripResult").addEventListener("click", function(e) {
+    if (e.target.tagName === 'A' && e.target.href.includes("dest_name")) {
         e.preventDefault();
-        const url= new URL(e.target.href);
-        const dest_name= url.searchParams.get("dest_name");
-        console.log(dest_name);
-        if (typeof fetchLocation=="function"){
-            fetchLocation(dest_name);
+        const url = new URL(e.target.href);
+        let dest_name = url.searchParams.get("dest_name");
+        dest_name = dest_name.replace(/\+/g, " ").replace(/_/g, " ").trim();
+        console.log("Map clicked:", dest_name);
 
-        }else{
-            console.error("fetchLocation function not found! Make sure map.js is loaded.");
+        if (typeof fetchLocation === "function") {
+            fetchLocation(dest_name).then(() => {
+                // Scroll AFTER map is fully loaded
+                setTimeout(() => {
+                    document.getElementById("map-section").scrollIntoView({ 
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }, 400);
+            });
+        } else {
+            console.error("fetchLocation not found");
         }
     }
 });

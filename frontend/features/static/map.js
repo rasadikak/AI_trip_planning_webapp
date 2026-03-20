@@ -3,16 +3,27 @@ let marker;
 
 
 async function fetchLocation(destName) {
-    const response = await fetch(`http://127.0.0.1:8000/map/json/?dest_name=${encodeURIComponent(destName)}`);
-    const data = await response.json();
-    const lat = parseFloat(data.lat);
-    const lon = parseFloat(data.lng);
-    
-    // Hide placeholder, show map
-    document.getElementById("map-placeholder").style.display = "none";
-    
-    showMap(lat, lon, data.name);
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/map/json/?dest_name=${encodeURIComponent(destName)}`);
+        
+        if (!response.ok) {
+            console.error("Location not found:", destName);
+            return;
+        }
+
+        const data = await response.json();
+        const lat = parseFloat(data.lat);
+        const lon = parseFloat(data.lng);
+
+        document.getElementById("map-placeholder").style.display = "none";
+        showMap(lat, lon, data.name);
+
+    } catch (error) {
+        console.error("Map fetch error:", error);
+    }
 }
+
+
 
 function showMap(lat, lng, placeName) {
 
