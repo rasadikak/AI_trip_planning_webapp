@@ -84,12 +84,9 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
 
     } catch (error) {
         resultDiv.innerHTML = "Error: " + error.message;
+        showToast("❌ " + error.message, "error");
     }
 });
-
-
-
-
 
 document.getElementById("tripResult").addEventListener("click", function(e) {
     if (e.target.tagName === 'A' && e.target.href.includes("dest_name")) {
@@ -115,12 +112,6 @@ document.getElementById("tripResult").addEventListener("click", function(e) {
     }
 });
 
-
-
-
-
-
-
 async function saveDestination(destination) {
     try {
         const formData = new FormData();
@@ -134,22 +125,16 @@ async function saveDestination(destination) {
 
         if (!response.ok) {
             const errData = await response.json();
-            alert(errData.detail);  // shows Destination already in favourites
+            showToast(errData.detail, "error");  // shows Destination already in favourites
             return;
         }
 
-        alert(`${destination} saved to favourites!`);
+        showToast(`⭐ ${destination} saved to favourites!`, "success");
 
     } catch (error) {
-        alert("Error: " + error.message);
+        showToast("Error: " + error.message, "error");
     }
 }
-
-
-
-
-
-
 
 async function savePlan(plan, destination){
     try{
@@ -167,11 +152,13 @@ async function savePlan(plan, destination){
         console.log("save plan 4");
 
         if(!response.ok){
-            throw new Error("Error:", Error);
-        }else{
-            alert("plan is saved!")
+            const errData = await response.json();
+            showToast(errData.detail || "Failed to save plan", "error");
+            return;
         }
+        showToast("💾 Plan saved successfully!", "success");
+
     }catch(error){
-        alert("Error saving plan: " + error.message);
+        showToast("Error saving plan: " + error.message, "error");
     }
 }

@@ -3,14 +3,12 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("PDF form submitted");
     e.preventDefault();
     console.log("Fetching trip plan text for PDF generation...");
-
     const text= document.getElementById("tripResult").innerText;
     if (!text || text.length < 10) {
-        alert("Please generate a trip plan first!");
+        showToast("⚠️ Please generate a trip plan first!", "warning");
         return;
     }
     console.log(text);
-
     try{
         const response = await fetch("http://127.0.0.1:8000/pdf/", {
             method: "POST",
@@ -36,11 +34,8 @@ document.addEventListener("DOMContentLoaded", function() {
         a.remove();
         console.log("Anchor element removed, revoking URL...");
         window.URL.revokeObjectURL(url);
+        showToast("📄 PDF downloaded successfully!", "success");
     }catch(error){
-        alert("Error downloading PDF: " + error.message);
+        showToast("Error downloading PDF: " + error.message, "error");
     }
-
-
-
-
 })});

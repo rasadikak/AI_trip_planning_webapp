@@ -1,44 +1,35 @@
 document.addEventListener('DOMContentLoaded', async function(e){
     try{
-
    
     const response= await fetch('http://127.0.0.1:8000/savedPlans/get',{
         "method":"GET",
         "credentials":"include"
     });
-
     if (!response.ok) throw new Error("Failed to load: " + response.status);
     const data= await response.json();
-
     if (!data || !data.response || data.response.length === 0) {
             favList.innerHTML = "<p>No saved plans yet.</p>";
             return;
 }
-
     const planList = document.getElementById("planList");
     planList.innerHTML="";
-
     data.response.forEach(item => {
     const div = document.createElement("div");
     div.style.border = "1px solid #ccc";
     div.style.padding = "10px";
     div.style.marginBottom = "10px";
-
     
     const downloadBtn = document.createElement("button");
     downloadBtn.innerText = "📄 Download PDF";
     downloadBtn.onclick = () => downloadPDF(item.plan); 
-
     const deleteBtn = document.createElement("button");
     deleteBtn.innerText = "🗑️ Remove Plan";
     deleteBtn.onclick = () => deletePlan(item.id);
-
     div.innerHTML = `
         <h3>📍 ${item.destination}</h3>
         <div>${marked.parse(item.plan)}</div>
         <p>Saved on: ${new Date(item.created_at).toLocaleDateString()}</p>
     `;
-
     div.appendChild(deleteBtn);
     div.appendChild(downloadBtn);
     planList.appendChild(div);
@@ -48,9 +39,6 @@ document.addEventListener('DOMContentLoaded', async function(e){
         planList.innerHTML = "<p>Error loading saved plans: " + error.message + "</p>";
     }
 });
-
-
-
 async function deletePlan(plan_id){
     try{
         const response = await fetch(`http://127.0.0.1:8000/savedPlans/delete/${plan_id}`, {
@@ -58,20 +46,13 @@ async function deletePlan(plan_id){
             credentials: "include"
         });
         console.log("delete response:", response.status);
-
         if (!response.ok) throw new Error("Failed to delete");
-
-        alert("deleted successfully!");
+        showToast("🗑️ Plan deleted successfully", "warning");
         location.reload(); 
-
 }catch(error){
-    alert("can not delete plan:", error.message)
+    showToast("Cannot delete plan: " + error.message, "error");
 }
 }
-
-
-
-
 async function downloadPDF(plan){
     
     
@@ -101,13 +82,8 @@ async function downloadPDF(plan){
         a.remove();
         console.log("Anchor element removed, revoking URL...");
         window.URL.revokeObjectURL(url);
+        showToast("📄 PDF downloaded successfully!", "success");
     }catch(error){
-        alert("Error downloading PDF: " + error.message);
+        showToast("Error downloading PDF: " + error.message, "error");
     }
-
-
-
-
-
-
 }

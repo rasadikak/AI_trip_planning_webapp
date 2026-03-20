@@ -65,6 +65,7 @@ async function sendChat() {
         console.error("Error in sendChat:", error);
         document.getElementById(thinkingId)?.remove();
         appendMessage("bot", "Sorry, something went wrong. Please try again.");
+        showToast("❌ Something went wrong. Please try again.", "error");
     }
 
     sendBtn.disabled = false;
@@ -127,6 +128,7 @@ function clearChat() {
             </div>
         </div>`;
     console.log("Chat cleared");
+    showToast("🗑️ Chat cleared", "info");
 }
 
 console.log("chatbotOutput.js loaded successfully");
