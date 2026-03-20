@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Form
+from fastapi import APIRouter, Form, HTTPException
+import httpx
 from  dotenv import load_dotenv
 import requests
 import os
@@ -136,12 +137,21 @@ Evening 🌙
 - Google Maps link  
 - Website (if available)
 
-5️⃣ Map Links 📍  
-- Include clickable map link for **every PLACE/DESTINATION only**
-- Do NOT add map links for hotels, restaurants, or businesses
-- Only real geographic locations like beaches, towns, parks, temples
-- Do not include google map links. Include only localhost map links like the example below.
-- Example: http://localhost:8000/map/?dest_name=Mirissa Beach
+5️⃣ Map Links 📍
+- At the END of the itinerary, add ONE section called "## Map Links 📍"
+- List ONLY the main geographic destinations (beaches, towns, parks, temples)
+- Do NOT add map links inside activity descriptions or accommodation sections
+- Do NOT add map links for hotels, restaurants, markets, or businesses
+- Use ONLY spaces in destination names, no underscores or hyphens
+- do not add google map links.
+- Format EXACTLY like this:
+
+## Map Links 📍
+- Mirissa Beach: http://localhost:8000/map/?dest_name=Mirissa Beach
+- Weligama Beach: http://localhost:8000/map/?dest_name=Weligama Beach
+- Ella: http://localhost:8000/map/?dest_name=Ella
+
+MAXIMUM 5 map links per itinerary — only the most important destinations.
 
 6️⃣ Transport 🚗  
 - For **each segment between destinations**, provide **at least 2–3 travel options**:  
@@ -181,19 +191,63 @@ IMPORTANT
 """
     
     
-
-    agent = create_react_agent(llm, tools, prompt)
-    agent_executor = AgentExecutor(
-        agent=agent,
-        tools=tools,
-        verbose=True,
-        handle_parsing_errors=True,
-        max_iterations=25,
-        max_execution_time=300
+    try:
+        agent = create_react_agent(llm, tools, prompt)
+        agent_executor = AgentExecutor(
+            agent=agent,
+            tools=tools,
+            verbose=True,
+            handle_parsing_errors=True,
+            max_iterations=25,
+            max_execution_time=300
         
-    )
-    response = agent_executor.invoke({"input": question})
-    return {"response": response["output"]}
+        )
+        response = agent_executor.invoke({"input": question})
+        return {"response": response["output"]}
+
+    except httpx.ConnectError:
+        # Network issue — can't reach HuggingFace API
+        raise HTTPException(
+            status_code=503,
+            detail="Cannot connect to AI service. Please check your internet connection and try again."
+        )
+
+    except httpx.TimeoutException:
+        # Request took too long
+        raise HTTPException(
+            status_code=504,
+            detail="AI service timed out. Please try again."
+        )
+
+    except TimeoutError:
+        # Agent exceeded max_execution_time=300
+        raise HTTPException(
+            status_code=504,
+            detail="Trip plan generation timed out. Try reducing the number of days."
+        )
+
+    except ValueError as e:
+        # Bad input values
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid input: {str(e)}"
+        )
+
+    except KeyError as e:
+        # response["output"] key missing
+        raise HTTPException(
+            status_code=500,
+            detail=f"Unexpected response from AI: {str(e)}"
+        )
+
+    except Exception as e:
+        # Catch all other unexpected errors
+        print(f"Unexpected error in trip_planner_api: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Something went wrong while generating your trip plan. Please try again."
+        )
+
     
 
 

@@ -17,7 +17,7 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
             body: formData
         });
 
-        if (!response.ok) throw new Error("Server responded with an error");
+        if (!response.ok) throw new Error("Server responded with an error, try again later");
 
         const result = await response.json();
         console.log(result)
