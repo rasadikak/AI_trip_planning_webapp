@@ -1,3 +1,7 @@
+
+
+
+
 document.getElementById("weather_form").addEventListener("submit", async function(e){
     e.preventDefault();
     const resultDiv=document.getElementById("weather-result");
