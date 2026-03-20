@@ -8,8 +8,11 @@ router= APIRouter(prefix='/weather', tags=['weather'])
 
 @router.post('/')
 def weather_api(place:str=Form(...)):
+    print("weather api loaded")
     try:
+        print("try first")
         url= f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={place}"
+        print(url)
         response= requests.get(url)
         data= response.json()
         if "error" in data:

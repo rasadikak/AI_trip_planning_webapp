@@ -5,18 +5,28 @@
 document.getElementById("weather_form").addEventListener("submit", async function(e){
     e.preventDefault();
     const resultDiv=document.getElementById("weather-result");
+    console.log("weather 1");
     try{
+    const place = document.getElementById("weather-input");
+    print(place)
+    if (!place){throw new error("first input a place")}
+    console.log("weather 2");
     const formdata= new FormData(e.target);
+    console.log("weather 3");
+    formdata.append(place);
     const response =await fetch("http://127.0.0.1:8000/weather/",{
         "method":"POST",
         "body": formdata
     });
+    console.log("weather 4");
 
     if (!response.ok) {
             const err = await response.json();
             throw new Error(err.detail || "Failed to fetch weather");
     }
+    console.log("weather 5");
     const data= await response.json();
+    console.log("weather 6");
     
     
     resultDiv.innerHTML = `
