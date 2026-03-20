@@ -7,6 +7,14 @@ document.addEventListener("DOMContentLoaded", async function() {
             credentials: "include"
         });
         console.log("response received:", response.status);
+        if (response.status==401){
+            showToast("⚠️ Session timed out — please log in again","error");
+            setTimeout(()=>{
+                window.location.href="http://127.0.0.1:8000/frontend/home/login.html";
+
+            }, 2000); //// redirect to login after 2 seconds
+            return;
+        }
         if (!response.ok) throw new Error("Failed to load: " + response.status);
         const data = await response.json();
         console.log("data:", data);

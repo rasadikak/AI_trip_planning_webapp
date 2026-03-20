@@ -231,7 +231,7 @@ IMPORTANT
         # Bad input values
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid input: {str(e)}"
+            detail=f"Network connection error, try again later"
         )
 
     except KeyError as e:
