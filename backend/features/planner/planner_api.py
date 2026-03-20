@@ -154,9 +154,9 @@ STRICT RULE — THIS SECTION IS MANDATORY. YOU MUST INCLUDE IT EVERY TIME.
 EXAMPLE — copy this format exactly:
 
 ## Map Links 📍
-- Mirissa Beach: http://localhost:8000/map/?dest_name=Mirissa Beach
+- Mirissa Beach: http://localhost:8000/map/?dest_name=Mirissa 
 - Weligama: http://localhost:8000/map/?dest_name=Weligama
-- Galle Fort: http://localhost:8000/map/?dest_name=Galle Fort
+- Galle Fort: http://localhost:8000/map/?dest_name=Galle 
 
 MAXIMUM 5 links — only the most important geographic destinations.
 
