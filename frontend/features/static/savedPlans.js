@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', async function(e){
     div.style.padding = "10px";
     div.style.marginBottom = "10px";
 
-    // Store plan in data attribute to avoid breaking onclick
+    
     const downloadBtn = document.createElement("button");
     downloadBtn.innerText = "📄 Download PDF";
-    downloadBtn.onclick = () => downloadPDF(item.plan);  // pass directly via closure
+    downloadBtn.onclick = () => downloadPDF(item.plan); 
 
     const deleteBtn = document.createElement("button");
     deleteBtn.innerText = "🗑️ Remove Plan";

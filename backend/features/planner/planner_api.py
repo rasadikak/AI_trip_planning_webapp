@@ -140,6 +140,7 @@ Evening 🌙
 - Include clickable map link for **every PLACE/DESTINATION only**
 - Do NOT add map links for hotels, restaurants, or businesses
 - Only real geographic locations like beaches, towns, parks, temples
+- Do not include google map links. Include only localhost map links like the example below.
 - Example: http://localhost:8000/map/?dest_name=Mirissa Beach
 
 6️⃣ Transport 🚗  
