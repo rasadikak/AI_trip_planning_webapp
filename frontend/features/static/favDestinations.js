@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 async function deleteFavourite(fav_id) {
     console.log("deleting:", fav_id);
     try {
-        const response = await fetch(`http://127.0.0.1:8000/savedPlans/delete/${fav_id}`, {
+        const response = await fetch(`http://127.0.0.1:8000/favDestination/delete/${fav_id}`, {
             method: "DELETE",
             credentials: "include"
         });

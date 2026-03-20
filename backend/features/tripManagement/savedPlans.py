@@ -57,6 +57,8 @@ def deletePlan(plan_id:int ,db:Session=Depends(database.get_db),
                 ):
     
     deleted_plan= db.query(orm_model.savedPlans).filter(orm_model.savedPlans.id==plan_id, orm_model.savedPlans.user_id == current_user.id).first()
+    if not deleted_plan:
+        raise HTTPException(status_code=404, detail="Plan not found")
     db.delete(deleted_plan)
     db.commit()
     return {"response":"plan deleted successfully"}
