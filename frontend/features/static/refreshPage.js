@@ -10,6 +10,10 @@ window.addEventListener("load", () =>{
     document.getElementById("chatForm").reset();
 });
 
+window.addEventListener("load", () =>{
+    document.getElementById("weather_form").reset();
+});
+
 
 
 

@@ -1,13 +1,18 @@
 document.getElementById("weather_form").addEventListener("submit", async function(e){
     e.preventDefault();
-    const div=document.getElementById("weather-result");
+    const resultDiv=document.getElementById("weather-result");
     try{
     const formdata= new FormData(e.target);
     const response =await fetch("http://127.0.0.1:8000/weather/",{
         "method":"POST",
         "body": formdata
     });
-    const data= response.json();
+
+    if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.detail || "Failed to fetch weather");
+    }
+    const data= await response.json();
     
     
     resultDiv.innerHTML = `
@@ -39,4 +44,4 @@ document.getElementById("weather_form").addEventListener("submit", async functio
         resultDiv.innerHTML = `<p style="color:red;">❌ ${error.message}</p>`;
         showToast("❌ " + error.message, "error");
     }
-})
+});

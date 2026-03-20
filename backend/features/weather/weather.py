@@ -9,11 +9,12 @@ router= APIRouter(prefix='/weather', tags=['weather'])
 @router.post('/')
 def weather_api(place:str=Form(...)):
     try:
-        url= "http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={place}"
+        url= f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={place}"
         response= requests.get(url)
         data= response.json()
         if "error" in data:
-            return HTTPException(status_code=404, detail=f"destination not found")
+            raise HTTPException(status_code=404, detail=f"destination not found")
+        print(data)
         return {
             "location": data["location"]["name"],
             "region": data["location"]["region"],
