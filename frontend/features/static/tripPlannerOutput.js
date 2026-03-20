@@ -121,30 +121,34 @@ document.getElementById("tripResult").addEventListener("click", function(e) {
 
 
 
-async function saveDestination(destination){
-    try{
-        const formData= new FormData();
-        console.log("save dest 1");
+async function saveDestination(destination) {
+    try {
+        const formData = new FormData();
         formData.append("destination", destination);
-        console.log("save dest 2");
-        const response= await fetch("http://127.0.0.1:8000/favDestination/",{
-            method:"POST",
-            body:formData,
-            credentials:"include"
-        });
-        console.log("save dest 3");
 
-        if(!response.ok){
-            throw new Error("Error:", Error);
-        }else{
-            alert("Destination saved to favourites!")
-            console.log("save dest 4");
+        const response = await fetch("http://127.0.0.1:8000/favDestination/", {
+            method: "POST",
+            body: formData,
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+            const errData = await response.json();
+            alert(errData.detail);  // shows Destination already in favourites
+            return;
         }
-    }catch(error){
-        alert("Error saving destination: " + error.message);
+
+        alert(`${destination} saved to favourites!`);
+
+    } catch (error) {
+        alert("Error: " + error.message);
     }
-    
 }
+
+
+
+
+
 
 
 async function savePlan(plan, destination){
