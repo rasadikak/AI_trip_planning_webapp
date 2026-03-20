@@ -203,11 +203,13 @@
   <!-- Weather Widget Section -->
 <section>
     <h2>🌤️ Check Weather</h2>
-    <input type="text" id="weather-input" 
+    <form id="weather_form" action="http://127.0.0.1:8000/weather/" method="POST">
+    <input type="text" id="weather-input" name="place" required
            placeholder="Enter destination e.g. Mirissa, Kandy..."
            style="padding:8px; width:250px; border-radius:6px; border:1px solid #ccc;">
-    <button id="weather-search-btn">Check Weather</button>
+    <input type="submit" value="search weather">
     <div id="weather-result" style="margin-top:16px;"></div>
+    </form>
 </section>
 <hr>
 
