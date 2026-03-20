@@ -28,29 +28,35 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
         console.log("5");
 
         // Add ⭐ button next to every map link
-        const mapLinks = resultDiv.querySelectorAll('a[href*="dest_name"]');
-        mapLinks.forEach(link => {
-            const linkUrl = new URL(link.href);
-            let destName = linkUrl.searchParams.get("dest_name");
-            destName = destName.replace(/\+/g, " ").replace(/_/g, " ").trim();
+        const mapLinks = resultDiv.querySelectorAll('a[href*="google.com/maps"]');
+    mapLinks.forEach(link => {
+    const linkUrl = new URL(link.href);
+    let pathParts = linkUrl.pathname.split('/search/');
+    let destName = pathParts[1]
+        ? decodeURIComponent(pathParts[1])
+            .replace(/\+/g, " ")
+            .replace(/Sri Lanka/gi, "")
+            .trim()
+        : link.innerText.trim();
 
-            const starBtn = document.createElement("button");
-            starBtn.innerText = "⭐";
-            starBtn.title = `Save ${destName} to favourites`;
-            starBtn.style.marginLeft = "6px";
-            starBtn.style.padding = "2px 8px";
-            starBtn.style.cursor = "pointer";
-            starBtn.style.fontSize = "0.85rem";
-            starBtn.style.border = "1px solid #ccc";
-            starBtn.style.borderRadius = "4px";
-            starBtn.style.background = "#fffde7";
-            starBtn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                saveDestination(destName);
-            };
-            link.insertAdjacentElement("afterend", starBtn);
-        });
+    const starBtn = document.createElement("button");
+    starBtn.innerText = "⭐";
+    starBtn.title = `Save ${destName} to favourites`;
+    starBtn.style.marginLeft = "6px";
+    starBtn.style.padding = "2px 8px";
+    starBtn.style.cursor = "pointer";
+    starBtn.style.fontSize = "0.85rem";
+    starBtn.style.border = "1px solid #ccc";
+    starBtn.style.borderRadius = "4px";
+    starBtn.style.background = "#fffde7";
+    starBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        saveDestination(destName);
+    };
+
+    link.insertAdjacentElement("afterend", starBtn);
+});
 
         // Extract first destination for Save Plan button
         const mapLinkMatch = result["response"].match(/dest_name=([^)\s\n&]+)/);
@@ -92,23 +98,12 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
     }
 });
 
-// ── Map link click — highlight marker instead of reloading map ──────
 document.getElementById("tripResult").addEventListener("click", function(e) {
-    if (e.target.tagName === 'A' && e.target.href.includes("dest_name")) {
+    if (e.target.tagName === 'A' && e.target.href.includes("google.com/maps")) {
         e.preventDefault();
-        const url = new URL(e.target.href);
-        let dest_name = url.searchParams.get("dest_name");
-        dest_name = dest_name.replace(/\+/g, " ").replace(/_/g, " ").trim();
-        console.log("Map link clicked:", dest_name);
-        console.log("Current markers:", Object.keys(markers));        // ADD
-        console.log("highlightMarker exists:", typeof highlightMarker); // ADD
-        console.log("map object:", map);                      
-
-        if (typeof highlightMarker === "function") {
-            highlightMarker(dest_name);
-        } else {
-            console.error("highlightMarker not found — is map.js loaded?");
-        }
+        const url = e.target.href;
+        console.log("Map link clicked:", url);
+        window.open(url, '_blank');  // opens in new tab
     }
 });
 

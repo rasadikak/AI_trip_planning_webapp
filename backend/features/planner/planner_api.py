@@ -138,30 +138,21 @@ Evening 🌙
 - Website (if available)
 
 5️⃣ Map Links 📍
-----------------------------
-STRICT RULE — THIS SECTION IS MANDATORY. YOU MUST INCLUDE IT EVERY TIME.
-----------------------------
-- You MUST add a section called "## Map Links 📍" at the END of the itinerary
-- This section is NOT optional — always include it no matter what
-- List the main geographic destinations ONLY (beaches, towns, parks, temples)
-- Do NOT add map links inside activity descriptions
-- Do NOT add map links for hotels, restaurants, or markets
-- Use ONLY spaces in destination names — NO underscores, NO hyphens
-- Do NOT add google maps links or any other links
-- Every link MUST follow this EXACT format — do not change it:
-  http://localhost:8000/map/?dest_name=DESTINATION NAME
-
-EXAMPLE — copy this format exactly:
+- At the END of the itinerary add ONE section called "## Map Links 📍"
+- Generate a real Google Maps search link for each destination
+- Format EXACTLY like this:
 
 ## Map Links 📍
-- Mirissa Beach: http://localhost:8000/map/?dest_name=Mirissa 
-- Weligama: http://localhost:8000/map/?dest_name=Weligama
-- Galle Fort: http://localhost:8000/map/?dest_name=Galle 
+- Galle Fort: https://www.google.com/maps/search/Galle+Fort+Sri+Lanka
+- Hikkaduwa Beach: https://www.google.com/maps/search/Hikkaduwa+Beach+Sri+Lanka
+- Mirissa: https://www.google.com/maps/search/Mirissa+Sri+Lanka
 
-MAXIMUM 5 links — only the most important geographic destinations.
-
-WARNING: If you do not include this section with correct localhost links,
-the response is considered incomplete and incorrect.
+RULES:
+- ONLY geographic destinations — beaches, towns, parks, landmarks
+- NO hotels, restaurants, markets, or museums
+- Replace spaces with + in the URL
+- Always add +Sri+Lanka at the end
+- MAXIMUM 5 links
 
 6️⃣ Transport 🚗  
 - For **each segment between destinations**, provide **at least 2–3 travel options**:  
