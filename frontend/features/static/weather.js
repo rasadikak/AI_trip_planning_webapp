@@ -66,7 +66,11 @@ resultDiv.innerHTML = `
     </div>
 `;
     }catch(error){
-        resultDiv.innerHTML = `<p style="color:red;">❌ ${error.message}</p>`;
-        showToast("❌ " + error.message, "error");
+        console.error("weather error:", error.message);
+        const userMessage= error.message.includes("fetch") || error.message.includes("Failed")
+                        ? "Network Connection Error — please check your connection" 
+                        : error.message;
+        resultDiv.innerHTML= `<p style= "color:red;"> ❌ ${userMessage} </p>`
+        showToast("❌"+ userMessage, "error");
     }
 });

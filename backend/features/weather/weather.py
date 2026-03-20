@@ -13,7 +13,7 @@ def weather_api(place:str=Form(...)):
         print("try first")
         url= f"https://wttr.in/{place}?format=j1"
         print(url)
-        response = requests.get(url, timeout=5, headers={"User-Agent": "serendib-trip-app"})
+        response = requests.get(url, timeout=20, headers={"User-Agent": "serendib-trip-app"})
         print("response", response)
         print("status:", response.status_code)
         if response.status_code != 200:
@@ -26,7 +26,7 @@ def weather_api(place:str=Form(...)):
         location = nearest.get("areaName",  [{"value": place}])[0]["value"]
         region   = nearest.get("region",    [{"value": "Sri Lanka"}])[0]["value"]
 
-        rreturn {
+        return {
             "location"  : location,
             "region"    : region,
             "temp_c"    : current["temp_C"],
