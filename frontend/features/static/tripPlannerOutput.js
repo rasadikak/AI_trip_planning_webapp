@@ -25,8 +25,20 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
         resultDiv.innerHTML = marked.parse(result["response"]);
         console.log("5");
 
-        const firstLine = result["response"].split('\n').find(line => line.trim() !== '');
-        const destination = firstLine.replace(/[#*]/g, '').trim();
+        const mapLinkMatch = result["response"].match(/dest_name=([^)\s\n&]+)/);
+        let destination = "";
+
+        if (mapLinkMatch) {
+        // Use first map link destination name
+            destination = decodeURIComponent(mapLinkMatch[1])
+                .replace(/\+/g, " ")
+                .replace(/_/g, " ")
+                .trim();
+        } else {
+            // Fallback — use destination type from form
+            const destType = document.getElementById("destinationType").value;
+            destination = destType.charAt(0).toUpperCase() + destType.slice(1);
+        }
         console.log("Destination:", destination);
 
         
