@@ -272,3 +272,72 @@ travel_calendar.html — calendar with trips:
 Date picker to add a trip date
 List of upcoming trips
 Email reminder settings
+
+
+
+Here are some feature suggestions that fit well with your existing project:
+
+---
+
+**🌤️ Weather Widget — Easy ✅**
+
+Since you already have a weather API key, add a standalone weather widget on the trip planner page. User types a destination and gets current weather — temperature, condition, humidity, wind. Very useful for trip planning and only takes 30 minutes to build since the API is already set up.
+
+---
+
+**💱 Currency Converter — Easy ✅**
+
+Add a simple LKR converter on the trip planner page. User enters an amount in their currency (USD, EUR, GBP, INR) and sees the LKR equivalent. Useful since your itineraries show costs in LKR. Free exchange rate APIs available with no API key needed.
+
+---
+
+**⭐ Destination Rating — Medium**
+
+After viewing a saved plan, let users rate destinations they visited (1-5 stars) and add a short review. Shows rated destinations on their profile. Connects well with your existing favourites feature.
+
+---
+
+**🔍 Destination Search Page — Medium**
+
+A standalone page where users can search any Sri Lankan destination and see:
+- Description
+- Best time to visit
+- Weather
+- Google Maps link
+- Option to save to favourites
+
+Uses your existing chatbot backend to generate the description.
+
+---
+
+**📊 Trip Budget Calculator — Medium**
+
+Based on the LLM itinerary output, automatically parse all the costs mentioned and show a total budget breakdown:
+
+```
+Accommodation: LKR 8,000
+Food: LKR 2,500
+Activities: LKR 6,000
+Transport: LKR 500
+─────────────────────
+Total: LKR 17,000
+Per person: LKR 17,000
+```
+
+This is very useful and connects directly to your existing planner output.
+
+---
+
+**🌍 Sri Lanka Destinations Gallery — Easy ✅**
+
+A simple page showing all major Sri Lankan destinations with images, short descriptions and a "Plan a trip here" button that pre-fills the trip planner form with that destination type. Good for users who don't know where to go.
+
+---
+
+**My top 3 recommendations for your project:**
+
+1. **Weather Widget** — already have the API, easy to build, genuinely useful
+2. **Budget Calculator** — directly connected to your existing planner output, high value
+3. **Destination Gallery** — good landing page feature, makes the app feel complete
+
+Which of these interests you most?
