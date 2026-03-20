@@ -3,12 +3,11 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
     console.log("1");
     const resultDiv = document.getElementById("tripResult");
     console.log("2");
-    resultDiv.innerHTML = "Creating your Sri Lankan adventure... Please wait. 🐘"; // Loading state
+    resultDiv.innerHTML = "Creating your Sri Lankan adventure... Please wait. 🐘";
     console.log("3");
 
-     // allow browser to repaint
     await new Promise(resolve => setTimeout(resolve, 50));
-    
+
     try {
         const formData = new FormData(e.target);
         console.log("4");
@@ -17,61 +16,80 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
             body: formData
         });
 
-        if (!response.ok) throw new Error("Server responded with an error, try again later");
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || "Server responded with an error");
+        }
 
         const result = await response.json();
-        console.log(result)
-        // result["trip plan"] matches your Python return key
+        console.log(result);
+
         resultDiv.innerHTML = marked.parse(result["response"]);
         console.log("5");
 
+        // Add ⭐ button next to every map link
+        const mapLinks = resultDiv.querySelectorAll('a[href*="dest_name"]');
+        mapLinks.forEach(link => {
+            const linkUrl = new URL(link.href);
+            let destName = linkUrl.searchParams.get("dest_name");
+            destName = destName.replace(/\+/g, " ").replace(/_/g, " ").trim();
+
+            const starBtn = document.createElement("button");
+            starBtn.innerText = "⭐";
+            starBtn.title = `Save ${destName} to favourites`;
+            starBtn.style.marginLeft = "6px";
+            starBtn.style.padding = "2px 8px";
+            starBtn.style.cursor = "pointer";
+            starBtn.style.fontSize = "0.85rem";
+            starBtn.style.border = "1px solid #ccc";
+            starBtn.style.borderRadius = "4px";
+            starBtn.style.background = "#fffde7";
+            starBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                saveDestination(destName);
+            };
+
+            link.insertAdjacentElement("afterend", starBtn);
+        });
+
+        // Extract first destination for Save Plan button
         const mapLinkMatch = result["response"].match(/dest_name=([^)\s\n&]+)/);
         let destination = "";
 
         if (mapLinkMatch) {
-        // Use first map link destination name
             destination = decodeURIComponent(mapLinkMatch[1])
                 .replace(/\+/g, " ")
                 .replace(/_/g, " ")
                 .trim();
         } else {
-            // Fallback — use destination type from form
             const destType = document.getElementById("destinationType").value;
             destination = destType.charAt(0).toUpperCase() + destType.slice(1);
         }
         console.log("Destination:", destination);
 
-        
+        // Save Plan button at bottom
         const buttonDiv = document.createElement("div");
         buttonDiv.style.marginTop = "20px";
         buttonDiv.style.display = "flex";
         buttonDiv.style.gap = "10px";
-        console.log("buttons creted");
-
-        const favouriteButton = document.createElement("button");
-        favouriteButton.innerText = "⭐ Save Destination";
-        console.log("fav buttons creted");
-        favouriteButton.onclick = () => saveDestination(destination);
-        console.log("fav buttons creted 2");
-
 
         const savePlanButton = document.createElement("button");
-        savePlanButton.innerText = "💾 Save Plan";   
-        console.log("save plan buttons creted");
+        savePlanButton.innerText = "💾 Save Plan";
         savePlanButton.onclick = () => savePlan(result["response"], destination);
-        console.log("save plan buttons creted 2");
 
-        buttonDiv.appendChild(favouriteButton);
-        console.log("button appended 1");
         buttonDiv.appendChild(savePlanButton);
-        console.log("button appended 2");
         resultDiv.appendChild(buttonDiv);
-        console.log("button appended 3");
+        console.log("buttons added");
 
     } catch (error) {
         resultDiv.innerHTML = "Error: " + error.message;
     }
 });
+
+
+
+
 
 document.getElementById("tripResult").addEventListener("click", function(e) {
     if (e.target.tagName === 'A' && e.target.href.includes("dest_name")) {
