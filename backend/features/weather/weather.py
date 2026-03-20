@@ -14,7 +14,9 @@ def weather_api(place:str=Form(...)):
         url= f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={place}"
         print(url)
         response= requests.get(url)
+        print("response", response)
         data= response.json()
+        print("data", data)
         if "error" in data:
             raise HTTPException(status_code=404, detail=f"destination not found")
         print(data)
