@@ -13,8 +13,8 @@ router = APIRouter(prefix='/pdf', tags=['pdf'])
 
 # Path check
 emoji_font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'NotoEmoji-Regular.ttf')
-print("Emoji font path:", emoji_font_path)
-print("Exists:", os.path.exists(emoji_font_path))
+#print("Emoji font path:", emoji_font_path)
+#print("Exists:", os.path.exists(emoji_font_path))
 
 emoji_pattern = re.compile(
     "["
@@ -79,7 +79,7 @@ def pdf_generate(data: str):
 
 @router.post('/')
 async def download_pdf(request: PDFRequest):
-    print("api loaded")
+    #print("api loaded")
     pdf_data = pdf_generate(request.text)
     return StreamingResponse(
         pdf_data,

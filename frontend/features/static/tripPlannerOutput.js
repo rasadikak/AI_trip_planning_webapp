@@ -1,17 +1,17 @@
 document.getElementById("tripForm").addEventListener("submit", async function(e) {
     e.preventDefault();
-    console.log("1");
+    //console.log("1");
     const resultDiv = document.getElementById("tripResult");
-    console.log("2");
+    //console.log("2");
     resultDiv.innerHTML = "Creating your Sri Lankan adventure... Please wait. 🐘";
-    console.log("3");
+    //console.log("3");
 
     await new Promise(resolve => setTimeout(resolve, 50));
 
     try {
         const formData = new FormData(e.target);
-        console.log("4");
-        const response = await fetch("http://127.0.0.1:8000/planner_api/", {
+        //console.log("4");
+        const response = await fetch(`${API_BASE}/planner_api/`, {
             method: "POST",
             body: formData
         });
@@ -22,10 +22,10 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
         }
 
         const result = await response.json();
-        console.log(result);
+        //console.log(result);
 
         resultDiv.innerHTML = marked.parse(result["response"]);
-        console.log("5");
+        //console.log("5");
 
         // Add ⭐ button next to every map link
         const mapLinks = resultDiv.querySelectorAll('a[href*="google.com/maps"]');
@@ -70,7 +70,7 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
             const destType = document.getElementById("destinationType").value;
             destination = destType.charAt(0).toUpperCase() + destType.slice(1);
         }
-        console.log("Destination:", destination);
+        //console.log("Destination:", destination);
 
         // Save Plan button at bottom
         const buttonDiv = document.createElement("div");
@@ -84,11 +84,11 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
 
         buttonDiv.appendChild(savePlanButton);
         resultDiv.appendChild(buttonDiv);
-        console.log("buttons added");
+        //console.log("buttons added");
 
         // AUTO LOAD ALL MAP LINKS — shows full trip overview on map
         if (typeof loadAllMapLinks === "function") {
-            console.log("Loading all map links...");
+            //console.log("Loading all map links...");
             loadAllMapLinks();
         }
 
@@ -102,7 +102,7 @@ document.getElementById("tripResult").addEventListener("click", function(e) {
     if (e.target.tagName === 'A' && e.target.href.includes("google.com/maps")) {
         e.preventDefault();
         const url = e.target.href;
-        console.log("Map link clicked:", url);
+        //console.log("Map link clicked:", url);
         window.open(url, '_blank');  // opens in new tab
     }
 });
@@ -111,11 +111,19 @@ async function saveDestination(destination) {
     try {
         const formData = new FormData();
         formData.append("destination", destination);
-        const response = await fetch("http://127.0.0.1:8000/favDestination/", {
+        const response = await fetch(`${API_BASE}/favDestination/`, {
             method: "POST",
             body: formData,
             credentials: "include"
         });
+        if (response.status==401){
+            showToast("⚠️ Session timed out — please log in again","error");
+            setTimeout(()=>{
+                window.location.href=`${API_BASE}/frontend/home/login.html`;
+
+            }, 2000); //// redirect to login after 2 seconds
+            return;
+        }
         if (!response.ok) {
             const errData = await response.json();
             showToast(errData.detail, "error");
@@ -130,17 +138,25 @@ async function saveDestination(destination) {
 async function savePlan(plan, destination) {
     try {
         const formData = new FormData();
-        console.log("save plan 1");
+        //console.log("save plan 1");
         formData.append("destination", destination);
-        console.log("save plan 2");
+        //console.log("save plan 2");
         formData.append("plan", plan);
-        console.log("save plan 3");
-        const response = await fetch("http://127.0.0.1:8000/savedPlans/", {
+        //console.log("save plan 3");
+        const response = await fetch(`${API_BASE}/savedPlans/`, {
             method: "POST",
             body: formData,
             credentials: "include"
         });
-        console.log("save plan 4");
+        if (response.status==401){
+            showToast("⚠️ Session timed out — please log in again","error");
+            setTimeout(()=>{
+                window.location.href=`${API_BASE}/frontend/home/login.html`;
+
+            }, 2000); //// redirect to login after 2 seconds
+            return;
+        }
+        //console.log("save plan 4");
         if (!response.ok) {
             const errData = await response.json();
             showToast(errData.detail || "Failed to save plan", "error");

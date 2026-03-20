@@ -44,34 +44,34 @@ router= APIRouter(prefix='/img_based_search',tags=['img_based_search'])
 
 @router.post('/')
 async def img_based_search(img:UploadFile= File(...)):
-    print("hiii")
+    #print("hiii")
     img_bytes= await img.read()
-    print("hi 2")
+    #print("hi 2")
     PIL_img= Image.open(io.BytesIO(img_bytes)).convert('RGB')
-    print("hi 3")
+    #print("hi 3")
     #Image.open() expects a file-like object. BytesIO?It converts raw bytes into a fake in-memory file.
     image_input= preprocess(PIL_img).unsqueeze(0).to(device)# WE SHOULD GIVE A PIL IMAGE TO PREPROCESS 
-    print("hi 4")
+    #print("hi 4")
     with torch.no_grad(): # we are not training a model, so torch.no grad, (only output, no  training the model)
         embedding= model.encode_image(image_input) 
-        print("hi 5") #That operation is using PyTorch tensors.
+        #print("hi 5") #That operation is using PyTorch tensors.
         embedding= embedding/embedding.norm(dim=-1, keepdim=True)
-    print("hi 6")
+    #print("hi 6")
     embedding= embedding.cpu().numpy()
-    print("hi 7")
+    #print("hi 7")
     D,I= index.search(embedding, k=3)
-    print("hi 8")
+    #print("hi 8")
 
     results=[]
     for idx in I[0]:
         #if idx < len(file_paths):
-           print("hi 9")
+           #print("hi 9")
            results.append({
             "label": all_labels[idx],
             "image_url": f"/dataset/{file_paths[idx]}"  # use relative path
         })
-    print("hi 10")
-    print(results)
+    #print("hi 10")
+    #print(results)
     return {"results":results}
     
     

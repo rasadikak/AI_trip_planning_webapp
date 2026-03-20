@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', async function(e){
+document.addEventListener('DOMContentLoaded', async function(){
     const planList = document.getElementById("planList");
     try{
    
-    const response= await fetch('http://127.0.0.1:8000/savedPlans/get',{
+    const response= await fetch(`${API_BASE}/savedPlans/get`,{
         "method":"GET",
         "credentials":"include"
     });
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function(e){
     if (response.status==401){
             showToast("⚠️ Session timed out — please log in again","error");
             setTimeout(()=>{
-                window.location.href="http://127.0.0.1:8000/frontend/home/login.html";
+                window.location.href=`${API_BASE}/frontend/home/login.html`;
 
             }, 2000); //// redirect to login after 2 seconds
             return;
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async function(e){
     planList.appendChild(div);
 });
     }catch(error){
-        console.error("Error:", error);
+        //console.error("Error:", error);
         planList.innerHTML = "<p>Error loading saved plans: " + error.message + "</p>";
     }
 });

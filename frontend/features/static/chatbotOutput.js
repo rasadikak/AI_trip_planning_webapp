@@ -1,17 +1,17 @@
 async function sendChat() {
-    console.log("sendChat() called");
+    //console.log("sendChat() called");
     const input = document.getElementById("chatInput");
     const chatBox = document.getElementById("chatBox");
     const sendBtn = document.getElementById("send-btn");
-    console.log("input:", input);
-    console.log("chatBox:", chatBox);
-    console.log("sendBtn:", sendBtn);
+    //console.log("input:", input);
+    //console.log("chatBox:", chatBox);
+    //console.log("sendBtn:", sendBtn);
 
     const userText = input.value.trim();
-    console.log("userText:", userText);
+    //console.log("userText:", userText);
 
     if (!userText) {
-        console.log("Empty input, returning");
+        //console.log("Empty input, returning");
         return;
     }
 
@@ -21,10 +21,10 @@ async function sendChat() {
     chatBox.scrollTop = chatBox.scrollHeight;
 
     sendBtn.disabled = true;
-    console.log("Send button disabled");
+    //console.log("Send button disabled");
 
     const thinkingId = "thinking_" + Date.now();
-    console.log("thinkingId:", thinkingId);
+    //console.log("thinkingId:", thinkingId);
 
     chatBox.innerHTML += `
         <div class="message bot-message" id="${thinkingId}">
@@ -36,14 +36,14 @@ async function sendChat() {
             </div>
         </div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
-    console.log("Thinking animation added");
+    //console.log("Thinking animation added");
 
     try {
         const formdata = new FormData();
         formdata.append("chatInput", userText);
-        console.log("Sending fetch to chatbot API...");
+        //console.log("Sending fetch to chatbot API...");
 
-        const response = await fetch("http://127.0.0.1:8000/chatbot/", {
+        const response = await fetch(`${API_BASE}/chatbot/`, {
             method: "POST",
             body: formdata,
             credentials: "include" // Include cookies for authentication
@@ -51,38 +51,38 @@ async function sendChat() {
         if (response.status==401){
             showToast("⚠️ Session timed out — please log in again","error");
             setTimeout(()=>{
-                window.location.href="http://127.0.0.1:8000/frontend/home/login.html";
+                window.location.href=`${API_BASE}/frontend/home/login.html`;
 
             }, 2000); //// redirect to login after 2 seconds
             return;
         }
-        console.log("Response received:", response.status, response.ok);
+        //console.log("Response received:", response.status, response.ok);
 
         if (!response.ok) throw new Error("Server error: " + response.status);
 
         const result = await response.json();
-        console.log("Result:", result);
+        //console.log("Result:", result);
 
         document.getElementById(thinkingId)?.remove();
-        console.log("Thinking animation removed");
+        //console.log("Thinking animation removed");
 
         appendMessage("bot", result.response);
-        console.log("Bot message appended");
+        //console.log("Bot message appended");
 
     } catch (error) {
-        console.error("Error in sendChat:", error);
+        //console.error("Error in sendChat:", error);
         document.getElementById(thinkingId)?.remove();
         appendMessage("bot", "Sorry, something went wrong. Please try again.");
         showToast("❌ Something went wrong. Please try again.", "error");
     }
 
     sendBtn.disabled = false;
-    console.log("Send button re-enabled");
+    //console.log("Send button re-enabled");
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function appendMessage(role, text) {
-    console.log("appendMessage called — role:", role);
+    //console.log("appendMessage called — role:", role);
     const chatBox = document.getElementById("chatBox");
     const isUser = role === "user";
 
@@ -101,7 +101,7 @@ function appendMessage(role, text) {
     div.appendChild(bubble);
     chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
-    console.log("appendMessage done");
+    //console.log("appendMessage done");
 }
 
 function escapeHtml(text) {
@@ -112,10 +112,10 @@ function escapeHtml(text) {
 }
 
 function handleChatKey(event) {
-    console.log("Key pressed:", event.key);
+    //console.log("Key pressed:", event.key);
     if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
-        console.log("Enter pressed — calling sendChat()");
+        //console.log("Enter pressed — calling sendChat()");
         sendChat();
     }
 }
@@ -126,7 +126,7 @@ function autoResize(textarea) {
 }
 
 function clearChat() {
-    console.log("clearChat() called");
+    //console.log("clearChat() called");
     const chatBox = document.getElementById("chatBox");
     chatBox.innerHTML = `
         <div class="message bot-message">
@@ -135,8 +135,8 @@ function clearChat() {
                 <p>Chat cleared! How can I help you with your Sri Lanka trip? 🌴</p>
             </div>
         </div>`;
-    console.log("Chat cleared");
+    //console.log("Chat cleared");
     showToast("🗑️ Chat cleared", "info");
 }
 
-console.log("chatbotOutput.js loaded successfully");
+//console.log("chatbotOutput.js loaded successfully");

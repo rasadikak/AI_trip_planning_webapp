@@ -7,9 +7,9 @@ router= APIRouter(prefix='/signout')
 
 @router.api_route('/', methods=['GET','POST'])
 def signout(response:Response):
-    print("one")
+    #print("one")
     response.delete_cookie(key='access_token')
-    print("seco")
+    #print("seco")
     return RedirectResponse(url='/frontend/home/home.html', status_code=status.HTTP_302_FOUND)
     
 

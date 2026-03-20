@@ -26,6 +26,8 @@ HF_TOKEN=os.getenv("HF_TOKEN")
 
 WEATHER_API=os.getenv("WEATHER_API")
 
+BASE_URL= os.getenv("BASE_URL")
+
 class Settings(BaseSettings):
     MAIL_USERNAME: str
     MAIL_PASSWORD: str
@@ -53,6 +55,8 @@ class Settings(BaseSettings):
     HF_TOKEN:str
 
     WEATHER_API:str
+
+    BASE_URL:str
 
     class Config:
         env_file = ".env"

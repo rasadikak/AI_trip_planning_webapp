@@ -14,7 +14,7 @@ router= APIRouter(prefix='/register', tags=['register'])
 
 @router.get('/test')
 def msg():
-    print("fff")
+    #print("fff")
     return 'bye'
 
 
@@ -43,18 +43,18 @@ def validate_user(name: str= Form(...), email: str= Form(...),password: str= For
 
 @router.post('/', status_code= status.HTTP_200_OK, response_model= schemas.UserResponse)
 async def create_user(db:Session=Depends(database.get_db),user=Depends(validate_user)):
-    print("before")
+    #print("before")
     hashed_pw= utils.hash(user['password'])
-    print("pw hashed suucessfully")
+    #print("pw hashed suucessfully")
     new_user= orm_model.User(name=user['name'], email=user['email'],password=hashed_pw)
-    print("new user cretaed successfully")
+    #print("new user cretaed successfully")
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     if new_user.is_verified== False:
         await email_verify_for_signup.send_mail(new_user.email,db)
         print("sent mail successufully")
-    print("after")
+    #print("after")
     return RedirectResponse(url='/frontend/home/check_your_mail.html', status_code=302)
     
     

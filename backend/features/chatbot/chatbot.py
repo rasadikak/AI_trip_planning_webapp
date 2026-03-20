@@ -50,7 +50,7 @@ system_prompt={
 
 @router.post('/')
 def chatbot(db:Session=Depends((database.get_db)),chatInput:str=Form(...),  current_user =Depends(oauth2.current_user_cookie)): 
-    print(current_user.id)
+    #print(current_user.id)
 
     db_history=db.query(orm_model.chatHistory).filter(orm_model.chatHistory.user_id==current_user.id).order_by(orm_model.chatHistory.created_at.asc()).limit(20).all()
     
@@ -59,7 +59,7 @@ def chatbot(db:Session=Depends((database.get_db)),chatInput:str=Form(...),  curr
         for row in db_history   #converts rows of db query into a list of dictionaries with 'role' and 'content' keys
     ]
 
-    print(chatInput)
+    #print(chatInput)
 
     history_messages.append({
         "role": "user",
@@ -96,7 +96,7 @@ def chatbot(db:Session=Depends((database.get_db)),chatInput:str=Form(...),  curr
     
     
     
-    print(response)
+    #print(response)
     return {"response": response}
 
 

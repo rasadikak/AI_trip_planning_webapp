@@ -15,28 +15,33 @@ function getWeatherEmoji(condition) {
 document.getElementById("weather_form").addEventListener("submit", async function(e){
     e.preventDefault();
     const resultDiv=document.getElementById("weather-result");
-    console.log("weather 1");
+    resultDiv.innerHTML = `<p style="color:blue;">⏳ Getting weather...</p>`;
+    //console.log("weather 1");
     try{
     const place = document.getElementById("weather-input").value.trim();
-    print(place)
-    if (!place){throw new Error("first input a place")}
-    console.log("weather 2");
-    const formdata= new FormData(e.target);
-    console.log("weather 3");
+    
+    if (!place) {
+        showToast("⚠️ Please enter a destination first", "warning");
+        return;
+    }
+
+    //console.log("weather 2");
+    const formdata= new FormData();
+    //console.log("weather 3");
     formdata.append("place",place);
-    const response =await fetch("http://127.0.0.1:8000/weather/",{
+    const response =await fetch(`${API_BASE}/weather/`,{
         "method":"POST",
         "body": formdata
     });
-    console.log("weather 4");
+    //console.log("weather 4");
 
     if (!response.ok) {
             const err = await response.json();
             throw new Error(err.detail || "Failed to fetch weather");
     }
-    console.log("weather 5");
+    //console.log("weather 5");
     const data= await response.json();
-    console.log("weather 6");
+    //console.log("weather 6");
     
     
     const emoji = getWeatherEmoji(data.condition);
@@ -66,11 +71,11 @@ resultDiv.innerHTML = `
     </div>
 `;
     }catch(error){
-        console.error("weather error:", error.message);
+        //console.error("weather error:", error.message);
         const userMessage= error.message.includes("fetch") || error.message.includes("Failed")
                         ? "Network Connection Error — please check your connection" 
                         : error.message;
         resultDiv.innerHTML= `<p style= "color:red;"> ❌ ${userMessage} </p>`
-        showToast("❌"+ userMessage, "error");
+        showToast("❌ "+ userMessage, "error");
     }
 });

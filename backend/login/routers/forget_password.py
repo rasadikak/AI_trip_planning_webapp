@@ -5,7 +5,7 @@ from backend.login import database,orm_model,utils
 from datetime import datetime, timedelta
 from fastapi.responses import RedirectResponse
 from backend.login.routers.send_reset_email import send_reset_email
-from backend.config import ALGORITHM2, SECRET_KEY2, ACCESS_TOKEN_EXPIRE_TIME2
+from backend.config import ALGORITHM2, SECRET_KEY2, ACCESS_TOKEN_EXPIRE_TIME2, BASE_URL
 
 router= APIRouter(prefix='/reset_pw')
 
@@ -37,16 +37,16 @@ def verify_reset_token(token: str):
 
 @router.post('/request_reset')
 async def request_reset(email:str =Form(...),db:Session=Depends(database.get_db)):
-    print("hi")
+    #print("hi")
     user= db.query(orm_model.User).filter(orm_model.User.email==email).first()
     if not user:
         raise HTTPException(status_code= 404, detail=f'user does not exist in db')
     if user:
-        print("user exists")
+        #print("user exists")
         token= create_token({"user_id": user.id})
         
         #print({"token":token})
-        reset_link=f"http://127.0.0.1:8000/reset_pw/reset_link?token={token}"
+        reset_link=f"{BASE_URL}/reset_pw/reset_link?token={token}"
         await send_reset_email(email, reset_link)
 
         return {"msg": "Password reset email sent successfully"}

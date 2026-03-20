@@ -49,7 +49,7 @@ def weather(dest_name:str):
         response = requests.get(url)
         return response.json()
     except Exception as e:
-        print(f"Error fetching weather data for {dest_name}: {e}")
+        #print(f"Error fetching weather data for {dest_name}: {e}")
         return {"error": str(e)}
 
 weather_tool= Tool(
@@ -73,9 +73,9 @@ def trip_planner_api(destinationType:str= Form(...),
                     numPeople:int=Form(...),accommodation:str=Form(...),
                     foodPreference:List[str]=Form([])): 
     
-    print(foodPreference)
+    #print(foodPreference)
     food_pref_string= ", ".join(foodPreference)
-    print(food_pref_string)
+    #print(food_pref_string)
 
     question = f"""
 You are a professional Sri Lanka travel planner ✈️🌴.
@@ -243,7 +243,7 @@ IMPORTANT
 
     except Exception as e:
         # Catch all other unexpected errors
-        print(f"Unexpected error in trip_planner_api: {e}")
+        #print(f"Unexpected error in trip_planner_api: {e}")
         raise HTTPException(
             status_code=500,
             detail="Something went wrong while generating your trip plan. Please try again."

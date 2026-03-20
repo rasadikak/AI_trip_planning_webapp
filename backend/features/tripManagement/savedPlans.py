@@ -9,10 +9,10 @@ def saved_plans(destination:str=Form(...),
                 plan:str=Form(...),
                 db:Session=Depends(database.get_db), 
                 current_user=Depends(oauth2.current_user_cookie)):
-    print("save plan api loaded")
+    #print("save plan api loaded")
     
     user_id= current_user.id
-    print(user_id)
+    #print(user_id)
 
     existing = db.query(orm_model.savedPlans)\
         .filter(
@@ -26,11 +26,11 @@ def saved_plans(destination:str=Form(...),
     if user_id is None:
         raise HTTPException(status_code= 404, detail=f'user not found')
     plan_obj= orm_model.savedPlans(user_id=user_id,  destination=destination, plan=plan)
-    print("plan obj created")
+    #print("plan obj created")
     db.add(plan_obj)
-    print("plan added to db")
+    #print("plan added to db")
     db.commit()
-    print("ok final")
+    #print("ok final")
     return {"message": f"plan is saved"}
     
 
@@ -40,10 +40,10 @@ def saved_plans(destination:str=Form(...),
 @router.get('/get')
 def get_savedPlans(db:Session=Depends(database.get_db),
                         current_user= Depends(oauth2.current_user_cookie)):
-    print("get saved destinations api loaded")
+    #print("get saved destinations api loaded")
     user_id= current_user.id
     plans= db.query(orm_model.savedPlans).filter(orm_model.savedPlans.user_id==user_id).all()
-    print(plans)
+    #print(plans)
     return {"response":plans}
 
 

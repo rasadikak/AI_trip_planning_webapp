@@ -4,5 +4,5 @@ router= APIRouter(prefix='/profile', tags=['profile'])
 
 @router.get('/')
 def profile():
-    print('prof')
+    #print('prof')
     return 'prof'

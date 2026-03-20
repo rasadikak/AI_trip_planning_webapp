@@ -8,18 +8,18 @@ router= APIRouter(prefix='/weather', tags=['weather'])
 
 @router.post('/')
 def weather_api(place:str=Form(...)):
-    print("weather api loaded")
+    #print("weather api loaded")
     try:
-        print("try first")
+        #print("try first")
         url= f"https://wttr.in/{place}?format=j1"
-        print(url)
+        #print(url)
         response = requests.get(url, timeout=20, headers={"User-Agent": "serendib-trip-app"})
-        print("response", response)
-        print("status:", response.status_code)
+        #print("response", response)
+        #print("status:", response.status_code)
         if response.status_code != 200:
             raise HTTPException(status_code=404, detail="Destination not found")
         data= response.json()
-        print("keys:", list(data.keys()))
+        #print("keys:", list(data.keys()))
         current = data["current_condition"][0]
         
         nearest  = data.get("nearest_area", [{}])[0]
@@ -41,9 +41,9 @@ def weather_api(place:str=Form(...)):
     except HTTPException:
         raise
     except KeyError as e:
-        print(f"Missing key: {e}")
+        #print(f"Missing key: {e}")
         raise HTTPException(status_code=500, detail=f"Unexpected data format: {e}")
     except Exception as e:
-        print(f"Weather error: {e}")
+        #print(f"Weather error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 

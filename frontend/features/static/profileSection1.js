@@ -20,11 +20,15 @@ function get_cookie(name){
 
 
 document.addEventListener("DOMContentLoaded", function() {
+    try{
     const name = get_cookie("user_name");
     const email = get_cookie("user_email");
 
     document.getElementById("name").value = name;
     document.getElementById("email").value = email;
+    }catch(error){
+        showToast("❌ Failed to load profile: " + error.message, "error");
+    }
 });
 
 

@@ -10,14 +10,14 @@ router= APIRouter(prefix='/login', tags=['login'])
 
 @router.post('/')
 def login( user_credintials: OAuth2PasswordRequestForm = Depends(), db:Session= Depends(database.get_db)):
-    print("before ok")
+    #print("before ok")
     user= db.query(orm_model.User).filter(orm_model.User.email==user_credintials.username).first()
     if not user:
          raise HTTPException(status_code= 400, detail=f'email not found')
     
     verify_pw= utils.verify(user_credintials.password, user.password)
     if  verify_pw== False :
-            print("password wrong")
+            #print("password wrong")
             raise HTTPException(status_code= 400, detail=f'wrong password') 
     if not user.is_verified:
         raise HTTPException(status_code=403, detail="Email not verified")

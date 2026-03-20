@@ -8,10 +8,10 @@ router= APIRouter(prefix='/favDestination', tags=['favDestination'])
 def add_fav_destination(destination:str=Form(...), 
                         db:Session=Depends(database.get_db), 
                         current_user=Depends(oauth2.current_user_cookie)):
-    print("fav dest api loaded")
+    #print("fav dest api loaded")
     
     user_id= current_user.id
-    print(user_id)
+    #print(user_id)
 
     existing = db.query(orm_model.favouritePlaces)\
         .filter(
@@ -25,11 +25,11 @@ def add_fav_destination(destination:str=Form(...),
     if user_id is None:
         raise HTTPException(status_code= 404, detail=f'user not found')
     destination_obj= orm_model.favouritePlaces(user_id=user_id,  destination=destination)
-    print('dest obj created')
+    #print('dest obj created')
     db.add(destination_obj)
-    print('dest obj added to db')
+    #print('dest obj added to db')
     db.commit()
-    print('ok 2')
+    #print('ok 2')
     return {"message": f"{destination} added to favourites"}
 
 
@@ -39,10 +39,10 @@ def add_fav_destination(destination:str=Form(...),
 @router.get('/get')
 def get_favDestinations(db:Session=Depends(database.get_db),
                         current_user= Depends(oauth2.current_user_cookie)):
-    print("get fav destination api loaded")
+    #print("get fav destination api loaded")
     user_id= current_user.id
     destinations= db.query(orm_model.favouritePlaces).filter(orm_model.favouritePlaces.user_id==user_id).all()
-    print(destinations)
+    #print(destinations)
     if destinations:
         return {"response":destinations}
 
