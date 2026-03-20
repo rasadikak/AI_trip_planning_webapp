@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function(e){
     if (!response.ok) throw new Error("Failed to load: " + response.status);
     const data= await response.json();
     if (!data || !data.response || data.response.length === 0) {
-            favList.innerHTML = "<p>No saved plans yet.</p>";
+            planList.innerHTML = "<p>No saved plans yet.</p>";
             return;
 }
     
@@ -40,6 +40,13 @@ document.addEventListener('DOMContentLoaded', async function(e){
         planList.innerHTML = "<p>Error loading saved plans: " + error.message + "</p>";
     }
 });
+
+
+
+
+
+
+
 async function deletePlan(plan_id){
     try{
         const response = await fetch(`http://127.0.0.1:8000/savedPlans/delete/${plan_id}`, {
@@ -54,6 +61,16 @@ async function deletePlan(plan_id){
     showToast("Cannot delete plan: " + error.message, "error");
 }
 }
+
+
+
+
+
+
+
+
+
+
 async function downloadPDF(plan){
     
     
