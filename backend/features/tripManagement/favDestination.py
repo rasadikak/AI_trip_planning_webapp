@@ -49,7 +49,7 @@ def get_favDestinations(db:Session=Depends(database.get_db),
 
 
 
-@router.delete('/{fav_id}')
+@router.delete('/delete/{fav_id}')
 def delete_fav_destination(
     fav_id: int,
     db: Session = Depends(database.get_db),
