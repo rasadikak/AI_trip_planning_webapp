@@ -55,8 +55,8 @@ def deletePlan(plan_id:int ,db:Session=Depends(database.get_db),
                 current_user= Depends(oauth2.current_user_cookie)
                
                 ):
-    user_id= current_user.id
-    deleted_plan= db.query(orm_model.savedPlans).filter(orm_model.savedPlans.id==plan_id).first()
+    
+    deleted_plan= db.query(orm_model.savedPlans).filter(orm_model.savedPlans.id==plan_id, orm_model.savedPlans.user_id == current_user.id).first()
     db.delete(deleted_plan)
     db.commit()
     return {"response":"plan deleted successfully"}

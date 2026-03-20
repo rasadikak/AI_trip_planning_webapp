@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function(e){
+    const planList = document.getElementById("planList");
     try{
    
     const response= await fetch('http://127.0.0.1:8000/savedPlans/get',{
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async function(e){
             favList.innerHTML = "<p>No saved plans yet.</p>";
             return;
 }
-    const planList = document.getElementById("planList");
+    
     planList.innerHTML="";
     data.response.forEach(item => {
     const div = document.createElement("div");
