@@ -48,6 +48,14 @@ async function sendChat() {
             body: formdata,
             credentials: "include" // Include cookies for authentication
         });
+        if (response.status==401){
+            showToast("⚠️ Session timed out — please log in again","error");
+            setTimeout(()=>{
+                window.location.href="http://127.0.0.1:8000/frontend/home/login.html";
+
+            }, 2000); //// redirect to login after 2 seconds
+            return;
+        }
         console.log("Response received:", response.status, response.ok);
 
         if (!response.ok) throw new Error("Server error: " + response.status);

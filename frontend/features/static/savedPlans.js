@@ -6,6 +6,15 @@ document.addEventListener('DOMContentLoaded', async function(e){
         "method":"GET",
         "credentials":"include"
     });
+
+    if (response.status==401){
+            showToast("⚠️ Session timed out — please log in again","error");
+            setTimeout(()=>{
+                window.location.href="http://127.0.0.1:8000/frontend/home/login.html";
+
+            }, 2000); //// redirect to login after 2 seconds
+            return;
+        }
     if (!response.ok) throw new Error("Failed to load: " + response.status);
     const data= await response.json();
     if (!data || !data.response || data.response.length === 0) {
@@ -53,6 +62,15 @@ async function deletePlan(plan_id){
             method: "DELETE",
             credentials: "include"
         });
+
+        if (response.status==401){
+            showToast("⚠️ Session timed out — please log in again","error");
+            setTimeout(()=>{
+                window.location.href="http://127.0.0.1:8000/frontend/home/login.html";
+
+            }, 2000); //// redirect to login after 2 seconds
+            return;
+        }
         console.log("delete response:", response.status);
         if (!response.ok) throw new Error("Failed to delete");
         showToast("🗑️ Plan deleted successfully", "warning");
