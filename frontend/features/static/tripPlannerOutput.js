@@ -100,6 +100,9 @@ document.getElementById("tripResult").addEventListener("click", function(e) {
         let dest_name = url.searchParams.get("dest_name");
         dest_name = dest_name.replace(/\+/g, " ").replace(/_/g, " ").trim();
         console.log("Map link clicked:", dest_name);
+        console.log("Current markers:", Object.keys(markers));        // ADD
+        console.log("highlightMarker exists:", typeof highlightMarker); // ADD
+        console.log("map object:", map);                      
 
         if (typeof highlightMarker === "function") {
             highlightMarker(dest_name);
