@@ -1,5 +1,5 @@
 from fastapi import FastAPI,APIRouter, Form, HTTPException
-from backend.config import WEATHER_API
+#from backend.config import WEATHER_API
 import requests
 
 router= APIRouter(prefix='/weather', tags=['weather'])
@@ -11,9 +11,9 @@ def weather_api(place:str=Form(...)):
     print("weather api loaded")
     try:
         print("try first")
-        url= f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={place}"
+        url= f"https://wttr.in/{place}?format=j1"
         print(url)
-        response= requests.get(url)
+        response = requests.get(url, timeout=5)
         print("response", response)
         data= response.json()
         print("data", data)

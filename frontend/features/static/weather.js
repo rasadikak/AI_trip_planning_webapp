@@ -1,4 +1,14 @@
-
+function getWeatherEmoji(condition) {
+    condition = condition.toLowerCase();
+    if (condition.includes("sunny") || condition.includes("clear"))    return "☀️";
+    if (condition.includes("partly cloudy"))                           return "⛅";
+    if (condition.includes("cloudy") || condition.includes("overcast")) return "☁️";
+    if (condition.includes("rain") || condition.includes("drizzle"))   return "🌧️";
+    if (condition.includes("thunder") || condition.includes("storm"))  return "⛈️";
+    if (condition.includes("fog") || condition.includes("mist"))       return "🌫️";
+    if (condition.includes("snow"))                                    return "❄️";
+    return "🌤️";
+}
 
 
 
@@ -29,31 +39,32 @@ document.getElementById("weather_form").addEventListener("submit", async functio
     console.log("weather 6");
     
     
-    resultDiv.innerHTML = `
-            <div style="
-                border: 1px solid #ccc;
-                border-radius: 12px;
-                padding: 20px;
-                max-width: 400px;
-                background: #f9f9f9;
-            ">
-                <h3 style="margin:0 0 4px;">
-                    📍 ${data.location}, ${data.region}
-                </h3>
-                <img src="https:${data.icon}" alt="${data.condition}" 
-                     style="width:64px; height:64px;">
-                <h2 style="margin:0; font-size:2.5rem;">${data.temp_c}°C</h2>
-                <p style="margin:0; color:#555;">${data.condition}</p>
-                <hr style="margin:12px 0;">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                    <div>🌡️ Feels like: <b>${data.feels_like}°C</b></div>
-                    <div>💧 Humidity: <b>${data.humidity}%</b></div>
-                    <div>💨 Wind: <b>${data.wind_kph} km/h</b></div>
-                    <div>👁️ Visibility: <b>${data.visibility} km</b></div>
-                    <div>☀️ UV Index: <b>${data.uv_index}</b></div>
-                </div>
-            </div>
-        `;
+    const emoji = getWeatherEmoji(data.condition);
+
+resultDiv.innerHTML = `
+    <div style="
+        border: 1px solid #ccc;
+        border-radius: 12px;
+        padding: 20px;
+        max-width: 400px;
+        background: #f9f9f9;
+    ">
+        <h3 style="margin:0 0 4px;">
+            📍 ${data.location}, ${data.region}
+        </h3>
+        <div style="font-size:3rem; margin:8px 0;">${emoji}</div>
+        <h2 style="margin:0; font-size:2.5rem;">${data.temp_c}°C</h2>
+        <p style="margin:0; color:#555;">${data.condition}</p>
+        <hr style="margin:12px 0;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>🌡️ Feels like: <b>${data.feels_like}°C</b></div>
+            <div>💧 Humidity: <b>${data.humidity}%</b></div>
+            <div>💨 Wind: <b>${data.wind_kph} km/h</b></div>
+            <div>👁️ Visibility: <b>${data.visibility} km</b></div>
+            <div>☀️ UV Index: <b>${data.uv_index}</b></div>
+        </div>
+    </div>
+`;
     }catch(error){
         resultDiv.innerHTML = `<p style="color:red;">❌ ${error.message}</p>`;
         showToast("❌ " + error.message, "error");
