@@ -1,10 +1,10 @@
 import logging
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Request
 from fastapi.middleware.cors import CORSMiddleware
 from backend.login.routers import user_register,user_login, forget_password, signout, email_verify_for_signup,email_verify_for_login
 from fastapi.staticfiles import StaticFiles
 from backend.features.searchImage import search_img
-
+from backend import logger
 from backend.features.pdf import pdf
 from backend.features.profile import profile
 #from backend.features.planner import planner
@@ -13,9 +13,43 @@ from backend.features.planner import planner_api
 from backend.features.chatbot import chatbot
 from backend.features.tripManagement import favDestination, savedPlans
 from backend.config import BASE_URL
+import time
 
 app = FastAPI()
 router = APIRouter(prefix="/test")
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    response   = await call_next(request)
+    duration   = round(time.time() - start_time, 3)
+
+    logger.info(
+        f"{request.method} {request.url.path} "
+        f"status:{response.status_code} "
+        f"time:{duration}s"
+    )
+    return response
+
+@app.on_event("startup")
+async def startup():
+    logger.info("=" * 50)
+    logger.info("Serendib AI server started")
+    logger.info("=" * 50)
+
+@app.on_event("shutdown")
+async def shutdown():
+    logger.info("Serendib AI server stopped")
+
+
+
+
+
+
+
+
+
 
 
 
