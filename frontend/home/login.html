@@ -3,12 +3,23 @@
     <head>
         <meta charset="UTF-8">
        <title>log in</title>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+       <link rel="stylesheet" href="static/css/passwordToggle.css">
 
     </head>
     <body>
         <form id = 'LoginForm'  method="POST">
             email<input type="email" name="username" id="email" required><br>
-            password<input type="password" name="password" id="password" required><br>
+
+            <div class="password-box">
+                password<input type="password" id="password" name="password" required>
+                <i class="fa-solid fa-eye"
+                    id="eye_password"
+                    onclick="togglePassword('password', 'eye_password')">
+                </i>
+            </div>
+                    <br>
+            
             <a href="request_reset_pw.html">forget password?</a><br>
             <a href="verify_mail.html">didnt verify your email, then verify here</a><br>
             <input type="submit" name="login">
@@ -18,6 +29,7 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="static/toast.js"></script>
     <script src="static/refreshPage_home.js"></script>
+    <script src="static/passwordToggle.js"></script>
 
         <script>
             document.getElementById("LoginForm").action=  `${API_BASE}/login/`;
