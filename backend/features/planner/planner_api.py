@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Form, HTTPException
 import httpx
-from  dotenv import load_dotenv
+
 import requests
-import os
+
 from backend.config import HF_TOKEN, WEATHER_API
+from backend.logger import logger
 
 from typing import List
 from langchain_huggingface import HuggingFaceEndpoint
@@ -13,7 +14,7 @@ from langchain_core.tools import Tool
 from langchain_huggingface import ChatHuggingFace
 #from langchain.prompts import PromptTemplate
 
-load_dotenv()
+
 
 router= APIRouter(prefix="/planner_api", tags=['planner_api'])
 
@@ -50,6 +51,7 @@ def weather(dest_name:str):
         return response.json()
     except Exception as e:
         #print(f"Error fetching weather data for {dest_name}: {e}")
+        logger.warning(f"Weather tool failed for {dest_name}: {e}")
         return {"error": str(e)}
 
 weather_tool= Tool(
@@ -76,6 +78,7 @@ def trip_planner_api(destinationType:str= Form(...),
     #print(foodPreference)
     food_pref_string= ", ".join(foodPreference)
     #print(food_pref_string)
+    logger.info(f"Plan requested — type:{destinationType} days:{numDays} people:{numPeople} budget:{budget}")
 
     question = f"""
 You are a professional Sri Lanka travel planner ✈️🌴.
@@ -204,10 +207,12 @@ IMPORTANT
         
         )
         response = agent_executor.invoke({"input": question})
+        logger.info(f"Plan generated successfully — type:{destinationType} days:{numDays}")
         return {"response": response["output"]}
 
     except httpx.ConnectError:
         # Network issue — can't reach HuggingFace API
+        logger.error(f"HuggingFace unreachable — type:{destinationType} days:{numDays}")
         raise HTTPException(
             status_code=503,
             detail="Cannot connect to AI service. Please check your internet connection and try again."
@@ -215,6 +220,7 @@ IMPORTANT
 
     except httpx.TimeoutException:
         # Request took too long
+        logger.error(f"HuggingFace timeout — type:{destinationType} days:{numDays}")
         raise HTTPException(
             status_code=504,
             detail="AI service timed out. Please try again."
@@ -222,6 +228,7 @@ IMPORTANT
 
     except TimeoutError:
         # Agent exceeded max_execution_time=300
+        logger.warning(f"Plan generation timed out — days:{numDays}")
         raise HTTPException(
             status_code=504,
             detail="Trip plan generation timed out. Try reducing the number of days."
@@ -229,6 +236,7 @@ IMPORTANT
 
     except ValueError as e:
         # Bad input values
+        logger.warning(f"ValueError in planner: {e}")
         raise HTTPException(
             status_code=400,
             detail=f"Network connection error, try again later"
@@ -236,6 +244,7 @@ IMPORTANT
 
     except KeyError as e:
         # response["output"] key missing
+        logger.error(f"KeyError in planner — missing key: {e}")
         raise HTTPException(
             status_code=500,
             detail=f"Unexpected response from AI: {str(e)}"
@@ -244,12 +253,8 @@ IMPORTANT
     except Exception as e:
         # Catch all other unexpected errors
         #print(f"Unexpected error in trip_planner_api: {e}")
+        logger.critical(f"Planner crashed: {e} — type:{destinationType} days:{numDays}")
         raise HTTPException(
             status_code=500,
             detail="Something went wrong while generating your trip plan. Please try again."
         )
-
-    
-
-
- 
