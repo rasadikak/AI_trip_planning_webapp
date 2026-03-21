@@ -1,31 +1,35 @@
-from fastapi import FastAPI,APIRouter, Form, HTTPException
+from fastapi import FastAPI, APIRouter, Form, HTTPException
 #from backend.config import WEATHER_API
 import requests
+from backend.logger import logger
 
-router= APIRouter(prefix='/weather', tags=['weather'])
-
+router = APIRouter(prefix='/weather', tags=['weather'])
 
 
 @router.post('/')
-def weather_api(place:str=Form(...)):
+def weather_api(place: str = Form(...)):
     #print("weather api loaded")
+    logger.info(f"Weather requested — place:{place}")
     try:
         #print("try first")
-        url= f"https://wttr.in/{place}?format=j1"
+        url = f"https://wttr.in/{place}?format=j1"
         #print(url)
         response = requests.get(url, timeout=20, headers={"User-Agent": "serendib-trip-app"})
         #print("response", response)
         #print("status:", response.status_code)
         if response.status_code != 200:
+            logger.warning(f"Weather destination not found — place:{place} status:{response.status_code}")
             raise HTTPException(status_code=404, detail="Destination not found")
-        data= response.json()
+
+        data = response.json()
         #print("keys:", list(data.keys()))
-        current = data["current_condition"][0]
-        
+        current  = data["current_condition"][0]
+
         nearest  = data.get("nearest_area", [{}])[0]
         location = nearest.get("areaName",  [{"value": place}])[0]["value"]
         region   = nearest.get("region",    [{"value": "Sri Lanka"}])[0]["value"]
 
+        logger.info(f"Weather fetched successfully — place:{place} location:{location} temp:{current['temp_C']}°C")
         return {
             "location"  : location,
             "region"    : region,
@@ -42,8 +46,9 @@ def weather_api(place:str=Form(...)):
         raise
     except KeyError as e:
         #print(f"Missing key: {e}")
+        logger.error(f"Weather data format error — place:{place} missing key:{e}")
         raise HTTPException(status_code=500, detail=f"Unexpected data format: {e}")
     except Exception as e:
         #print(f"Weather error: {e}")
+        logger.error(f"Weather failed — place:{place} error:{e}")
         raise HTTPException(status_code=500, detail=str(e))
-
