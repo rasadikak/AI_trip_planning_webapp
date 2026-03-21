@@ -1,14 +1,15 @@
-from fastapi import APIRouter, Form, Depends
+from fastapi import APIRouter, Form, Depends, HTTPException
 from  dotenv import load_dotenv
 from sqlalchemy.orm import Session
-import requests
-import os
+
 from backend.config import HF_TOKEN
 from openai import OpenAI
 from backend.login import database,orm_model, oauth2
-from backend.login.routers import user_login
+#from backend.login.routers import user_login
+from backend.logger import logger
+import httpx
 
-load_dotenv()
+
 
 
 
@@ -19,7 +20,7 @@ router= APIRouter(prefix="/chatbot", tags=['chatbot'])
 
 
 
-messages=[]
+
 
 system_prompt={
          "role": "system",
@@ -49,55 +50,66 @@ system_prompt={
 }
 
 @router.post('/')
-def chatbot(db:Session=Depends((database.get_db)),chatInput:str=Form(...),  current_user =Depends(oauth2.current_user_cookie)): 
+def chatbot(db:Session=Depends(database.get_db),chatInput:str=Form(...),  current_user =Depends(oauth2.current_user_cookie)): 
     #print(current_user.id)
+    try:
+        logger.info(f"Chatbot request — user:{current_user.id}")
 
-    db_history=db.query(orm_model.chatHistory).filter(orm_model.chatHistory.user_id==current_user.id).order_by(orm_model.chatHistory.created_at.asc()).limit(20).all()
+        db_history=db.query(orm_model.chatHistory).filter(orm_model.chatHistory.user_id==current_user.id).order_by(orm_model.chatHistory.created_at.asc()).limit(20).all()
     
-    history_messages = [
-        {"role": row.role, "content": row.content}
-        for row in db_history   #converts rows of db query into a list of dictionaries with 'role' and 'content' keys
-    ]
+        history_messages = [
+            {"role": row.role, "content": row.content}
+            for row in db_history   #converts rows of db query into a list of dictionaries with 'role' and 'content' keys
+        ]
 
-    #print(chatInput)
+        logger.info(f"Chatbot input by user {current_user.id} — {chatInput}")
 
-    history_messages.append({
-        "role": "user",
-        "content": chatInput
-    })
+        history_messages.append({
+            "role": "user",
+            "content": chatInput
+        })
 
    
 
-    messages = [system_prompt] + history_messages
+        messages = [system_prompt] + history_messages
     
 
-    client = OpenAI(
-       base_url= url,
-       api_key=HF_TOKEN
+        client = OpenAI(
+            base_url= url,
+            api_key=HF_TOKEN
     )
 
     
 
-    completion = client.chat.completions.create(
-        model=model,
-        messages=messages
+        completion = client.chat.completions.create(
+            model=model,
+            messages=messages
        
-    )
+        )
 
-    response=completion.choices[0].message.content
+        response=completion.choices[0].message.content
 
     
 
-    user_content=orm_model.chatHistory(user_id= current_user.id, role="user", content=chatInput)
-    assistant_content=orm_model.chatHistory(user_id= current_user.id, role="assistant", content=response)
-    db.add(user_content)
-    db.add(assistant_content)
-    db.commit()
+        user_content=orm_model.chatHistory(user_id= current_user.id, role="user", content=chatInput)
+        assistant_content=orm_model.chatHistory(user_id= current_user.id, role="assistant", content=response)
+        db.add(user_content)
+        db.add(assistant_content)
+        db.commit()
     
     
     
-    #print(response)
-    return {"response": response}
+        logger.info(f"Chatbot response sent — user:{current_user.id}")
+        return {"response": response}
+    
+    except httpx.ConnectError:
+        logger.error(f"HuggingFace unreachable — user:{current_user.id}")
+        raise HTTPException(status_code=503, detail="Cannot connect to AI service")
+    
+    except Exception as e:
+        logger.critical(f"Chatbot crashed: {e} — user:{current_user.id}")
+        raise HTTPException(status_code=500, detail="Something went wrong")
+
 
 
 
