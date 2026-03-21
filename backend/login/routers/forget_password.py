@@ -44,7 +44,10 @@ async def request_reset(
 
         if not user:
             logger.warning(f"Reset failed — user not found: {email}")
-            raise HTTPException(status_code=404, detail=f'user does not exist in db')
+            return RedirectResponse(
+                url=f'/frontend/home/password_forget.html?token={token}&error=user_not_found',
+                status_code=302
+            )
 
         if user:
             #print("user exists")
@@ -53,7 +56,7 @@ async def request_reset(
             reset_link = f"{BASE_URL}/reset_pw/reset_link?token={token}"
             await send_reset_email(email, reset_link)
             logger.info(f"Password reset email sent — email:{email}")
-            return {"msg": "Password reset email sent successfully"}
+            return RedirectResponse(f"{BASE_URL}/frontend/home/check_your_mail.html", status_code=302)
 
     except HTTPException:
         raise
@@ -113,7 +116,7 @@ def forget_password(
                 db.refresh(user)
                 #print("congratssss")
                 logger.info(f"Password updated successfully — user:{user_id}")
-                return {"msg": "password updated successfully"}
+                return RedirectResponse(url='/frontend/home/login.html', status_code=302)
             else:
                 logger.warning(f"Password reset failed — passwords not similar user:{user_id}")
                 raise HTTPException(status_code=400, detail=f'passwords are not similar')

@@ -26,34 +26,34 @@ def validate_user(
 ):
     if password != confirm_password:
         logger.warning(f"Registration validation failed — passwords do not match email:{email}")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'passwords do not match')
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='passwords_not_match')
 
     if not re.fullmatch(r"[A-Za-z ]{3,}", name):
         logger.warning(f"Registration validation failed — invalid name: {name}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Name must be at least 3 characters and contain only letters and spaces"
+            detail="invalid_name"
         )
 
     if not re.fullmatch(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email):
         logger.warning(f"Registration validation failed — invalid email: {email}")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid email address")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid_email")
 
     existing_email = db.query(orm_model.User).filter(orm_model.User.email == email).first()
     if existing_email:
         logger.warning(f"Registration validation failed — email already exists: {email}")
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f'{email} exists')
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='email_exists')
 
     if not re.fullmatch(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$", password):
         logger.warning(f"Registration validation failed — weak password email:{email}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Password must be at least 8 characters long and include uppercase, lowercase, number, and special character"
+            detail="weak_password"
         )
 
     if len(password) > 64:
         logger.warning(f"Registration validation failed — password too long email:{email}")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Password too long (max 64 characters)")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="password_too_long")
 
     return {"name": name, "email": email, "password": password}
 
@@ -82,11 +82,19 @@ async def create_user(
         logger.info(f"User registered successfully — email:{user['email']} id:{new_user.id}")
         return RedirectResponse(url='/frontend/home/check_your_mail.html', status_code=302)
 
-    except HTTPException:
-        raise
+    except HTTPException as e:
+        # Redirect back to register page with error code from validate_user
+        logger.warning(f"Registration validation error — {e.detail}")
+        return RedirectResponse(
+            url=f'/frontend/home/register.html?error={e.detail}',
+            status_code=302
+        )
     except Exception as e:
         logger.error(f"User registration failed — email:{user['email']} error:{e}")
-        raise HTTPException(status_code=500, detail="Registration failed. Please try again.")
+        return RedirectResponse(
+            url='/frontend/home/register.html?error=registration_failed',
+            status_code=302
+        )
 
 
 #  email verification
@@ -134,4 +142,7 @@ def delete_user(id: int, db: Session = Depends(database.get_db)):
         raise
     except Exception as e:
         logger.error(f"Admin delete user failed — id:{id} error:{e}")
-        raise HTTPException(status_code=500, detail="Failed to delete user")
+        return RedirectResponse(
+            url='/frontend/home/register.html?error=registration_failed',
+            status_code=302
+        )

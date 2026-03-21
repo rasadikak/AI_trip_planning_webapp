@@ -3,7 +3,7 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
     //console.log("1");
     const resultDiv = document.getElementById("tripResult");
     //console.log("2");
-    resultDiv.innerHTML = "Creating your Sri Lankan adventure... Please wait. 🐘";
+    resultDiv.innerHTML = "Creating your Sri Lankan adventure... Please wait.(This may take few minutes) 🐘";
     //console.log("3");
 
     await new Promise(resolve => setTimeout(resolve, 50));

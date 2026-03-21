@@ -29,6 +29,30 @@
         <script>
             document.getElementById("LoginForm").action=  `${API_BASE}/login/`;
         </script>
+        <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const params = new URLSearchParams(window.location.search);
+    const error  = params.get("error");
+    const success  = params.get("success");
+
+    if (success === "already_verified") {
+        showToast("✅ Your email is already verified. Please log in.", "success");
+}
+
+    if (error === "email_not_found") {
+        showToast("❌ Email not found. Please register first.", "error");
+    } else if (error === "wrong_password") {
+        showToast("❌ Wrong password. Please try again.", "error");
+    } else if (error === "not_verified") {
+        showToast("⚠️ Email not verified. Please check your inbox.", "warning");
+        // Also show verify link
+        document.getElementById("verify-link").style.display = "block";
+    } else if (error === "server_error") {
+        showToast("❌ Something went wrong. Please try again.", "error");
+    }
+});
+</script>>
+
     </body>
 </html>
 

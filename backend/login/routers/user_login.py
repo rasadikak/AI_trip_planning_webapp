@@ -22,17 +22,26 @@ def login(
 
         if not user:
             logger.warning(f"Login failed — email not found: {user_credintials.username}")
-            raise HTTPException(status_code=400, detail=f'email not found')
+            return RedirectResponse(
+                    url='/frontend/home/login.html?error=email_not_found',
+                    status_code=302
+             )
 
         verify_pw = utils.verify(user_credintials.password, user.password)
         if verify_pw == False:
             #print("password wrong")
             logger.warning(f"Login failed — wrong password: {user_credintials.username}")
-            raise HTTPException(status_code=400, detail=f'wrong password')
+            return RedirectResponse(
+                url='/frontend/home/login.html?error=wrong_password',
+                status_code=302
+            )
 
         if not user.is_verified:
             logger.warning(f"Login failed — email not verified: {user_credintials.username}")
-            raise HTTPException(status_code=403, detail="Email not verified")
+            return RedirectResponse(
+                url='/frontend/home/login.html?error=not_verified',
+                status_code=302
+            )
 
         access_token = oauth2.create_token({"user_id": user.id})
 

@@ -107,15 +107,27 @@ def verify_mail(token: str, db: Session = Depends(database.get_db)):
 
         if not user:
             logger.warning(f"Verification failed — user not found for id:{user_id}")
-            raise HTTPException(status_code=404, detail="User not found")
+            return RedirectResponse(
+                url='/frontend/home/login.html?error=verification_failed',
+                status_code=302
+            )
 
         user.is_verified = True
         db.commit()
         logger.info(f"Email verified successfully — user:{user_id}")
-        return RedirectResponse(url='/frontend/home/login.html', status_code=302)
+        return RedirectResponse(
+            url='/frontend/home/login.html?success=email_verified',
+            status_code=302
+        )
 
     except HTTPException:
-        raise
+        return RedirectResponse(
+            url='/frontend/home/login.html?error=verification_failed',
+            status_code=302
+        )
     except Exception as e:
         logger.error(f"Email verification failed — error:{e}")
-        raise HTTPException(status_code=500, detail="Verification failed")
+        return RedirectResponse(
+            url='/frontend/home/login.html?error=verification_failed',
+            status_code=302
+        )
