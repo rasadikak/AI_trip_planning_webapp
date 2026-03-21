@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("name").value = name;
     document.getElementById("email").value = email;
     }catch(error){
+        console.error("Error:", error);
         showToast("❌ Failed to load profile: " + error.message, "error");
     }
 });

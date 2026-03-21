@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
         window.URL.revokeObjectURL(url);
         showToast("📄 PDF downloaded successfully!", "success");
     }catch(error){
+        console.error("Error:", error);
         showToast("Error downloading PDF: " + error.message, "error");
     }
 })});

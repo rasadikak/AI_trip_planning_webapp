@@ -213,6 +213,35 @@
 </section>
 <hr>
 
+ <!-- currency converter Section -->
+
+<section>
+    <h2>💱 Currency Converter</h2>
+    <p style="color:#666; font-size:0.9rem;">Convert LKR to any world currency</p>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
+        <input
+            type="number"
+            id="currency-amount"
+            placeholder="Enter LKR amount e.g. 5000"
+            min="0"
+            style="padding:8px; width:220px; border-radius:6px; border:1px solid #ccc;">
+
+        <!-- Searchable input with datalist -->
+        <input
+            type="text"
+            id="currency-search"
+            placeholder="Type currency e.g. USD, EUR..."
+            list="currency-list"
+            style="padding:8px; width:220px; border-radius:6px; border:1px solid #ccc;">
+
+        <!-- Datalist provides autocomplete suggestions -->
+        <datalist id="currency-list"></datalist>
+
+    </div>
+    <div id="currency-result"></div>
+</section>
+<hr>
+
   </main>
 
 
@@ -227,7 +256,7 @@
    
    <script src="static/weather.js"></script>
    
-
+<script src="static/currency.js"></script>
 <script src="static/outputImage.js"></script>
 
 

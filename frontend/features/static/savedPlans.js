@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async function(){
     planList.appendChild(div);
 });
     }catch(error){
-        //console.error("Error:", error);
+        console.error("Error:", error);
         planList.innerHTML = "<p>Error loading saved plans: " + error.message + "</p>";
     }
 });

@@ -48,7 +48,7 @@ document.getElementById("ImageSearchForm").addEventListener("submit", async func
         
         });
     }catch(error){
-        //console.error("error:", error);
+        console.error("error:", error);
         resultDiv.innerText="Error: " + error.message;
     }
 

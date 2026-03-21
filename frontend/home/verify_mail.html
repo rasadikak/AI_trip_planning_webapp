@@ -6,11 +6,17 @@
 
     </head>
     <body>
-        <form id = 'verifyMailForm' action="http://127.0.0.1:8000/verify_email_for_login" method="POST">
+        <form id = 'verifyMailForm'  method="POST">
             enter email if you havent verify yet<input type="email" name="email" id="email"><br>
             
             <input type="submit" name="login">
         </form>
         <script src="static/refreshPage_home.js"></script>
+        <script src="frontend/features/static/config.js"></script>
+    <script>
+            document.getElementById("verifyMailForm").action=  `${API_BASE}/verify_email_for_login`;
+        </script>
     </body>
 </html>
+
+<!--action="http://127.0.0.1:8000/verify_email_for_login"

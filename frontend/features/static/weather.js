@@ -71,7 +71,7 @@ resultDiv.innerHTML = `
     </div>
 `;
     }catch(error){
-        //console.error("weather error:", error.message);
+        console.error("weather error:", error.message);
         const userMessage= error.message.includes("fetch") || error.message.includes("Failed")
                         ? "Network Connection Error — please check your connection" 
                         : error.message;

@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             favList.appendChild(div);
         });
     } catch (error) {
-        //console.error("Error:", error);
+        console.error("Error:", error);
         favList.innerHTML = "<p>Error loading favourites: " + error.message + "</p>";
     }
 });
@@ -63,6 +63,7 @@ async function deleteFavourite(fav_id) {
         showToast("🗑️ Removed from favourites", "warning");
         location.reload(); 
     } catch (error) {
+        console.error("Error:", error);
         showToast("Error: " + error.message, "error");
     }
 }

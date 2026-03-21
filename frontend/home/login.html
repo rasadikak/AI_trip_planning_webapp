@@ -6,7 +6,7 @@
 
     </head>
     <body>
-        <form id = 'LoginForm' action="http://127.0.0.1:8000/login" method="POST">
+        <form id = 'LoginForm'  method="POST">
             email<input type="email" name="username" id="email" required><br>
             password<input type="password" name="password" id="password" required><br>
             <a href="request_reset_pw.html">forget password?</a><br>
@@ -24,6 +24,12 @@
                 }
             });
         </script>
+        <script src="frontend/features/static/config.js"></script>
         <script src="static/refreshPage.js"></script>
+        <script>
+            document.getElementById("LoginForm").action=  `${API_BASE}/login/`;
+        </script>
     </body>
 </html>
+
+<!--action="http://127.0.0.1:8000/login"-->

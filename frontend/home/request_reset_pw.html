@@ -6,7 +6,7 @@
 
     </head>
     <body>
-        <form id = 'RequestResetPassword' action="http://127.0.0.1:8000/reset_pw/request_reset" method="POST">
+        <form id = 'RequestResetPassword'  method="POST">
             email<input type="email" name="email" id="email" required><br>
             
             
@@ -23,5 +23,11 @@
             });
         </script>
         <script src="static/refreshPage_home.js"></script>
+        <script src="frontend/features/static/config.js"></script>
+    <script>
+            document.getElementById("RequestResetPassword").action=  `${API_BASE}/reset_pw/request_reset`;
+        </script>
     </body>
 </html>
+
+<!--action="http://127.0.0.1:8000/reset_pw/request_reset"-->

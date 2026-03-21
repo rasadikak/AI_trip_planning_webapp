@@ -6,7 +6,7 @@
 
     </head>
     <body>
-        <form  id="registerForm" action="http://127.0.0.1:8000/register/" method="POST">
+        <form  id="registerForm"  method="POST">
             name<input type="text" name="name" id="name"><br>
             email<input type="email" name="email" id="email"><br>
             
@@ -58,8 +58,12 @@
     }
     </script>
     <script src="static/refreshPage_home.js"></script>
+    <script src="frontend/features/static/config.js"></script>
+    <script>
+            document.getElementById("registerForm").action=  `${API_BASE}/register/`;
+        </script>
     </body>
 </html>
 
 
-
+<!--action="http://127.0.0.1:8000/register/"-->

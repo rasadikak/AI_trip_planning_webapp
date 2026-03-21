@@ -70,7 +70,7 @@ async function sendChat() {
         //console.log("Bot message appended");
 
     } catch (error) {
-        //console.error("Error in sendChat:", error);
+        console.error("Error in sendChat:", error);
         document.getElementById(thinkingId)?.remove();
         appendMessage("bot", "Sorry, something went wrong. Please try again.");
         showToast("❌ Something went wrong. Please try again.", "error");

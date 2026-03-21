@@ -93,6 +93,7 @@ document.getElementById("tripForm").addEventListener("submit", async function(e)
         }
 
     } catch (error) {
+        console.error("Error:", error);
         resultDiv.innerHTML = "Error: " + error.message;
         showToast("❌ " + error.message, "error");
     }
@@ -131,6 +132,7 @@ async function saveDestination(destination) {
         }
         showToast(`⭐ ${destination} saved to favourites!`, "success");
     } catch (error) {
+        console.error("Error:", error);
         showToast("Error: " + error.message, "error");
     }
 }
@@ -164,6 +166,7 @@ async function savePlan(plan, destination) {
         }
         showToast("💾 Plan saved successfully!", "success");
     } catch (error) {
+        console.error("Error:", error);
         showToast("Error saving plan: " + error.message, "error");
     }
 }
