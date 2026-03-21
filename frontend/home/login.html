@@ -10,48 +10,58 @@
             email<input type="email" name="username" id="email" required><br>
             password<input type="password" name="password" id="password" required><br>
             <a href="request_reset_pw.html">forget password?</a><br>
-            <a href="/frontend/home/verify_mail.html">didnt verify your email, then verify here</a><br>
+            <a href="verify_mail.html">didnt verify your email, then verify here</a><br>
             <input type="submit" name="login">
         </form>
 
+    <script src="static/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="static/toast.js"></script>
+    <script src="static/refreshPage_home.js"></script>
+
         <script>
+            document.getElementById("LoginForm").action=  `${API_BASE}/login/`;
+
             document.getElementById('LoginForm').addEventListener('submit', function(event){
                 let email= document.getElementById('email').value;
                 let password= document.getElementById('password').value;
                 if (email=='' || password==''){
-                    event.preventDefault(); 
-                    alert('email and password can not be empty');
+                    event.preventDefault();
+                    showToast("⚠️ Email and password cannot be empty", "warning");
                 }
             });
-        </script>
-        <script src="frontend/features/static/config.js"></script>
-        <script src="static/refreshPage.js"></script>
-        <script>
-            document.getElementById("LoginForm").action=  `${API_BASE}/login/`;
-        </script>
-        <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const params = new URLSearchParams(window.location.search);
-    const error  = params.get("error");
-    const success  = params.get("success");
+        
+        
 
-    if (success === "already_verified") {
-        showToast("✅ Your email is already verified. Please log in.", "success");
-}
+        
+            
+        
+            document.addEventListener("DOMContentLoaded", function() {
+                const params = new URLSearchParams(window.location.search);
+                const error  = params.get("error");
+                const success  = params.get("success");
 
-    if (error === "email_not_found") {
-        showToast("❌ Email not found. Please register first.", "error");
-    } else if (error === "wrong_password") {
-        showToast("❌ Wrong password. Please try again.", "error");
-    } else if (error === "not_verified") {
-        showToast("⚠️ Email not verified. Please check your inbox.", "warning");
-        // Also show verify link
-        document.getElementById("verify-link").style.display = "block";
-    } else if (error === "server_error") {
-        showToast("❌ Something went wrong. Please try again.", "error");
-    }
-});
-</script>>
+                if (success === "already_verified") {
+                     showToast("✅ Your email is already verified. Please log in.", "success");
+                }if (success === "email_verified") {
+                     showToast("✅ Successfully verified you email. Please log in.", "success");
+                }
+                if (success === "password_updated") {
+                     showToast("✅ Successfully update your password. Please log in.", "success");
+                }
+
+                if (error === "email_not_found") {
+                    showToast("❌ Email not found. Please register first.", "error");
+                } else if (error === "wrong_password") {
+                    showToast("❌ Wrong password. Please try again.", "error");
+                } else if (error === "not_verified") {
+                    showToast("⚠️ Email not verified. First verify your email.", "warning");
+                
+                } else if (error === "server_error") {
+                    showToast("❌ Something went wrong. Please try again.", "error");
+                }
+            });
+            </script>
 
     </body>
 </html>

@@ -341,3 +341,220 @@ A simple page showing all major Sri Lankan destinations with images, short descr
 3. **Destination Gallery** — good landing page feature, makes the app feel complete
 
 Which of these interests you most?
+---------------------------------------------
+Good question. Let me give you both answers:
+
+---
+
+**Should you use pytest?**
+
+For your project at this stage — **yes, but keep it simple**. You don't need full test coverage but having basic tests will catch bugs before deployment and impress anyone reviewing your code.
+
+---
+
+**What to test for each router:**
+
+**`/register`**
+- ✅ Valid registration creates user and sends email
+- ✅ Duplicate email redirects with `error=email_exists`
+- ✅ Passwords not matching redirects with `error=passwords_not_match`
+- ✅ Weak password redirects with `error=weak_password`
+- ✅ Invalid name redirects with `error=invalid_name`
+- ✅ Invalid email redirects with `error=invalid_email`
+
+**`/login`**
+- ✅ Valid login sets cookie and redirects to trip planner
+- ✅ Wrong email redirects with `error=email_not_found`
+- ✅ Wrong password redirects with `error=wrong_password`
+- ✅ Unverified user redirects with `error=not_verified`
+
+**`/reset_pw`**
+- ✅ Valid email sends reset email
+- ✅ Invalid email returns 404
+- ✅ Valid token redirects to password reset page
+- ✅ Expired token returns error
+- ✅ Passwords not matching redirects with error
+- ✅ Successful reset redirects to login
+
+**`/verify_mail_in_signup`**
+- ✅ Valid token verifies user and redirects to login
+- ✅ Invalid token redirects with error
+- ✅ Already verified user redirects to login
+
+**`/chatbot`**
+- ✅ Valid request returns response
+- ✅ No cookie returns 401
+- ✅ History is saved to DB after chat
+
+**`/planner_api`**
+- ✅ Valid form data returns itinerary
+- ✅ Missing required fields returns 422
+- ✅ Network error returns 503
+
+**`/favDestination`**
+- ✅ Save new destination returns success
+- ✅ Save duplicate returns `error=already_exists`
+- ✅ Get all returns list
+- ✅ Delete existing returns success
+- ✅ Delete non-existing returns 404
+- ✅ No cookie returns 401
+
+**`/savedPlans`**
+- ✅ Save new plan returns success
+- ✅ Save duplicate returns error
+- ✅ Get all returns list
+- ✅ Delete existing returns success
+- ✅ Delete non-existing returns 404
+
+**`/weather`**
+- ✅ Valid place returns weather data
+- ✅ Invalid place returns 404
+- ✅ Empty place returns error
+
+**`/img_based_search`**
+- ✅ Valid image returns results
+- ✅ Invalid file type returns error
+- ✅ No file returns 422
+
+---
+
+**Simple pytest setup:**
+
+**Install:**
+```bash
+pip install pytest httpx pytest-asyncio
+```
+
+**Create `tests/test_auth.py`:**
+
+```python
+import pytest
+from fastapi.testclient import TestClient
+from backend.main import app
+
+client = TestClient(app)
+
+# ── Register tests ──────────────────────────────────────
+def test_register_duplicate_email():
+    response = client.post("/register/", data={
+        "name"            : "Test User",
+        "email"           : "existing@gmail.com",  # already in DB
+        "password"        : "Test@1234",
+        "confirm_password": "Test@1234"
+    }, follow_redirects=False)
+    assert response.status_code == 302
+    assert "error=email_exists" in response.headers["location"]
+
+def test_register_passwords_not_match():
+    response = client.post("/register/", data={
+        "name"            : "Test User",
+        "email"           : "new@gmail.com",
+        "password"        : "Test@1234",
+        "confirm_password": "Different@1234"
+    }, follow_redirects=False)
+    assert response.status_code == 302
+    assert "error=passwords_not_match" in response.headers["location"]
+
+def test_register_weak_password():
+    response = client.post("/register/", data={
+        "name"            : "Test User",
+        "email"           : "new@gmail.com",
+        "password"        : "weak",
+        "confirm_password": "weak"
+    }, follow_redirects=False)
+    assert response.status_code == 302
+    assert "error=weak_password" in response.headers["location"]
+
+# ── Login tests ──────────────────────────────────────────
+def test_login_wrong_email():
+    response = client.post("/login/", data={
+        "username": "notexist@gmail.com",
+        "password": "Test@1234"
+    }, follow_redirects=False)
+    assert response.status_code == 302
+    assert "error=email_not_found" in response.headers["location"]
+
+def test_login_wrong_password():
+    response = client.post("/login/", data={
+        "username": "existing@gmail.com",
+        "password": "WrongPass@1"
+    }, follow_redirects=False)
+    assert response.status_code == 302
+    assert "error=wrong_password" in response.headers["location"]
+
+def test_login_not_verified():
+    response = client.post("/login/", data={
+        "username": "unverified@gmail.com",
+        "password": "Test@1234"
+    }, follow_redirects=False)
+    assert response.status_code == 302
+    assert "error=not_verified" in response.headers["location"]
+```
+
+**Create `tests/test_weather.py`:**
+
+```python
+from fastapi.testclient import TestClient
+from backend.main import app
+
+client = TestClient(app)
+
+def test_weather_valid_place():
+    response = client.post("/weather/", data={"place": "Colombo"})
+    assert response.status_code == 200
+    data = response.json()
+    assert "temp_c" in data
+    assert "condition" in data
+    assert "humidity" in data
+
+def test_weather_invalid_place():
+    response = client.post("/weather/", data={"place": "xyznotaplace123"})
+    assert response.status_code == 404
+
+def test_weather_empty_place():
+    response = client.post("/weather/", data={"place": ""})
+    assert response.status_code == 422
+```
+
+**Create `tests/test_fav.py`:**
+
+```python
+from fastapi.testclient import TestClient
+from backend.main import app
+
+client = TestClient(app)
+
+def test_fav_no_cookie():
+    response = client.post("/favDestination/", data={"destination": "Mirissa"})
+    assert response.status_code == 401
+
+def test_get_fav_no_cookie():
+    response = client.get("/favDestination/get")
+    assert response.status_code == 401
+```
+
+**Run tests:**
+```bash
+pytest tests/ -v
+```
+
+**Output looks like:**
+```
+tests/test_auth.py::test_register_duplicate_email  PASSED
+tests/test_auth.py::test_register_passwords_not_match  PASSED
+tests/test_auth.py::test_register_weak_password  PASSED
+tests/test_auth.py::test_login_wrong_email  PASSED
+tests/test_weather.py::test_weather_valid_place  PASSED
+tests/test_weather.py::test_weather_invalid_place  PASSED
+```
+
+---
+
+**My honest recommendation:**
+
+Write tests for at minimum:
+1. **Auth** — register and login error cases
+2. **Weather** — valid and invalid place
+3. **Favourites** — 401 without cookie
+
+These cover the most critical user-facing flows. You don't need 100% coverage — even 20-30% test coverage on the important paths is significantly better than zero and will catch most deployment bugs.

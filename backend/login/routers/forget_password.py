@@ -45,7 +45,7 @@ async def request_reset(
         if not user:
             logger.warning(f"Reset failed — user not found: {email}")
             return RedirectResponse(
-                url=f'/frontend/home/password_forget.html?token={token}&error=user_not_found',
+                url=f'/frontend/home/request_reset_pw?token={token}&error=user_not_found',
                 status_code=302
             )
 
@@ -62,7 +62,7 @@ async def request_reset(
         raise
     except Exception as e:
         logger.error(f"Password reset request failed — email:{email} error:{e}")
-        raise HTTPException(status_code=500, detail="Failed to send reset email")
+        return RedirectResponse(f"{BASE_URL}/frontend/home/request_reset_pw.html?error=server_error", status_code=302)
 
 
 @router.get('/reset_link')
@@ -80,7 +80,7 @@ def reset_link(token):
         raise
     except Exception as e:
         logger.error(f"Reset link verification failed — error:{e}")
-        raise HTTPException(status_code=500, detail="Reset link verification failed")
+        return RedirectResponse(f"{BASE_URL}/frontend/home/request_reset_pw.html?error=server_error", status_code=302)
     #opens the html page for reset
 
 
@@ -101,28 +101,25 @@ def forget_password(
 
         if not user:
             logger.warning(f"Password reset failed — user not found id:{user_id}")
-            raise HTTPException(status_code=404, detail=f'user does not exist in db')
+            return RedirectResponse(f"{BASE_URL}/frontend/home/password_forget.html?error=email_not_found", status_code=302)
 
         if new_password != confirm_new_pw:
             logger.warning(f"Password reset failed — passwords do not match user:{user_id}")
-            raise HTTPException(400, detail="Passwords do not match")
+            return RedirectResponse(f"{BASE_URL}/frontend/home/password_forget.html?error=mismatched_passwords", status_code=302)
 
         if user:
-            if new_password == confirm_new_pw:
-
                 hashed_pw     = utils.hash(new_password)
                 user.password = hashed_pw
                 db.commit()
                 db.refresh(user)
                 #print("congratssss")
                 logger.info(f"Password updated successfully — user:{user_id}")
-                return RedirectResponse(url='/frontend/home/login.html', status_code=302)
-            else:
-                logger.warning(f"Password reset failed — passwords not similar user:{user_id}")
-                raise HTTPException(status_code=400, detail=f'passwords are not similar')
+                return RedirectResponse(url='/frontend/home/login.html?success=password_updated', status_code=302)
+            
+                
 
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Password reset failed — error:{e}")
-        raise HTTPException(status_code=500, detail="Password reset failed")
+        return RedirectResponse(f"{BASE_URL}/frontend/home/password_forget.html?error=server_error", status_code=302)

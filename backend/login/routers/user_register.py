@@ -76,20 +76,24 @@ async def create_user(
 
         if new_user.is_verified == False:
             await email_verify_for_signup.send_mail(new_user.email, db)
-            print("sent mail successufully")
+            return RedirectResponse(url='/frontend/home/check_your_mail.html', status_code=302)
+            #print("sent mail successufully")
 
         #print("after")
         logger.info(f"User registered successfully — email:{user['email']} id:{new_user.id}")
-        return RedirectResponse(url='/frontend/home/check_your_mail.html', status_code=302)
+        return RedirectResponse(url='/frontend/home/login.html', status_code=302)
+        
 
     except HTTPException as e:
         # Redirect back to register page with error code from validate_user
+        # This catches ALL HTTPExceptions from validate_user too
         logger.warning(f"Registration validation error — {e.detail}")
         return RedirectResponse(
             url=f'/frontend/home/register.html?error={e.detail}',
             status_code=302
         )
     except Exception as e:
+        
         logger.error(f"User registration failed — email:{user['email']} error:{e}")
         return RedirectResponse(
             url='/frontend/home/register.html?error=registration_failed',
@@ -97,7 +101,7 @@ async def create_user(
         )
 
 
-#  email verification
+#admin opeartion- created for learning purpose
 @router.get('/admin', response_model=List[schemas.UserResponse])
 def get_all(db: Session = Depends(database.get_db)):
     logger.info("Admin — get all users requested")

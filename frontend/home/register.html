@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang='en'>
     <head>
-        <meta chartset="UTF-8">
+        <meta charset="UTF-8">
        <title>log in</title>
 
     </head>
     <body>
         <form  id="registerForm"  method="POST">
-            name<input type="text" name="name" id="name"><br>
-            email<input type="email" name="email" id="email"><br>
+            name<input type="text" name="name" id="name" required><br>
+            email<input type="email" name="email" id="email" required><br>
             
-            password<input type="password" name="password" id="password" ><br>
-            reenter password<input type="password" name="confirm_password" id="confirm_password" ><br>
+            password<input type="password" name="password" id="password" required><br>
+            reenter password<input type="password" name="confirm_password" id="confirm_password" required><br>
             <input type="submit" name="register">
         </form>
+        
+    <script src="static/config.js"></script>    
 
+    <script src="static/refreshPage_home.js"></script>
     
+     <script src="static/toast.js"></script>
 
     <script>
+
+    document.getElementById("registerForm").action=  `${API_BASE}/register/`;
+
+
     document.getElementById("registerForm").onsubmit = function(e) {
         const name = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
@@ -56,17 +64,13 @@
 
         return true; // all validations passed, allow form submission
     }
-    </script>
-    <script src="static/refreshPage_home.js"></script>
-    <script src="frontend/features/static/config.js"></script>
-    <script>
-            document.getElementById("registerForm").action=  `${API_BASE}/register/`;
-        </script>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-    const params = new URLSearchParams(window.location.search);
-    const error  = params.get("error");
+    
+    
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        const params = new URLSearchParams(window.location.search);
+        const error  = params.get("error");
+        const success= params.get("success");
 
     const messages = {
         "passwords_not_match" : "⚠️ Passwords do not match",
@@ -83,7 +87,9 @@
     }
 });
         </script>
+
     </body>
+
 </html>
 
 

@@ -58,4 +58,7 @@ def login(
         raise
     except Exception as e:
         logger.error(f"Login crashed — email:{user_credintials.username} error:{e}")
-        raise HTTPException(status_code=500, detail="Login failed. Please try again.")
+        return RedirectResponse(
+                url='/frontend/home/login.html?error=server_error',
+                status_code=302
+            )
