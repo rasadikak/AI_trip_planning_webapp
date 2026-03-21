@@ -7,5 +7,5 @@ _pycache_/
 backend/alembic.ini
 mycode.txt
 *.faiss
-/logging
+/logs
 backend/logger.py

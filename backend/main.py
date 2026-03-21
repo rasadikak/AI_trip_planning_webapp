@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.login.routers import user_register,user_login, forget_password, signout, email_verify_for_signup,email_verify_for_login
 from fastapi.staticfiles import StaticFiles
 from backend.features.searchImage import search_img
-from backend import logger
+from backend.logger import logger
 from backend.features.pdf import pdf
 from backend.features.profile import profile
 #from backend.features.planner import planner
