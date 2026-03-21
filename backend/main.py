@@ -18,7 +18,7 @@ import time
 app = FastAPI()
 router = APIRouter(prefix="/test")
 
-
+# Log every single HTTP request automatically
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     start_time = time.time()
