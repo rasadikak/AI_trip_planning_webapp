@@ -1,10 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fpdf import FPDF
 from fastapi.responses import StreamingResponse
 import io
 import os
 import re
 from pydantic import BaseModel
+from backend.logger import logger
 
 class PDFRequest(BaseModel):
     text: str
@@ -63,7 +64,6 @@ def pdf_generate(data: str):
         line = line.strip()
         if not line:
             continue
-
         if line.startswith("##"):
             pdf.ln(5)
             write_mixed_line(pdf, line.replace("##", "").strip(), 'DejaVu', 'B', 14)
@@ -80,9 +80,18 @@ def pdf_generate(data: str):
 @router.post('/')
 async def download_pdf(request: PDFRequest):
     #print("api loaded")
-    pdf_data = pdf_generate(request.text)
-    return StreamingResponse(
-        pdf_data,
-        media_type="application/pdf",
-        headers={"Content-Disposition": "attachment; filename=trip_plan.pdf"}
-    )
+    logger.info("PDF generation requested")
+    try:
+        pdf_data = pdf_generate(request.text)
+        logger.info("PDF generated successfully")
+        return StreamingResponse(
+            pdf_data,
+            media_type="application/pdf",
+            headers={"Content-Disposition": "attachment; filename=trip_plan.pdf"}
+        )
+    except FileNotFoundError as e:
+        logger.error(f"Font file missing: {e}")
+        raise HTTPException(status_code=500, detail="PDF font file missing — contact support")
+    except Exception as e:
+        logger.critical(f"PDF generation failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate PDF")
