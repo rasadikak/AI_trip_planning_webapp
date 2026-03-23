@@ -8,7 +8,7 @@ import re
 
 router= APIRouter(prefix='/profile', tags=['profile'])
 
-@router.put('/editName')
+@router.patch('/editName')
 def editName(new_name:str=Form(...),
              db:Session=Depends(database.get_db),
              current_user=Depends(oauth2.current_user_cookie)):
