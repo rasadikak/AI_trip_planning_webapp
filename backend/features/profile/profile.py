@@ -75,5 +75,38 @@ def get_profile(
 
 
 
+
+@router.delete('/delAccount')
+def delete_account(
+    db: Session = Depends(database.get_db),
+    current_user = Depends(oauth2.current_user_cookie)
+):
+    logger.info(f"Account deletion requested — user:{current_user.id}")
+    try:
+        user = db.query(orm_model.User)\
+            .filter(orm_model.User.id == current_user.id).first()
+
+        if not user:
+            logger.warning(f"Delete account failed — user not found: {current_user.id}")
+            raise HTTPException(status_code=404, detail="User not found")
+
+        
+        db.delete(user)
+        db.commit()
+
+        logger.info(f"Account deleted — user:{current_user.id}")
+        return {"message": "Account deleted successfully"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Account deletion failed — user:{current_user.id} error:{e}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete account: {e}")
+        
+    
+
+
+
+
     
     

@@ -71,6 +71,8 @@
 <hr>
 
 <a href="#" onclick="signOut()">🚪 Sign Out</a>
+<br>
+<a href="#" onclick="delAccount()">🗑️ Delete Account</a>
 
 </section>
 
@@ -91,6 +93,37 @@
    <script>
     function signOut() {
         window.location.href = `${API_BASE}/signout`;
+    }
+
+    async function delAccount() {
+        
+        const confirmed = confirm("Are you sure you want to delete your account? This will permanently delete all your saved plans, favourite places and chat history. This cannot be undone.");
+
+        if (!confirmed) return;
+
+        try {
+            
+            const response = await fetch(`${API_BASE}/profile/delAccount`, {
+                method     : "DELETE",
+                credentials: "include"
+            });
+
+            if (response.status === 401) { handle401(); return; }
+
+            if (response.ok) {
+                showToast("🗑️ Account deleted successfully", "success");
+                
+                setTimeout(() => {
+                    window.location.href = `${API_BASE}/frontend/home/home.html`;
+                }, 2000);
+            } else {
+                const err = await response.json();
+                showToast("❌ " + (err.detail || "Failed to delete account"), "error");
+            }
+
+        } catch(error) {
+            showToast("❌ " + error.message, "error");
+        }
     }
 </script>
 
