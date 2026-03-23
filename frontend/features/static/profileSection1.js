@@ -91,19 +91,26 @@ function editName() {
         e.preventDefault();
         const newName = text.value.trim();  
 
+        console.log(newName);
+
         if (!/^[a-zA-Z ]{3,}$/.test(newName)) {
             showToast("⚠️ Name must be at least 3 letters", "warning");
             return;
         }
 
+        console.log("hi 1");
+
         if (newName === originalName) {
             showToast("⚠️ Name is the same as current name", "warning");
             return;
         }
+        console.log("hi 2");
 
         try {
             const formdata = new FormData();
-            formdata.append("name", newName);
+            formdata.append("new_name", newName);
+
+            console.log("hi 3");
 
             
             const response = await fetch(`${API_BASE}/profile/editName`, {
@@ -112,20 +119,31 @@ function editName() {
                 credentials: "include"
             });
 
+            console.log("hi 4");
+
             if (response.status === 401) { handle401(); return; }
 
+            console.log("hi 5");
+
             const data = await response.json();
+
+            console.log(response.status);
 
             if (response.ok) {
                 
                 nameInput.value = data.name;
+                console.log(nameInput);
                 showToast("✅ Name updated successfully!", "success");
                 cleanupEdit();
+                console.log("hi 7");
             } else {
+                console.log("hi 8");
                 showToast("❌ " + (data.detail || "Failed to update name"), "error");
+                console.log("hi 9");
             }
 
         } catch(error) {
+            console.log("hi 10");
             showToast("❌ " + error.message, "error");
         }
     });

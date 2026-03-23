@@ -16,7 +16,7 @@ def editName(new_name:str=Form(...),
     try:
         user_id= current_user.id
 
-        if not re.fullmatch(r"[A-Za-z ]{3,}", name.strip()):
+        if not re.fullmatch(r"[A-Za-z ]{3,}", new_name.strip()):
             logger.warning(f"Name update failed — invalid name: {new_name}")
             raise HTTPException(
                 status_code=400,
@@ -37,14 +37,14 @@ def editName(new_name:str=Form(...),
         db.commit()
         db.refresh(user)
         logger.info(f"user {user_id} updated his name ")
-        raise HTTPException(status_code=200, detail=f"name updated successfully")
+        return {"message": "Name updated successfully", "name": user.name}
 
     except HTTPException:
         raise 
 
     except Exception as e:
         logger.error(f"Name update failed — user:{current_user.id} error:{e}")
-        raise HTTPException(status_code=500, detail="Failed to update name")
+        raise HTTPException(status_code=500, detail=f"Failed to update name{e}")
 
 
 
