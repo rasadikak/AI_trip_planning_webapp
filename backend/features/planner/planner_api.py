@@ -78,6 +78,25 @@ def trip_planner_api(destinationType:str= Form(...),
                     numPeople:int=Form(...),accommodation:str=Form(...),
                     foodPreference:List[str]=Form([])): 
     
+
+    if numDays < 1 or numDays > 30:
+        raise HTTPException(status_code=400, detail="Number of days must be between 1 and 30")
+
+    if numPeople < 1 or numPeople > 20:
+        raise HTTPException(status_code=400, detail="Number of people must be between 1 and 20")
+
+    valid_destinations = ["beach", "upcountry", "city", "safari", "culturel"]
+    if destinationType not in valid_destinations:
+        raise HTTPException(status_code=400, detail="Invalid destination type")
+
+    valid_budgets = ["low", "mid", "high"]
+    if budget not in valid_budgets:
+        raise HTTPException(status_code=400, detail="Invalid budget type")
+
+    valid_accommodations = ["hotel", "tents", "five_star", "kabana"]
+    if accommodation not in valid_accommodations:
+        raise HTTPException(status_code=400, detail="Invalid accommodation type")
+    
     #print(foodPreference)
     food_pref_string= ", ".join(foodPreference)
     #print(food_pref_string)
