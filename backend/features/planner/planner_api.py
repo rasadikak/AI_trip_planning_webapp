@@ -3,7 +3,7 @@ import httpx
 
 import requests
 
-from backend.config import HF_TOKEN, WEATHER_API
+from backend.config import HF_TOKEN #WEATHER_API
 from backend.logger import logger
 
 from typing import List
@@ -46,7 +46,10 @@ prompt = hub.pull("hwchase17/react")
 def weather(dest_name:str):
     try:
         clean_name = dest_name.split('\n')[0].replace('Observ', '').strip()
-        url = f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={clean_name}"
+        url = f"https://wttr.in/{clean_name}?format=j1"
+
+        #url = f"http://api.weatherapi.com/v1/current.json?key={WEATHER_API}&q={clean_name}"
+        #old api based weather tool
         response = requests.get(url)
         return response.json()
     except Exception as e:
