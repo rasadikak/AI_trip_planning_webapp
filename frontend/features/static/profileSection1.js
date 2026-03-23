@@ -41,3 +41,106 @@ document.addEventListener("DOMContentLoaded", function() {
 //decodeURIComponent makes sure any URL-encoded characters (like %20) are converted back to normal characters.
 
 //This returns the value of the cookie.
+
+let originalName = "";
+
+
+        
+function editName() {
+    const nameInput = document.getElementById("name");
+    const editBtn   = document.getElementById("editName");
+
+    
+    originalName = nameInput.value; //save original name
+
+    
+    const nameDiv = document.createElement("div");
+    nameDiv.id            = "editNameDiv";
+    nameDiv.style.display = "flex";
+    nameDiv.style.gap     = "8px";
+    nameDiv.style.marginTop = "8px";
+
+    
+    const text   = document.createElement("input"); 
+    text.type    = "text";
+    text.value   = originalName;
+    text.style.padding = "4px";
+
+    
+    const saveButton         = document.createElement("button");
+    saveButton.innerHTML     = "✅ Save";
+    saveButton.type          = "button";
+
+   
+    const cancelButton       = document.createElement("button");
+    cancelButton.innerHTML   = "❌ Cancel";
+    cancelButton.type        = "button";
+
+    nameDiv.append(text);
+    nameDiv.append(saveButton);
+    nameDiv.append(cancelButton);
+
+    
+    nameInput.insertAdjacentElement("afterend", nameDiv);
+
+   
+    editBtn.style.display = "none"; //hide edit btn
+
+    
+    saveButton.addEventListener("click", async function(e) {
+        e.preventDefault();
+        const newName = text.value.trim();  
+
+        if (!/^[a-zA-Z ]{3,}$/.test(newName)) {
+            showToast("⚠️ Name must be at least 3 letters", "warning");
+            return;
+        }
+
+        if (newName === originalName) {
+            showToast("⚠️ Name is the same as current name", "warning");
+            return;
+        }
+
+        try {
+            const formdata = new FormData();
+            formdata.append("name", newName);
+
+            
+            const response = await fetch(`${API_BASE}/profile/editName`, {
+                method     : "PATCH",
+                body       : formdata,
+                credentials: "include"
+            });
+
+            if (response.status === 401) { handle401(); return; }
+
+            const data = await response.json();
+
+            if (response.ok) {
+                
+                nameInput.value = data.name;
+                showToast("✅ Name updated successfully!", "success");
+                cleanupEdit();
+            } else {
+                showToast("❌ " + (data.detail || "Failed to update name"), "error");
+            }
+
+        } catch(error) {
+            showToast("❌ " + error.message, "error");
+        }
+    });
+
+    
+    cancelButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        cleanupEdit();
+    });
+}
+
+function cleanupEdit() {
+    const nameDiv = document.getElementById("editNameDiv");
+    const editBtn = document.getElementById("editName");
+
+    if (nameDiv) nameDiv.style.display = "none"; 
+    editBtn.style.display = "inline";
+}                
