@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, Form, Depends, RedirectResponse
+from fastapi import APIRouter, HTTPException, Form, Depends
 
 from backend.login import database, orm_model, oauth2
 from sqlalchemy.orm import Session
 from backend.logger import logger
-import httpx  #a module
+
 import re
 
 router= APIRouter(prefix='/profile', tags=['profile'])
