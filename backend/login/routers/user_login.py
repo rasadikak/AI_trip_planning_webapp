@@ -48,8 +48,8 @@ def login(
         response = RedirectResponse(url=f'/frontend/features/trip_planner.html', status_code=302)
         response.set_cookie(key="access_token", value=f"bearer {access_token}", httponly=True)
         #return {"access_token": access_token, "token_type":"bearer"}
-        response.set_cookie(key="user_name", value=user.name)
-        response.set_cookie(key="user_email", value=user.email)
+        #response.set_cookie(key="user_name", value=user.name)
+        #response.set_cookie(key="user_email", value=user.email)
 
         logger.info(f"Login successful — user:{user.id}")
         return response

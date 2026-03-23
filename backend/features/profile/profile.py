@@ -48,5 +48,32 @@ def editName(new_name:str=Form(...),
 
 
 
+
+
+
+
+
+
+
+
+@router.get('/')
+def get_profile(
+    db: Session = Depends(database.get_db),
+    current_user = Depends(oauth2.current_user_cookie)
+):
+    logger.info(f"Profile requested — user:{current_user.id}")
+    try:
+        return {
+            "name"      : current_user.name,
+            "email"     : current_user.email,
+            "created_at": current_user.created_at
+        }
+    except Exception as e:
+        logger.error(f"Failed to fetch profile — user:{current_user.id} error:{e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch profile")
+
+
+
+
     
     
