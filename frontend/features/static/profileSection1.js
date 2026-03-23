@@ -81,7 +81,7 @@ function editName() {
         e.preventDefault();
         const newName = text.value.trim();  
 
-        console.log(newName);
+        //console.log(newName);
 
         if (!/^[a-zA-Z ]{3,}$/.test(newName)) {
             showToast("⚠️ Name must be at least 3 letters", "warning");
@@ -112,6 +112,8 @@ function editName() {
             //console.log("hi 4");
 
             if (response.status === 401) { handle401(); return; }
+            //i created this handle401 function to handle session time out error, if 401 error happend user sees
+            //a toast msg to log in again and redirect to login.html
 
             //console.log("hi 5");
 
@@ -125,7 +127,7 @@ function editName() {
 
                 
 
-                console.log(nameInput);
+                //console.log(nameInput);
                 showToast("✅ Name updated successfully!", "success");
                 cleanupEdit();
                 //console.log("hi 7");
@@ -152,6 +154,6 @@ function cleanupEdit() {
     const nameDiv = document.getElementById("editNameDiv");
     const editBtn = document.getElementById("editName");
 
-    if (nameDiv) nameDiv.style.display = "none"; 
+    if (nameDiv) if (nameDiv) nameDiv.remove();; 
     editBtn.style.display = "inline";
 }                
