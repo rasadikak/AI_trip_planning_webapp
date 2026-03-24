@@ -15,15 +15,15 @@ from backend.features.tripManagement import favDestination, savedPlans
 from backend.config import BASE_URL
 import time
 
-from slowapi import Limiter, rate_limit_eceeded_handler
-from slowapi.util import get_remote_adderess
-from slowapi.error import RateLimitExceeded
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 app = FastAPI()
 router = APIRouter(prefix="/test")
 
-limiter=Limiter(key_func=get_remote_access)
-app.state.limiter= limiter
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Log every single HTTP request automatically
