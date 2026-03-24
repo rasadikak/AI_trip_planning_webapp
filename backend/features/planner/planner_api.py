@@ -285,3 +285,9 @@ IMPORTANT
             status_code=500,
             detail="Something went wrong while generating your trip plan. Please try again."
         )
+
+
+
+    #pip install huggingface-hub
+    #pip install langchain_huggingface
+    #pip install langchain_classic

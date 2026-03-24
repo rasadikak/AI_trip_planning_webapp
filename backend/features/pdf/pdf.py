@@ -95,3 +95,8 @@ async def download_pdf(request: PDFRequest):
     except Exception as e:
         logger.critical(f"PDF generation failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate PDF")
+
+
+
+
+#pip install fpdf2

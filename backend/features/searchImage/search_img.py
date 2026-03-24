@@ -119,3 +119,8 @@ async def img_based_search(img:UploadFile= File(...)):
 #Example:
 #I = [[25, 100, 7]]
 #That means:Most similar image = image 25, Second = image 100, Third = image 7
+
+
+
+
+#pip install git+https://github.com/openai/CLIP.git
