@@ -9,7 +9,7 @@ from backend.login import database,orm_model, oauth2
 from backend.logger import logger
 import httpx
 
-from backend.main import limiter
+from backend.limiter_file import limiter
 from fastapi import Request
 
 

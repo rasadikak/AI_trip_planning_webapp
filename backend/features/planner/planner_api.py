@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Form, HTTPException
 import httpx
 
-from backend.main import limiter
+from backend.limiter_file import limiter
 from fastapi import Request
 
 import requests
