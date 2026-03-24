@@ -9,3 +9,4 @@ mycode.txt
 *.faiss
 /logs
 backend/logger.py
+mycode.txt
