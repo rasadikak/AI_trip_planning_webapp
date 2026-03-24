@@ -9,6 +9,9 @@ from backend.login import database,orm_model, oauth2
 from backend.logger import logger
 import httpx
 
+from backend.main import limiter
+from fastapi import Request
+
 
 
 
@@ -50,8 +53,43 @@ system_prompt={
 }
 
 @router.post('/')
-def chatbot(db:Session=Depends(database.get_db),chatInput:str=Form(...),  current_user =Depends(oauth2.current_user_cookie)): 
+@limiter.limit("10/minute")  # max 10 chat messages per minute
+def chatbot(request: Request,db:Session=Depends(database.get_db),chatInput:str=Form(...),  current_user =Depends(oauth2.current_user_cookie)): 
     #print(current_user.id)
+
+    # Basic sanitization
+    chatInput = chatInput.strip()
+
+    # Length limit — prevent extremely long inputs
+    if len(chatInput) > 1000:
+        raise HTTPException(
+            status_code=400,
+            detail="Message too long. Please keep it under 1000 characters."
+        )
+
+    # Empty check
+    if not chatInput:
+        raise HTTPException(
+            status_code=400,
+            detail="Message cannot be empty"
+        )
+
+    # Basic prompt injection detection
+    suspicious_phrases = [
+        "ignore previous instructions",
+        "ignore your instructions",
+        "forget your instructions",
+        "you are now",
+        "new instructions",
+        "system prompt"
+    ]
+
+    if any(phrase in chatInput.lower() for phrase in suspicious_phrases):
+        logger.warning(f"Possible prompt injection attempt — user:{current_user.id}")
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid message content"
+        )
     try:
         logger.info(f"Chatbot request — user:{current_user.id}")
 

@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Form, HTTPException
 import httpx
 
+from backend.main import limiter
+from fastapi import Request
+
 import requests
 
 from backend.config import HF_TOKEN #WEATHER_API
@@ -72,7 +75,9 @@ tools= [weather_tool]
 
 
 @router.post('/')
-def trip_planner_api(destinationType:str= Form(...),
+@limiter.limit("3/minute")  # max 3 trip plans per minute per user
+def trip_planner_api(request: Request,
+                    destinationType:str= Form(...),
                     budget:str=Form(...),
                     numDays:int=Form(...) ,
                     numPeople:int=Form(...),accommodation:str=Form(...),

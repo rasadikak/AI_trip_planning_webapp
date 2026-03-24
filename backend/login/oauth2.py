@@ -1,4 +1,5 @@
 from jose import JWTError, jwt
+#pip install python-jose[cryptography]
 from backend.login import database, orm_model
 from fastapi import Cookie
 from fastapi import Depends, HTTPException, status

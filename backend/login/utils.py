@@ -18,3 +18,6 @@ def verify(password:str, hashed_pw:str) -> bool:
     return pwd_context.verify(password, hashed_pw)
 
 
+#pip install passlib[argon2]
+
+
