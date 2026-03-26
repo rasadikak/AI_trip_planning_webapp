@@ -1,117 +1,355 @@
 <!DOCTYPE html>
 <html lang='en'>
-    <head>
-        <meta charset="UTF-8">
-       <title>log in</title>
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-       <link rel="stylesheet" href="static/css/passwordToggle.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account — Serendib AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="static/css/passwordToggle.css">
+    <link rel="stylesheet" href="/frontend/static/css/output.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --darker: #060E1A;
+            --dark:   #0A1628;
+            --card:   #0F1E35;
+            --green:  #1A6B3C;
+            --green2: #22C55E;
+            --gold:   #D4A843;
+            --gold2:  #F5C842;
+            --border: rgba(212,168,67,0.2);
+            --text:   #E8E0D0;
+            --muted:  rgba(232,224,208,0.5);
+        }
 
-    </head>
-    <body>
-        <form  id="registerForm"  method="POST">
-            name<input type="text" name="name" id="name" required><br>
-            email<input type="email" name="email" id="email" required><br>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-            <div class="password-box">
-                 password:<input type="password" id="password" name="password" required>
-                <i class="fa-solid fa-eye"
-                    id="eye_password"
-                    onclick="togglePassword('password', 'eye_password')">
-                </i>
+        body {
+            min-height: 100vh;
+            background-color: var(--darker);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 2rem 1rem;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse 70% 70% at 15% 30%, rgba(26,107,60,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 85% 70%, rgba(212,168,67,0.07) 0%, transparent 60%),
+                var(--darker);
+            z-index: 0;
+        }
+
+        .back-home {
+            position: fixed;
+            top: 1.5rem; left: 1.5rem; z-index: 10;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            color: var(--muted); text-decoration: none;
+            font-size: 0.875rem; transition: color 0.2s;
+        }
+        .back-home:hover { color: var(--gold); }
+
+        .register-wrapper {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 480px;
+        }
+
+        .register-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            position: relative; overflow: hidden;
+            animation: cardReveal 0.6s ease forwards;
+            opacity: 0; transform: translateY(20px);
+        }
+        @keyframes cardReveal { to { opacity: 1; transform: translateY(0); } }
+
+        .register-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .brand { text-align: center; margin-bottom: 2rem; }
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem; font-weight: 700;
+            color: var(--gold); text-decoration: none;
+            display: inline-block; margin-bottom: 0.5rem;
+        }
+        .brand-logo span { color: var(--green2); }
+        .brand-tagline { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem; font-weight: 700;
+            color: var(--text); text-align: center; margin-bottom: 0.375rem;
+        }
+        .card-subtitle {
+            font-size: 0.875rem; color: var(--muted);
+            text-align: center; margin-bottom: 2rem; font-weight: 300;
+        }
+
+        .divider { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.75rem; }
+        .divider-line { flex: 1; height: 1px; background: var(--border); }
+        .divider-text { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; white-space: nowrap; }
+
+        .field-group { margin-bottom: 1.25rem; }
+        .field-label {
+            display: block; font-size: 0.8rem; font-weight: 500;
+            color: var(--muted); letter-spacing: 0.05em;
+            text-transform: uppercase; margin-bottom: 0.5rem;
+        }
+        .field-input {
+            width: 100%;
+            background: rgba(6,14,26,0.6);
+            border: 1px solid rgba(232,224,208,0.1);
+            border-radius: 10px; padding: 0.75rem 1rem;
+            color: var(--text); font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem; outline: none; transition: all 0.2s ease;
+        }
+        .field-input:focus {
+            border-color: rgba(212,168,67,0.5);
+            box-shadow: 0 0 0 3px rgba(212,168,67,0.08);
+            background: rgba(6,14,26,0.8);
+        }
+        .field-input::placeholder { color: rgba(232,224,208,0.25); }
+
+        /* password-box — class preserved for passwordToggle.js */
+        .password-box { position: relative; }
+        .password-box .field-input { padding-right: 3rem; }
+        .password-box .fa-eye,
+        .password-box .fa-eye-slash {
+            position: absolute; right: 1rem; top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted); cursor: pointer;
+            font-size: 0.9rem; transition: color 0.2s;
+        }
+        .password-box .fa-eye:hover,
+        .password-box .fa-eye-slash:hover { color: var(--gold); }
+
+        /* Password hint */
+        .pw-hint {
+            font-size: 0.75rem; color: var(--muted);
+            margin-top: 0.375rem; line-height: 1.5;
+        }
+
+        .submit-btn {
+            width: 100%; padding: 0.875rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            border: none; border-radius: 10px;
+            color: #0A1628; font-family: 'Outfit', sans-serif;
+            font-size: 1rem; font-weight: 700; letter-spacing: 0.02em;
+            cursor: pointer; transition: all 0.3s ease;
+            margin-top: 0.5rem; margin-bottom: 1.5rem;
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(212,168,67,0.3); }
+        .submit-btn:active { transform: translateY(0); }
+
+        .login-prompt { text-align: center; font-size: 0.875rem; color: var(--muted); }
+        .login-prompt a {
+            color: var(--gold); text-decoration: none;
+            font-weight: 600; transition: color 0.2s;
+        }
+        .login-prompt a:hover { color: var(--gold2); }
+
+        /* Terms note */
+        .terms-note {
+            font-size: 0.75rem; color: var(--muted);
+            text-align: center; margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) { .register-card { padding: 2rem 1.5rem; } }
+    </style>
+</head>
+<body>
+
+    <!-- Back to home -->
+    <a href="home.html" class="back-home">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Home
+    </a>
+
+    <div class="register-wrapper">
+        <div class="register-card">
+
+            <!-- Brand -->
+            <div class="brand">
+                <a href="home.html" class="brand-logo">Serendib<span>AI</span></a>
+                <p class="brand-tagline">Sri Lanka Trip Planner</p>
             </div>
-            <br>
 
-            <div class="password-box">
-                Re-enter  password:<input type="password" id="confirm_password" name="confirm_password" required>
-                <i class="fa-solid fa-eye"
-                    id="eye_password"
-                    onclick="togglePassword('confirm_password', 'eye_password')">
-                </i>
+            <h1 class="card-title">Create account</h1>
+            <p class="card-subtitle">Start planning your Sri Lanka adventure today</p>
+
+            <div class="divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">Fill in your details</span>
+                <div class="divider-line"></div>
             </div>
-            <br>
-            
-            
-            <input type="submit" name="register">
-        </form>
-        
-    <script src="static/config.js"></script>    
 
-    <script src="static/refreshPage_home.js"></script>
-    
-     <script src="static/toast.js"></script>
+            <!-- registerForm — id and method preserved -->
+            <form id="registerForm" method="POST">
 
-     <script src="static/passwordToggle.js"></script>
+                <!-- name — name="name" id="name" preserved -->
+                <div class="field-group">
+                    <label class="field-label" for="name">Full Name</label>
+                    <input
+                        class="field-input"
+                        type="text"
+                        name="name"
+                        id="name"
+                        placeholder="e.g. Nipuni Perera"
+                        required>
+                </div>
+
+                <!-- email — name="email" id="email" preserved -->
+                <div class="field-group">
+                    <label class="field-label" for="email">Email Address</label>
+                    <input
+                        class="field-input"
+                        type="email"
+                        name="email"
+                        id="email"
+                        placeholder="you@example.com"
+                        required>
+                </div>
+
+                <!-- password — password-box class, id="password", name="password",
+                     id="eye_password", onclick preserved -->
+                <div class="field-group">
+                    <label class="field-label" for="password">Password</label>
+                    <div class="password-box">
+                        <input
+                            class="field-input"
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a strong password"
+                            required>
+                        <i class="fa-solid fa-eye"
+                           id="eye_password"
+                           onclick="togglePassword('password', 'eye_password')">
+                        </i>
+                    </div>
+                    <p class="pw-hint">Min 8 characters · uppercase · lowercase · number · special character</p>
+                </div>
+
+                <!-- confirm_password — password-box class, id="confirm_password",
+                     name="confirm_password", FIXED eye id to "eye_confirm", onclick preserved -->
+                <div class="field-group">
+                    <label class="field-label" for="confirm_password">Confirm Password</label>
+                    <div class="password-box">
+                        <input
+                            class="field-input"
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Re-enter your password"
+                            required>
+                        <i class="fa-solid fa-eye"
+                           id="eye_confirm"
+                           onclick="togglePassword('confirm_password', 'eye_confirm')">
+                        </i>
+                    </div>
+                </div>
+
+                <p class="terms-note">
+                    By creating an account you agree to our terms of service and privacy policy.
+                </p>
+
+                <!-- submit — name="register" preserved -->
+                <input class="submit-btn" type="submit" name="register" value="Create Account">
+
+            </form>
+
+            <p class="login-prompt">
+                Already have an account? <a href="login.html">Sign in</a>
+            </p>
+
+        </div>
+    </div>
+
+    <!-- Scripts — config.js first, Toastify added, refreshPage_home.js removed -->
+    <script src="static/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="static/toast.js"></script>
+    <script src="static/passwordToggle.js"></script>
 
     <script>
+        document.getElementById("registerForm").action = `${API_BASE}/register/`;
 
-    document.getElementById("registerForm").action=  `${API_BASE}/register/`;
+        document.getElementById("registerForm").onsubmit = function(e) {
+            const name            = document.getElementById("name").value.trim();
+            const email           = document.getElementById("email").value.trim();
+            const password        = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm_password").value;
 
+            // Name validation: letters only, min 3 chars
+            if (!/^[a-zA-Z ]{3,}$/.test(name)) {
+                showToast("⚠️ Name must be at least 3 letters and contain only letters and spaces.", "warning"); // FIXED — was alert()
+                e.preventDefault();
+                return false;
+            }
 
-    document.getElementById("registerForm").onsubmit = function(e) {
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirm_password").value;
+            // Email validation: simple regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast("⚠️ Please enter a valid email address.", "warning"); // FIXED — was alert()
+                e.preventDefault();
+                return false;
+            }
 
-        // Name validation: letters only, min 3 chars
-        if (!/^[a-zA-Z ]{3,}$/.test(name)) {
-            alert("Name must be at least 3 letters and contain only letters and spaces.");
-            e.preventDefault();
-            return false;
+            // Password validation: min 6 chars, uppercase, lowercase, number, special char
+            const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            if (!pwRegex.test(password)) {
+                showToast("⚠️ Password must be at least 8 characters and include uppercase, lowercase, number, and special character.", "warning"); // FIXED — was alert()
+                e.preventDefault();
+                return false;
+            }
+
+            // Confirm password
+            if (password !== confirmPassword) {
+                showToast("⚠️ Passwords do not match!", "warning"); // FIXED — was alert()
+                e.preventDefault();
+                return false;
+            }
+
+            return true; // all validations passed, allow form submission
         }
 
-        // Email validation: simple regex
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert("Please enter a valid email address.");
-            e.preventDefault();
-            return false;
-        }
+        document.addEventListener("DOMContentLoaded", function() {
+            const params  = new URLSearchParams(window.location.search);
+            const error   = params.get("error");
+            const success = params.get("success");
 
-        // Password validation: min 6 chars, uppercase, lowercase, number, special char
-        const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-        if (!pwRegex.test(password)) {
-            alert("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
-            e.preventDefault();
-            return false;
-        }
+            const messages = {
+                "passwords_not_match" : "⚠️ Passwords do not match",
+                "invalid_name"        : "⚠️ Name must be at least 3 characters, letters only",
+                "invalid_email"       : "⚠️ Invalid email address",
+                "email_exists"        : "⚠️ This email is already registered",
+                "weak_password"       : "⚠️ Password must include uppercase, lowercase, number and special character",
+                "password_too_long"   : "⚠️ Password too long (max 64 characters)",
+                "registration_failed" : "❌ Registration failed. Please try again."
+            };
 
-        // Confirm password
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            e.preventDefault();
-            return false;
-        }
+            if (error && messages[error]) {
+                showToast(messages[error], "warning");
+            }
+        });
+    </script>
 
-        return true; // all validations passed, allow form submission
-    }
-    
-    
-    
-    document.addEventListener("DOMContentLoaded", function() {
-        const params = new URLSearchParams(window.location.search);
-        const error  = params.get("error");
-        const success= params.get("success");
-
-    const messages = {
-        "passwords_not_match" : "⚠️ Passwords do not match",
-        "invalid_name"        : "⚠️ Name must be at least 3 characters, letters only",
-        "invalid_email"       : "⚠️ Invalid email address",
-        "email_exists"        : "⚠️ This email is already registered",
-        "weak_password"       : "⚠️ Password must include uppercase, lowercase, number and special character",
-        "password_too_long"   : "⚠️ Password too long (max 64 characters)",
-        "registration_failed" : "❌ Registration failed. Please try again."
-    };
-
-    if (error && messages[error]) {
-        showToast(messages[error], "warning");
-    }
-});
-        </script>
-
-    </body>
-
+</body>
 </html>
-
 
 <!--action="http://127.0.0.1:8000/register/"-->

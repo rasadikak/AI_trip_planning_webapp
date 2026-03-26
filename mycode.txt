@@ -734,3 +734,6 @@ async function sendChat() {
 | Prompt injection detection | Low — your system prompt handles most cases | 10 minutes |
 
 All four together take less than an hour and significantly improve the security and stability of your project before deployment.
+
+
+npx tailwindcss -i ./frontend/static/css/input.css -o ./frontend/static/css/output.css --watch

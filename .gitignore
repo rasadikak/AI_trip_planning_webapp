@@ -10,3 +10,5 @@ mycode.txt
 /logs
 backend/logger.py
 mycode.txt
+/node_modules
+

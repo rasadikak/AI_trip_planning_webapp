@@ -1,57 +1,229 @@
 <!DOCTYPE html>
 <html lang='en'>
-    <head>
-        <meta charset="UTF-8">
-       <title>request reset password</title>
-       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    </head>
-    <body>
-        <form id = 'RequestResetPassword'  method="POST">
-            email<input type="email" name="email" id="email" required><br>
-            
-            
-            <input type="submit" name="login">
-        </form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password — Serendib AI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="/frontend/static/css/output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --darker: #060E1A;
+            --card:   #0F1E35;
+            --green2: #22C55E;
+            --gold:   #D4A843;
+            --gold2:  #F5C842;
+            --border: rgba(212,168,67,0.2);
+            --text:   #E8E0D0;
+            --muted:  rgba(232,224,208,0.5);
+        }
 
-        <script src="static/config.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-        <script src="static/toast.js"></script>
-        <script src="static/refreshPage_home.js"></script>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        <script>
+        body {
+            min-height: 100vh;
+            background-color: var(--darker);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+            padding: 2rem 1rem;
+        }
 
-                document.getElementById("RequestResetPassword").action=  `${API_BASE}/reset_pw/request_reset`;
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse 70% 70% at 15% 30%, rgba(26,107,60,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 85% 70%, rgba(212,168,67,0.07) 0%, transparent 60%),
+                var(--darker);
+            z-index: 0;
+        }
 
-                document.getElementById('RequestResetPassword').addEventListener('submit', function(event){
-                    let email= document.getElementById('email').value;
+        .back-link {
+            position: fixed; top: 1.5rem; left: 1.5rem; z-index: 10;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            color: var(--muted); text-decoration: none;
+            font-size: 0.875rem; transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--gold); }
+
+        .wrapper {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 440px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px; padding: 3rem 2.5rem;
+            position: relative; overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .brand { text-align: center; margin-bottom: 2rem; }
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem; font-weight: 700;
+            color: var(--gold); text-decoration: none;
+            display: inline-block; margin-bottom: 0.5rem;
+        }
+        .brand-logo span { color: var(--green2); }
+        .brand-tagline { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+        .icon-circle {
+            width: 64px; height: 64px;
+            background: rgba(26,107,60,0.15);
+            border: 1px solid rgba(34,197,94,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.75rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem; font-weight: 700;
+            color: var(--text); text-align: center; margin-bottom: 0.375rem;
+        }
+        .card-subtitle {
+            font-size: 0.875rem; color: var(--muted);
+            text-align: center; margin-bottom: 2rem; font-weight: 300; line-height: 1.6;
+        }
+
+        .divider { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.75rem; }
+        .divider-line { flex: 1; height: 1px; background: var(--border); }
+        .divider-text { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; white-space: nowrap; }
+
+        .field-group { margin-bottom: 1.25rem; }
+        .field-label {
+            display: block; font-size: 0.8rem; font-weight: 500;
+            color: var(--muted); letter-spacing: 0.05em;
+            text-transform: uppercase; margin-bottom: 0.5rem;
+        }
+        .field-input {
+            width: 100%;
+            background: rgba(6,14,26,0.6);
+            border: 1px solid rgba(232,224,208,0.1);
+            border-radius: 10px; padding: 0.75rem 1rem;
+            color: var(--text); font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem; outline: none; transition: all 0.2s ease;
+        }
+        .field-input:focus {
+            border-color: rgba(212,168,67,0.5);
+            box-shadow: 0 0 0 3px rgba(212,168,67,0.08);
+            background: rgba(6,14,26,0.8);
+        }
+        .field-input::placeholder { color: rgba(232,224,208,0.25); }
+
+        .submit-btn {
+            width: 100%; padding: 0.875rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            border: none; border-radius: 10px;
+            color: #0A1628; font-family: 'Outfit', sans-serif;
+            font-size: 1rem; font-weight: 700; letter-spacing: 0.02em;
+            cursor: pointer; transition: all 0.2s ease;
+            margin-top: 0.5rem; margin-bottom: 1.5rem;
+        }
+        .submit-btn:hover { box-shadow: 0 8px 24px rgba(212,168,67,0.3); }
+
+        .login-prompt { text-align: center; font-size: 0.875rem; color: var(--muted); }
+        .login-prompt a { color: var(--gold); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+        .login-prompt a:hover { color: var(--gold2); }
+
+        @media (max-width: 480px) { .card { padding: 2rem 1.5rem; } }
+    </style>
+</head>
+<body>
+
+    <a href="login.html" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Sign In
+    </a>
+
+    <div class="wrapper">
+        <div class="card">
+
+            <div class="brand">
+                <a href="home.html" class="brand-logo">Serendib<span>AI</span></a>
+                <p class="brand-tagline">Sri Lanka Trip Planner</p>
+            </div>
+
+            <div class="icon-circle">🔐</div>
+
+            <h2 class="card-title">Forgot Password?</h2>
+            <p class="card-subtitle">Enter your email address and we'll send you a link to reset your password</p>
+
+            <div class="divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">Enter your email</span>
+                <div class="divider-line"></div>
+            </div>
+
+           
+            <form id="RequestResetPassword" method="POST">
+
+               
+                <div class="field-group">
+                    <label class="field-label" for="email">Email Address</label>
+                    <input
+                        class="field-input"
+                        type="email"
+                        name="email"
+                        id="email"
+                        placeholder="you@example.com"
+                        required>
+                </div>
+
                 
-                    if (email=='' ){
-                        event.preventDefault();
-                        showToast("⚠️ Email cannot be empty", "warning");
-                    }
-                });
+                <input class="submit-btn" type="submit" name="login" value="Send Reset Email">
 
+            </form>
 
-                document.addEventListener("DOMContentLoaded", function() {
-                    const params  = new URLSearchParams(window.location.search);
-                    const error   = params.get("error");
-                    const success = params.get("success");
+            <p class="login-prompt">
+                Remember your password? <a href="login.html">Sign in</a>
+            </p>
 
-                    
+        </div>
+    </div>
 
-                    if (error === "user_not_found") {
-                        showToast("❌ Email not found. Please register first.", "error");
-                    } else if (error === "send_failed") {
-                        showToast("❌ Failed to send reset email. Please try again.", "error");
-                    } else if (error === "server_error") {
-                        showToast("❌ Something went wrong. Please try again.", "error");
-                    }
+    
+    <script src="static/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="static/toast.js"></script>
+
+    <script>
+        document.getElementById("RequestResetPassword").action = `${API_BASE}/reset_pw/request_reset`;
+
+        document.getElementById('RequestResetPassword').addEventListener('submit', function(event) {
+            let email = document.getElementById('email').value;
+            if (email == '') {
+                event.preventDefault();
+                showToast("⚠️ Email cannot be empty", "warning");
+            }
         });
-        
-        </script>
 
-    </body>
+        document.addEventListener("DOMContentLoaded", function() {
+            const params  = new URLSearchParams(window.location.search);
+            const error   = params.get("error");
+            const success = params.get("success");
 
+            if (error === "user_not_found") {
+                showToast("❌ Email not found. Please register first.", "error");
+            } else if (error === "send_failed") {
+                showToast("❌ Failed to send reset email. Please try again.", "error");
+            } else if (error === "server_error") {
+                showToast("❌ Something went wrong. Please try again.", "error");
+            }
+        });
+    </script>
+
+</body>
 </html>
-
 <!--action="http://127.0.0.1:8000/reset_pw/request_reset"-->
