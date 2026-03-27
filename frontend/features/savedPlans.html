@@ -3,35 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Plans — Serendib AI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/frontend/static/css/output.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <title>Saved Plans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --darker: #060E1A;
+            --card:   #0F1E35;
+            --card2:  #0C1A2E;
+            --green2: #22C55E;
+            --gold:   #D4A843;
+            --gold2:  #F5C842;
+            --border: rgba(212,168,67,0.2);
+            --border2:rgba(232,224,208,0.08);
+            --text:   #E8E0D0;
+            --muted:  rgba(232,224,208,0.5);
+            --danger: #EF4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background-color: var(--darker);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse 70% 60% at 10% 10%, rgba(26,107,60,0.1) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 70% at 90% 90%, rgba(212,168,67,0.06) 0%, transparent 60%),
+                var(--darker);
+            z-index: 0; pointer-events: none;
+        }
+
+        /* Header */
+        header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(6,14,26,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .header-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem; font-weight: 700;
+            color: var(--gold); text-decoration: none;
+        }
+        .header-logo span { color: var(--green2); }
+
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.4rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text); text-decoration: none;
+            font-size: 0.85rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .back-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+        /* Main */
+        main {
+            position: relative; z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem; font-weight: 700;
+            color: var(--text); margin-bottom: 0.375rem;
+        }
+        .page-subtitle {
+            font-size: 0.875rem; color: var(--muted);
+            margin-bottom: 2rem; font-weight: 300;
+        }
+
+        .section-card {
+            background: var(--card);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            padding: 1.75rem;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem; font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.05em; text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        /* planList — id preserved */
+        #planList {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Style for dynamically created plan items from savedPlans.js */
+        #planList > div {
+            background: rgba(6,14,26,0.5) !important;
+            border: 1px solid var(--border2) !important;
+            border-radius: 12px !important;
+            padding: 1.25rem 1.5rem !important;
+            margin-bottom: 0 !important;
+        }
+
+        #planList > div h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem; font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+        }
+
+        #planList > div p {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Markdown rendered plan content */
+        #planList > div > div {
+            font-size: 0.875rem;
+            line-height: 1.8;
+            color: rgba(232,224,208,0.8);
+            border-top: 1px solid var(--border2);
+            padding-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons inside plan cards */
+        #planList > div button {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.45rem 1rem;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem; font-weight: 500;
+            cursor: pointer; transition: all 0.2s;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Delete button */
+        #planList > div button:first-of-type {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.2);
+            color: rgba(239,68,68,0.8);
+        }
+        #planList > div button:first-of-type:hover {
+            background: rgba(239,68,68,0.15);
+            border-color: rgba(239,68,68,0.4);
+            color: #EF4444;
+        }
+
+        /* Download PDF button */
+        #planList > div button:last-of-type {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            border: none;
+            color: #0A1628; font-weight: 700;
+        }
+        #planList > div button:last-of-type:hover {
+            box-shadow: 0 4px 16px rgba(212,168,67,0.3);
+        }
+
+        /* Empty state */
+        #planList p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        @media (max-width: 480px) {
+            .section-card { padding: 1.25rem; }
+            main { padding: 1.5rem 1rem 3rem; }
+            header { padding: 0.875rem 1rem; }
+        }
+    </style>
 </head>
 <body>
 
+    <!-- Header -->
     <header>
-        <h1 align="center">💾 Saved Plans</h1>
-        <a href="profile.html">← Back to Profile</a>
+        <a href="trip_planner.html" class="header-logo">Serendib<span>AI</span></a>
+        <!-- Back to Profile — href preserved -->
+        <a href="profile.html" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Profile
+        </a>
     </header>
 
     <main>
-        <section>
-            <h2>Your Saved Trip Plans</h2>
-            <div id="planList">
-                
+
+        <h1 class="page-title">💾 Saved Plans</h1>
+        <p class="page-subtitle">Your saved Sri Lanka trip itineraries</p>
+
+        <div class="section-card">
+            <div class="card-title">
+                <i class="fa-solid fa-bookmark"></i>
+                Your Saved Trip Plans
             </div>
-        </section>
+
+            <!-- planList — id preserved -->
+            <div id="planList"></div>
+        </div>
+
     </main>
+
+    <!-- Scripts — order and paths preserved -->
     <script src="static/config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="static/toast.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="static/savedPlans.js"></script>
-    
-    
-    
-    
 
 </body>
 </html>

@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Serendib AI — Trip Planner</title>
+ 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="static/css/chatbot.css"/>
   <link rel="stylesheet" href="/frontend/static/css/output.css">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
+
     :root {
       --darker: #060E1A;
       --dark:   #0A1628;
@@ -61,13 +63,37 @@
       display: flex; align-items: center;
     }
 
-    .logo {
+     .logo {
       font-family: 'Playfair Display', serif;
       font-size: 1.4rem; font-weight: 700;
       color: var(--gold); letter-spacing: 0.02em;
       text-decoration: none;
     }
     .logo span { color: var(--green2); }
+
+    /* Left scrollable */
+    .left-panel {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1.75rem 1.75rem 3rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
+    }
+    .left-panel::-webkit-scrollbar { width: 5px; }
+    .left-panel::-webkit-scrollbar-track { background: transparent; }
+    .left-panel::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.2); border-radius: 99px; }
+
+    /* Right chatbot: fixed width, fills height exactly */
+    .right-panel {
+      width: 370px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--border2);
+      background: var(--card2);
+      overflow: hidden;
+    }
 
     /* ════ NAV ════ */
     nav {
@@ -128,7 +154,7 @@
     .nav-profile:hover { border-color: var(--gold); color: var(--gold); background: rgba(212,168,67,0.05); }
     .nav-profile i { font-size: 0.78rem; }
 
-    /* ════ APP SHELL: fills screen below chrome, side-by-side ════ */
+        /* ════ APP SHELL: fills screen below chrome, side-by-side ════ */
     .app-shell {
       position: fixed;
       top: var(--chrome-h);
@@ -138,28 +164,10 @@
       overflow: hidden;
     }
 
-    /* Left scrollable */
-    .left-panel {
-      flex: 1 1 0;
-      min-width: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 1.75rem 1.75rem 3rem;
-      display: flex; flex-direction: column; gap: 1.5rem;
-    }
-    .left-panel::-webkit-scrollbar { width: 5px; }
-    .left-panel::-webkit-scrollbar-track { background: transparent; }
-    .left-panel::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.2); border-radius: 99px; }
-
-    /* Right chatbot: fixed width, fills height exactly */
-    .right-panel {
-      width: 370px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      border-left: 1px solid var(--border2);
-      background: var(--card2);
-      overflow: hidden;
+    .utilities-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
     }
 
     /* ════ CARDS ════ */
@@ -183,7 +191,7 @@
       margin-left: 0.75rem;
     }
 
-    /* ════ FORM ELEMENTS ════ */
+     /* ════ FORM ELEMENTS ════ */
     label {
       display: block;
       font-size: 0.72rem; font-weight: 600;
@@ -285,12 +293,7 @@
     #pdfForm { display: contents; }
     #tripOutputPDF { display: none; }
 
-    /* ════ UTILITIES ════ */
-    .utilities-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
+
 
     .file-upload-area {
       border: 1px dashed rgba(212,168,67,0.3);
@@ -321,126 +324,6 @@
     }
     #currency-result { margin-top: 0.875rem; }
 
-    /* ════ CHATBOT — override chatbot.css aggressively ════ */
-    #chatbot-section {
-      flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden;
-    }
-
-    /* Reset anything chatbot.css may set on the container */
-    #chat-container {
-      all: unset !important;
-      display: flex !important;
-      flex-direction: column !important;
-      flex: 1 !important;
-      min-height: 0 !important;
-      overflow: hidden !important;
-      background: transparent !important;
-    }
-
-    #chat-header {
-      all: unset !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 0.65rem !important;
-      padding: 0.9rem 1.1rem !important;
-      background: rgba(6,14,26,0.75) !important;
-      border-bottom: 1px solid var(--border2) !important;
-      flex-shrink: 0 !important;
-    }
-    #chat-icon { font-size: 1.2rem; }
-    #chat-header h2 {
-      color: var(--text) !important;
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 0.9rem !important;
-      font-weight: 600 !important;
-      line-height: 1.2 !important;
-    }
-    #chat-status {
-      display: block !important;
-      color: var(--green2) !important;
-      font-size: 0.7rem !important;
-      font-family: 'Outfit', sans-serif !important;
-    }
-
-    #chatBox {
-      all: unset !important;
-      display: block !important;
-      flex: 1 !important;
-      overflow-y: auto !important;
-      min-height: 0 !important;
-      padding: 1rem !important;
-      background: transparent !important;
-    }
-    #chatBox::-webkit-scrollbar { width: 4px; }
-    #chatBox::-webkit-scrollbar-thumb { background: rgba(212,168,67,0.2); border-radius: 99px; }
-
-    #chat-input-area {
-      all: unset !important;
-      display: flex !important;
-      gap: 0.5rem !important;
-      align-items: flex-end !important;
-      padding: 0.75rem !important;
-      background: rgba(6,14,26,0.65) !important;
-      border-top: 1px solid var(--border2) !important;
-      flex-shrink: 0 !important;
-    }
-
-    #chatInput {
-      all: unset !important;
-      flex: 1 !important;
-      background: rgba(6,14,26,0.55) !important;
-      border: 1px solid var(--border2) !important;
-      border-radius: 8px !important;
-      color: var(--text) !important;
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 0.85rem !important;
-      padding: 0.55rem 0.75rem !important;
-      resize: none !important;
-      line-height: 1.4 !important;
-      min-height: 38px !important;
-      max-height: 120px !important;
-      overflow-y: auto !important;
-    }
-    #chatInput:focus { border-color: rgba(212,168,67,0.4) !important; outline: none !important; }
-    #chatInput::placeholder { color: var(--muted) !important; }
-
-    #send-btn {
-      all: unset !important;
-      background: linear-gradient(135deg, var(--gold), var(--gold2)) !important;
-      border-radius: 8px !important;
-      width: 38px !important; height: 38px !important;
-      display: flex !important; align-items: center !important; justify-content: center !important;
-      cursor: pointer !important; flex-shrink: 0 !important;
-      color: #0A1628 !important;
-    }
-    #send-btn:hover { box-shadow: 0 4px 12px rgba(212,168,67,0.3) !important; }
-
-    #clear-chat-btn {
-      all: unset !important;
-      margin-left: auto !important;
-      background: transparent !important;
-      border: 1px solid var(--border2) !important;
-      color: var(--muted) !important;
-      border-radius: 6px !important;
-      font-size: 0.72rem !important;
-      font-family: 'Outfit', sans-serif !important;
-      padding: 0.22rem 0.55rem !important;
-      cursor: pointer !important;
-    }
-    #clear-chat-btn:hover { border-color: var(--gold) !important; color: var(--gold) !important; }
-
-    #chat-hint {
-      all: unset !important;
-      display: block !important;
-      color: var(--muted) !important;
-      font-size: 0.68rem !important;
-      font-family: 'Outfit', sans-serif !important;
-      text-align: center !important;
-      padding: 0.3rem !important;
-      background: rgba(6,14,26,0.65) !important;
-      flex-shrink: 0 !important;
-    }
-
     /* ════ RESPONSIVE ════ */
     @media (max-width: 960px) {
       html, body { overflow: auto; }
@@ -463,17 +346,18 @@
       nav { padding: 0 0.75rem; gap: 0.1rem; }
       .nav-item { padding: 0.35rem 0.6rem; font-size: 0.78rem; }
     }
+
   </style>
 </head>
 <body>
 
-  <!-- ══ HEADER ══ -->
+  <!-- Header -->
   <header>
-    <a href="#" class="logo">Serendib<span>AI</span></a>
+     <a href="#" class="logo">Serendib<span>AI</span></a>
   </header>
 
-  <!-- ══ NAV BAR ══ -->
-  <nav>
+
+    <nav>
     <a href="#section-planner" class="nav-item active">
       <i class="fa-solid fa-map-location-dot"></i> Trip Planner
     </a>
@@ -482,72 +366,89 @@
       <i class="fa-solid fa-image"></i> Find by Image
     </a>
     <a href="#section-weather" class="nav-item">
-      <i class="fa-solid fa-cloud-sun"></i> Weather
+      <i class="fa-solid fa-cloud-sun"></i>Search Weather
     </a>
     <a href="#section-currency" class="nav-item">
-      <i class="fa-solid fa-coins"></i> Currency
+      <i class="fa-solid fa-coins"></i> Currency Converter
     </a>
     <a href="profile.html" class="nav-profile">
       <i class="fa-solid fa-circle-user"></i> Profile
     </a>
   </nav>
+    
+    
+    
 
-  <!-- ══ APP SHELL ══ -->
-  <div class="app-shell">
+ 
+<div class="app-shell">
+<div class="left-panel">
 
-    <!-- LEFT: scrollable content -->
-    <div class="left-panel">
+    <!-- Trip Planning Section -->
+<section>
+      <h2>Plan Your Trip</h2>
 
-      <!-- Trip Planner -->
-      <div class="section-card" id="section-planner">
-        <h2 class="section-title">🗺️ Plan Your Trip</h2>
-        <form id="tripForm" name="tripForm">
-          <div class="form-grid">
+      <form id="tripForm"  name="tripForm" >
 
-            <div>
-              <label for="destinationType">Destination Type</label>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+
+           <div>
+              <label for="destinationType">📍 Destination Type</label>
               <select id="destinationType" name="destinationType" required>
-                <option value="">Select destination</option>
-                <option value="beach">Beach &amp; Coastal</option>
-                <option value="upcountry">Hill Country &amp; Nature</option>
-                <option value="city">City / Colombo</option>
-                <option value="safari">Wildlife &amp; Safari</option>
-                <option value="culturel">Cultural &amp; Heritage</option>
+                  <option value="">Select destination</option>
+                  <option value="beach">🏖️ Beach &amp; Coastal</option>
+                  <option value="upcountry">🌿 Hill Country &amp; Nature</option>
+                  <option value="city">🏙️ City / Colombo</option>
+                  <option value="safari">🐘 Wildlife &amp; Safari</option>
+                  <option value="culturel">🏛️ Cultural &amp; Heritage</option>
               </select>
             </div>
 
+
             <div>
-              <label for="budget">Budget</label>
-              <select id="budget" name="budget" required>
+                <label for="accommodation">🏨 Accommodation</label>
+                <select id="accommodation" name="accommodation" required>
+                    <option value="">Select accommodation</option>
+                    <option value="hotel">🏩 Hotel</option>
+                    <option value="tents">⛺ Tents / Camping</option>
+                    <option value="five_star">⭐ Five Star Hotel</option>
+                    <option value="kabana">🌴 Kabana / Guesthouse</option>
+                </select>
+            </div>
+
+        
+
+        <div>
+            <label for="budget">💰 Budget</label>
+            <select id="budget" name="budget" required>
                 <option value="">Select budget</option>
-                <option value="low">Low</option>
-                <option value="mid">Mid</option>
-                <option value="high">High</option>
-              </select>
-            </div>
+                <option value="low">🟢 Low</option>
+                <option value="mid">🟡 Mid</option>
+                <option value="high">🔴 High</option>
+            </select>
+        </div>
 
+        
+
+         <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; grid-column: span 1;">
             <div>
-              <label for="numDays">Number of Days</label>
-              <input type="number" id="numDays" min="1" max="30" placeholder="e.g., 3" name="numDays" required>
+              <label for="numDays">📅 Days</label>
+              <input type="number" id="numDays" min="1" max="30" placeholder="e.g. 3" name="numDays" required>
             </div>
-
             <div>
-              <label for="numPeople">Number of People</label>
-              <input type="number" id="numPeople" min="1" max="20" placeholder="e.g., 2" name="numPeople" required>
+              <label for="numPeople">👥 People</label>
+              <input type="number" id="numPeople" min="1" max="20" placeholder="e.g. 2" name="numPeople" required>
             </div>
+          </div>
 
-            <div class="full">
-              <label for="accommodation">Accommodation Type</label>
-              <select id="accommodation" name="accommodation" required>
-                <option value="">Select accommodation</option>
-                <option value="hotel">Hotel</option>
-                <option value="tents">Tents / Camping</option>
-                <option value="five_star">Five Star Hotel</option>
-                <option value="kabana">Kabana / Guesthouse</option>
-              </select>
-            </div>
+        
 
-            <div class="full">
+        
+      
+
+      </div>  
+
+        
+        <div class="full">
               <label>Food Preferences 🍽️</label>
               <div class="checkbox-group">
                 <div class="checkbox-item">
@@ -592,28 +493,34 @@
                 </div>
               </div>
             </div>
+        
 
-          </div>
+        <button type="submit">Plan Trip</button>
 
-          <!-- Plan + Download PDF together -->
-          <div class="plan-actions">
-            <button type="submit" class="btn-gold">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Plan Trip
-            </button>
-            <form id="pdfForm" style="display:contents;">
-              <div id="tripOutputPDF" style="display:none;"></div>
-              <input type="submit" value="⬇️ Download PDF" class="btn-ghost">
-            </form>
-          </div>
+        
+      
+      </form>
 
-        </form>
-        <div id="tripResult"></div>
+      <div>
+      
+      <form id="pdfForm" >
+        <div id="tripOutputPDF"></div>
+        <br>
+        <input type="submit" value="Download PDF"  style="width: auto; padding: 0.62rem 1.4rem;">
+      </form>
+   </div>
+
+      <div id="tripResult">
+
       </div>
+      
+</section>
 
-      <!-- Utilities Row -->
-      <div class="utilities-row">
-
-        <!-- Find by Image -->
+    <hr>
+    
+    <div class="utilities-row">
+    <!-- Image-Based Destination Search -->
+   <!-- Find by Image -->
         <div class="section-card" id="section-image">
           <h2 class="section-title">🖼️ Find by Image</h2>
           <form id="ImageSearchForm" enctype="multipart/form-data">
@@ -627,7 +534,14 @@
           <div id="imageResult"></div>
         </div>
 
-        <!-- Weather -->
+    
+
+   
+  
+
+    
+
+   <!-- Weather -->
         <div class="section-card" id="section-weather">
           <h2 class="section-title">🌤️ Check Weather</h2>
           <form id="weather_form">
@@ -640,7 +554,9 @@
           <div id="weather-result"></div>
         </div>
 
-        <!-- Currency -->
+ <!-- currency converter Section -->
+
+  <!-- Currency -->
         <div class="section-card" id="section-currency">
           <h2 class="section-title">💱 Currency Converter</h2>
           <p style="font-size:0.78rem; color:var(--muted); margin-bottom:0.875rem;">Convert LKR to any world currency</p>
@@ -658,60 +574,63 @@
           <div id="currency-result"></div>
         </div>
 
-      </div><!-- /utilities-row -->
+  </div>
+  <hr>
 
-    </div><!-- /left-panel -->
+</div>
 
-    <!-- RIGHT: Chatbot (fills full height, never scrolls the panel itself) -->
-    <div class="right-panel">
-      <section id="chatbot-section">
-        <div id="chat-container">
+<div class="right-panel">
 
-          <div id="chat-header">
+   <!-- Chatbot Section -->
+  <section id="chatbot-section">
+    <div id="chat-container">
+        <div id="chat-header">
             <span id="chat-icon">🌴</span>
             <div>
-              <h2>Sri Lanka Travel Assistant</h2>
-              <span id="chat-status">● Online</span>
+                <h2>Sri Lanka Travel Assistant</h2>
+                <span id="chat-status">Online</span>
             </div>
-            <button id="clear-chat-btn" onclick="clearChat()">Clear</button>
-          </div>
+            <button id="clear-chat-btn" onclick="clearChat()">Clear Chat</button>
+        </div>
 
-          <div id="chatBox">
+        <div id="chatBox">
+            <!-- Welcome message -->
             <div class="message bot-message">
-              <div class="avatar bot-avatar">🌴</div>
-              <div class="bubble bot-bubble">
-                <p>Ayubowan! 👋 I'm your Sri Lanka Travel Assistant.</p>
-                <p>Ask me anything about traveling in Sri Lanka — destinations, food, transport, hotels, and more!</p>
-              </div>
+                <div class="avatar bot-avatar">🌴</div>
+                <div class="bubble bot-bubble">
+                    <p>Ayubowan! 👋 I'm your Sri Lanka Travel Assistant.</p>
+                    <p>Ask me anything about traveling in Sri Lanka — destinations, food, transport, hotels, and more!</p>
+                </div>
             </div>
-          </div>
+        </div>
 
-          <div id="chat-input-area">
+        <div id="chat-input-area">
             <textarea
-              id="chatInput"
-              placeholder="Ask about Sri Lanka travel..."
-              rows="1"
-              onkeydown="handleChatKey(event)"
-              oninput="autoResize(this)"
+                id="chatInput"
+                placeholder="Ask about Sri Lanka travel..."
+                rows="1"
+                onkeydown="handleChatKey(event)"
+                oninput="autoResize(this)"
             ></textarea>
             <button id="send-btn" onclick="sendChat()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
             </button>
-          </div>
-          <p id="chat-hint">Enter to send · Shift+Enter for new line</p>
-
         </div>
-      </section>
-    </div><!-- /right-panel -->
+        <p id="chat-hint">Press Enter to send · Shift+Enter for new line</p>
+    </div>
+  </section>
 
-  </div><!-- /app-shell -->
+  
 
-  <!-- Nav active state on scroll -->
+</div>
+</div>
+
+<!-- Nav active state on scroll -->
   <script>
     const navItems = document.querySelectorAll('nav a.nav-item[href^="#"]');
     const sectionIds = ['section-planner','section-image','section-weather','section-currency'];
@@ -739,17 +658,24 @@
     }
   </script>
 
-  <script src="static/config.js"></script>
+
+<script src="static/config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <script src="static/toast.js"></script>
+<script src="static/toast.js"></script>
   <script src="static/refreshPage.js"></script>
   <script src="static/tripPlannerOutput.js"></script>
   <script src="static/pdf.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="static/chatbotOutput.js"></script>
-  <script src="static/weather.js"></script>
-  <script src="static/currency.js"></script>
-  <script src="static/outputImage.js"></script>
+   <script src="static/chatbotOutput.js"></script>
+   
+   <script src="static/weather.js"></script>
+   
+<script src="static/currency.js"></script>
+<script src="static/outputImage.js"></script>
+
+
+
+
 
 </body>
 </html>

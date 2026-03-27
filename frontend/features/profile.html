@@ -1,120 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — Serendib AI</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/frontend/static/css/output.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<title>Profile</title>
-</head>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --darker: #060E1A;
+        --dark:   #0A1628;
+        --card:   #0F1E35;
+        --card2:  #0C1A2E;
+        --green2: #22C55E;
+        --gold:   #D4A843;
+        --gold2:  #F5C842;
+        --border: rgba(212,168,67,0.2);
+        --border2:rgba(232,224,208,0.08);
+        --text:   #E8E0D0;
+        --muted:  rgba(232,224,208,0.5);
+        --danger: #EF4444;
+    }
 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        min-height: 100vh;
+        background-color: var(--darker);
+        font-family: 'Outfit', sans-serif;
+        color: var(--text);
+    }
+
+    body::before {
+        content: '';
+        position: fixed; inset: 0;
+        background:
+            radial-gradient(ellipse 70% 60% at 10% 10%, rgba(26,107,60,0.1) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 70% at 90% 90%, rgba(212,168,67,0.06) 0%, transparent 60%),
+            var(--darker);
+        z-index: 0; pointer-events: none;
+    }
+
+    /* Header */
+    header {
+        position: sticky; top: 0; z-index: 100;
+        background: rgba(6,14,26,0.85);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem; font-weight: 700;
+        color: var(--gold); text-decoration: none;
+    }
+    .header-logo span { color: var(--green2); }
+
+    .back-btn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.4rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text); text-decoration: none;
+        font-size: 0.85rem; font-weight: 500;
+        transition: all 0.2s;
+    }
+    .back-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Main */
+    main {
+        position: relative; z-index: 1;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* Page title */
+    .page-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem; font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.375rem;
+    }
+    .page-subtitle {
+        font-size: 0.875rem; color: var(--muted);
+        margin-bottom: 2rem; font-weight: 300;
+    }
+
+    /* Section card */
+    .profile-card {
+        background: var(--card);
+        border: 1px solid var(--border2);
+        border-radius: 16px;
+        padding: 1.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem; font-weight: 700;
+        color: var(--gold);
+        letter-spacing: 0.05em; text-transform: uppercase;
+        margin-bottom: 1.25rem;
+        display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    /* Field */
+    .field-group { margin-bottom: 1.25rem; }
+    .field-group:last-child { margin-bottom: 0; }
+
+    .field-label {
+        display: block;
+        font-size: 0.75rem; font-weight: 500;
+        color: var(--muted);
+        letter-spacing: 0.08em; text-transform: uppercase;
+        margin-bottom: 0.4rem;
+    }
+
+    .field-row {
+        display: flex; align-items: center; gap: 0.75rem;
+    }
+
+    /* name, email — id and name preserved */
+    #name, #email {
+        flex: 1;
+        background: rgba(6,14,26,0.6);
+        border: 1px solid var(--border2);
+        border-radius: 8px;
+        padding: 0.65rem 0.9rem;
+        color: var(--text);
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s;
+        width: 100%;
+    }
+    #name:focus, #email:focus { border-color: rgba(212,168,67,0.5); }
+
+    /* editName button — id and onclick preserved */
+    #editName {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.5rem 0.9rem;
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--muted);
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.8rem; font-weight: 500;
+        cursor: pointer; transition: all 0.2s;
+        white-space: nowrap;
+    }
+    #editName:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Nav links */
+    .nav-links { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .nav-link-item {
+        display: flex; align-items: center; gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        background: rgba(6,14,26,0.4);
+        border: 1px solid var(--border2);
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        font-size: 0.9rem; font-weight: 500;
+        transition: all 0.2s;
+    }
+    .nav-link-item:hover { border-color: rgba(212,168,67,0.3); color: var(--gold); background: rgba(212,168,67,0.04); }
+    .nav-link-item .link-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+    .nav-link-item .link-arrow { margin-left: auto; color: var(--muted); font-size: 0.8rem; }
+
+    /* Danger zone */
+    .danger-zone {
+        background: rgba(239,68,68,0.05);
+        border: 1px solid rgba(239,68,68,0.15);
+        border-radius: 16px;
+        padding: 1.75rem;
+        margin-bottom: 1.25rem;
+    }
+    .danger-title {
+        font-size: 0.75rem; font-weight: 600;
+        color: rgba(239,68,68,0.7);
+        letter-spacing: 0.1em; text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+    .danger-links { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .danger-link {
+        display: flex; align-items: center; gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        background: rgba(6,14,26,0.4);
+        border: 1px solid rgba(239,68,68,0.15);
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        font-size: 0.9rem; font-weight: 500;
+        cursor: pointer; transition: all 0.2s;
+    }
+    .danger-link:hover { border-color: rgba(239,68,68,0.4); color: var(--danger); background: rgba(239,68,68,0.05); }
+    .danger-link .link-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+    .danger-link .link-arrow { margin-left: auto; color: var(--muted); font-size: 0.8rem; }
+
+    /* Divider in card */
+    .card-divider {
+        border: none; border-top: 1px solid var(--border2);
+        margin: 1.25rem 0;
+    }
+
+    @media (max-width: 480px) {
+        .profile-card, .danger-zone { padding: 1.25rem; }
+        main { padding: 1.5rem 1rem 3rem; }
+    }
+</style>
+</head>
 <body>
 
-<h1 align="center">User Profile</h1>
+<!-- Header -->
+<header>
+    <a href="trip_planner.html" class="header-logo">Serendib<span>AI</span></a>
+    <!-- Back to Trip Planner -->
+    <a href="trip_planner.html" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        Trip Planner
+    </a>
+</header>
 
-<!-- Profile Info -->
-<section align="center">
+<main>
 
-<h2>Account Information</h2>
+    <h1 class="page-title">Your Profile</h1>
+    <p class="page-subtitle">Manage your account and preferences</p>
 
+    <!-- Profile Info -->
+    <!-- Account Information section -->
+    <div class="profile-card">
+        <div class="card-title">
+            <i class="fa-solid fa-user"></i>
+            Account Information
+        </div>
 
+        <!-- name — id="name" name="name" readonly preserved -->
+        <div class="field-group">
+            <label class="field-label" for="name">Full Name</label>
+            <div class="field-row">
+                <input type="text" id="name" name="name" readonly placeholder="Loading...">
+                <!-- editName — id="editName" onclick="editName()" type="button" preserved -->
+                <button type="button" id="editName" onclick="editName()">
+                    ✏️ Edit
+                </button>
+            </div>
+        </div>
 
+        <!-- email — id="email" name="email" readonly preserved -->
+        <div class="field-group">
+            <label class="field-label" for="email">Email Address</label>
+            <input type="email" id="email" name="email" readonly placeholder="Loading...">
+        </div>
+    </div>
 
+    <!-- Trip Management -->
+    <div class="profile-card">
+        <div class="card-title">
+            <i class="fa-solid fa-map"></i>
+            Trip Management
+        </div>
+        <div class="nav-links">
+            <a href="savedPlans.html" class="nav-link-item">
+                <span class="link-icon">💾</span>
+                Saved Plans
+                <i class="fa-solid fa-chevron-right link-arrow"></i>
+            </a>
+            <a href="favDestination.html" class="nav-link-item">
+                <span class="link-icon">⭐</span>
+                Favourite Places
+                <i class="fa-solid fa-chevron-right link-arrow"></i>
+            </a>
+        </div>
+    </div>
 
-<br>
+    <!-- Settings -->
+    <div class="profile-card">
+        <div class="card-title">
+            <i class="fa-solid fa-gear"></i>
+            Settings
+        </div>
+        <div class="nav-links">
+            <a href='/frontend/home/request_reset_pw.html' class="nav-link-item">
+                <span class="link-icon">🔑</span>
+                Change Password
+                <i class="fa-solid fa-chevron-right link-arrow"></i>
+            </a>
+            <!-- signOut — onclick preserved -->
+            <a href="#" onclick="signOut()" class="nav-link-item">
+                <span class="link-icon">🚪</span>
+                Sign Out
+                <i class="fa-solid fa-chevron-right link-arrow"></i>
+            </a>
+        </div>
+    </div>
 
-<label for="name">Name</label><br>
-<input type="text" id="name" name="name" readonly>
-<button type="button" id ="editName" onclick="editName()">✏️ Edit Name</button>
+    <!-- Danger Zone -->
+    <div class="danger-zone">
+        <div class="danger-title">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Danger Zone
+        </div>
+        <div class="danger-links">
+            <!-- delAccount — onclick preserved -->
+            <a href="#" onclick="delAccount()" class="danger-link">
+                <span class="link-icon">🗑️</span>
+                Delete Account
+                <i class="fa-solid fa-chevron-right link-arrow"></i>
+            </a>
+        </div>
+    </div>
 
-<br><br>
+</main>
 
-<label for="email">Email</label><br>
-<input type="email" id="email" name="email" readonly>
-
-<br><br>
-
-
-
-
-
-</section>
-
-<hr>
-
-<!-- Trip Management -->
-<section align="center">
-
-<h2>Trip Management</h2>
-
-
-<a href="savedPlans.html">📍 Saved plans</a><br><br>
-<a href="favDestination.html">⭐ Favorite Places</a><br><br>
-
-
-</section>
-
-<hr>
-
-
-
-<!-- Settings -->
-<section align="center">
-
-<h2>Settings</h2>
-
-
-<a href='/frontend/home/request_reset_pw.html'>🔑 Change Password</a><br><br>
-
-
-
-<hr>
-
-<a href="#" onclick="signOut()">🚪 Sign Out</a>
-<br>
-<a href="#" onclick="delAccount()">🗑️ Delete Account</a>
-
-</section>
-
-<br>
-
-<section>
-<a href="trip_planner.html">🏠 Back to Trip Planner</a>
-</section>
-
+<!-- Scripts — paths preserved -->
 <script src="static/config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <script src="static/toast.js"></script>
-  <script src="static/profileSection1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="static/toast.js"></script>
+<script src="static/profileSection1.js"></script>
 
- 
-   
-
-   <script>
+<script>
     function signOut() {
         window.location.href = `${API_BASE}/signout`;
     }
 
     async function delAccount() {
-        
         const confirmed = confirm("Are you sure you want to delete your account? This will permanently delete all your saved plans, favourite places and chat history. This cannot be undone.");
-
         if (!confirmed) return;
-
         try {
-            
             const response = await fetch(`${API_BASE}/profile/delAccount`, {
                 method     : "DELETE",
                 credentials: "include"
             });
-
             if (response.status === 401) { handle401(); return; }
-
             if (response.ok) {
                 showToast("🗑️ Account deleted successfully", "success");
-                
                 setTimeout(() => {
                     window.location.href = `${API_BASE}/frontend/home/home.html`;
                 }, 2000);
@@ -122,7 +348,6 @@
                 const err = await response.json();
                 showToast("❌ " + (err.detail || "Failed to delete account"), "error");
             }
-
         } catch(error) {
             showToast("❌ " + error.message, "error");
         }
@@ -130,5 +355,4 @@
 </script>
 
 </body>
-
 </html>
