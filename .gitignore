@@ -11,4 +11,6 @@ mycode.txt
 backend/logger.py
 mycode.txt
 /node_modules
+.pytest_cache/
+__pycache__/
 
