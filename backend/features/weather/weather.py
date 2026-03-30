@@ -9,10 +9,11 @@ router = APIRouter(prefix='/weather', tags=['weather'])
 @router.post('/')
 def weather_api(place: str = Form(...)):
     #print("weather api loaded")
-    logger.info(f"Weather requested — place:{place}")
+    search_place = f"{place}, Sri Lanka"
+    logger.info(f"Weather requested — place:{search_place}")
     try:
         #print("try first")
-        url = f"https://wttr.in/{place}?format=j1"
+        url = f"https://wttr.in/{search_place}?format=j1"
         #print(url)
         response = requests.get(url, timeout=20, headers={"User-Agent": "serendib-trip-app"})
         #print("response", response)
@@ -31,7 +32,7 @@ def weather_api(place: str = Form(...)):
 
         logger.info(f"Weather fetched successfully — place:{place} location:{location} temp:{current['temp_C']}°C")
         return {
-            "location"  : location,
+            "location"  : search_place,
             "region"    : region,
             "temp_c"    : current["temp_C"],
             "feels_like": current["FeelsLikeC"],

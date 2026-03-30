@@ -48,25 +48,27 @@ document.getElementById("weather_form").addEventListener("submit", async functio
 
 resultDiv.innerHTML = `
     <div style="
-        border: 1px solid #ccc;
+        border: 1px solid #C4D4C4;
         border-radius: 12px;
         padding: 20px;
         max-width: 400px;
-        background: #f9f9f9;
+        background: #F7FAF7;
+        color: #1A2E1A;
+        font-family: 'Outfit', sans-serif;
     ">
-        <h3 style="margin:0 0 4px;">
-            📍 ${data.location}, ${data.region}
+        <h3 style="margin:0 0 4px; color:#1A2E1A;">
+            📍 ${data.search_place}, ${data.region}
         </h3>
         <div style="font-size:3rem; margin:8px 0;">${emoji}</div>
-        <h2 style="margin:0; font-size:2.5rem;">${data.temp_c}°C</h2>
-        <p style="margin:0; color:#555;">${data.condition}</p>
-        <hr style="margin:12px 0;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-            <div>🌡️ Feels like: <b>${data.feels_like}°C</b></div>
-            <div>💧 Humidity: <b>${data.humidity}%</b></div>
-            <div>💨 Wind: <b>${data.wind_kph} km/h</b></div>
-            <div>👁️ Visibility: <b>${data.visibility} km</b></div>
-            <div>☀️ UV Index: <b>${data.uv_index}</b></div>
+        <h2 style="margin:0; font-size:2.5rem; color:#1A2E1A;">${data.temp_c}°C</h2>
+        <p style="margin:0; color:#4B6B4B;">${data.condition}</p>
+        <hr style="margin:12px 0; border-color:#C4D4C4;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.875rem;">
+            <div>🌡️ Feels like: <br><b>${data.feels_like}°C</b></div>
+            <div>💧 Humidity: <br><b>${data.humidity}%</b></div>
+            <div>💨 Wind: <br><b>${data.wind_kph} km/h</b></div>
+            <div>👁️ Visibility: <br><b>${data.visibility} km</b></div>
+            <div>☀️ UV Index: <br><b>${data.uv_index}</b></div>
         </div>
     </div>
 `;
@@ -76,6 +78,6 @@ resultDiv.innerHTML = `
                         ? "Network Connection Error — please check your connection" 
                         : error.message;
         resultDiv.innerHTML= `<p style= "color:red;"> ❌ ${userMessage} </p>`
-        showToast("❌ "+ userMessage, "error");
+        showToast("❌ Network Coonection error, try again later!", "error");
     }
 });

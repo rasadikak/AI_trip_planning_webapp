@@ -55,6 +55,9 @@ function editName() {
     text.type    = "text";
     text.value   = originalName;
     text.style.padding = "4px";
+    text.style.backgroundColor="#F0F4F0"
+    text.style.color="black"
+
 
     
     const saveButton         = document.createElement("button");
