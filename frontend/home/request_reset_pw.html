@@ -29,9 +29,18 @@
             display: flex; align-items: center; justify-content: center;
             position: relative; overflow: hidden;
             padding: 2rem 1rem;
+
+            background-image: 
+                    radial-gradient(ellipse 70% 70% at 15% 30%, rgba(20,83,45,0.18) 0%, transparent 60%),
+                    radial-gradient(ellipse 50% 60% at 85% 70%, rgba(180,83,9,0.12) 0%, transparent 60%),
+                    linear-gradient(rgba(240,244,240,0.25), rgba(240,244,240,0.25)),
+                    url('/frontend/background_images/request_reset_pw_img.webp');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
-        body::before {
+        /*body::before {
             content: '';
             position: fixed; inset: 0;
             background:
@@ -39,7 +48,7 @@
                 radial-gradient(ellipse 50% 60% at 85% 70%, rgba(180,83,9,0.04) 0%, transparent 60%),
                 var(--darker);
             z-index: 0;
-        }
+        }*/
 
         .back-link {
             position: fixed; top: 1.5rem; left: 1.5rem; z-index: 10;
@@ -137,7 +146,12 @@
         .login-prompt a { color: var(--gold); text-decoration: none; font-weight: 600; transition: color 0.2s; }
         .login-prompt a:hover { color: var(--gold2); }
 
-        @media (max-width: 480px) { .card { padding: 2rem 1.5rem; } }
+        @media (max-width: 480px) { 
+            .card { padding: 2rem 1.5rem; }
+             body {
+                background-attachment: scroll;
+            }
+        }
     </style>
 </head>
 <body>

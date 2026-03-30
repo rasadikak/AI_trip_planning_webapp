@@ -30,9 +30,18 @@
             background-color: var(--darker);
             font-family: 'Outfit', sans-serif;
             color: var(--text);
+
+            background-image: 
+                    radial-gradient(ellipse 70% 70% at 15% 30%, rgba(20,83,45,0.18) 0%, transparent 60%),
+                    radial-gradient(ellipse 50% 60% at 85% 70%, rgba(180,83,9,0.12) 0%, transparent 60%),
+                    linear-gradient(rgba(240,244,240,0.25), rgba(240,244,240,0.25)),
+                    url('/frontend/background_images/savedPlans_img.webp');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
-        body::before {
+        /*body::before {
             content: '';
             position: fixed; inset: 0;
             background:
@@ -40,7 +49,7 @@
                 radial-gradient(ellipse 60% 70% at 90% 90%, rgba(180,83,9,0.04) 0%, transparent 60%),
                 var(--darker);
             z-index: 0; pointer-events: none;
-        }
+        }*/
 
         /* Header */
         header {
@@ -189,6 +198,9 @@
             .section-card { padding: 1.25rem; }
             main { padding: 1.5rem 1rem 3rem; }
             header { padding: 0.875rem 1rem; }
+            body {
+                background-attachment: scroll;
+            }
         }
     </style>
 </head>

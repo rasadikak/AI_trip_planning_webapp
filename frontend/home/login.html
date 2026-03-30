@@ -38,8 +38,8 @@
     background-image: 
         radial-gradient(ellipse 70% 70% at 15% 30%, rgba(20,83,45,0.18) 0%, transparent 60%),
         radial-gradient(ellipse 50% 60% at 85% 70%, rgba(180,83,9,0.12) 0%, transparent 60%),
-        linear-gradient(rgba(240,244,240,0.75), rgba(240,244,240,0.75)),
-        url('/frontend/background_images/images.jpg');
+        linear-gradient(rgba(240,244,240,0.45), rgba(240,244,240,0.45)),
+        url('/frontend/background_images/login_img.webp');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -186,7 +186,12 @@
         #verify-link a { font-size: 0.85rem; color: var(--gold); text-decoration: none; }
         #verify-link a:hover { color: var(--gold2); }
 
-        @media (max-width: 480px) { .login-card { padding: 2rem 1.5rem; } }
+        @media (max-width: 480px) { 
+            .login-card { padding: 2rem 1.5rem; } 
+            body {
+                background-attachment: scroll;
+            }
+        }
     </style>
 </head>
 <body >
