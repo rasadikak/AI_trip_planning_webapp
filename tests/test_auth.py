@@ -71,5 +71,21 @@ def test_login_wrong_username_and_pw(client):
     assert response.status_code==302
 
 
-    #pytest -v
-    #pytest -s
+# -------------weather tests-----------
+
+def test_weather_success(client):
+    response= client.post("/weather", data={
+        "place":"colombo"
+    })
+    print(f" ⭐code for test_weather_success ",response.status_code)
+    assert response.status_code==200
+
+
+
+def test_weather_empty_place():
+    response = client.post("/weather/", data={"place": ""})
+    assert response.status_code == 422  # FastAPI validation error
+
+def test_weather_invalid_place():
+    response = client.post("/weather/", data={"place": "xyznotarealplace999"})
+    assert response.status_code in [404, 500]
