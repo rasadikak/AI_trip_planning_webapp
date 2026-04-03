@@ -69,3 +69,7 @@ def test_login_wrong_username_and_pw(client):
     )
     print(f" ⭐code for test_login_wrong_username_and_pw ",response.status_code)
     assert response.status_code==302
+
+
+    #pytest -v
+    #pytest -s
