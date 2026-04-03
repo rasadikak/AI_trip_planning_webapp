@@ -9,7 +9,8 @@ def client():
     with TestClient(app) as c:
         yield c  #This creates a basic test client.
 
-
+#4️⃣ What about auth_client?=Sometimes you want a client that is already logged in,
+#  so you don’t have to log in every time.
 @pytest.fixture(scope="module")
 def auth_client():
     # Returns a client with a logged-in session cookie
