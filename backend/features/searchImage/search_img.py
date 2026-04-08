@@ -61,18 +61,22 @@ except Exception as e:
 # ─────────────────────────────────────────────────────────────
 # Collect file paths (for returning image URLs)
 # ─────────────────────────────────────────────────────────────
-dataset_folder = "backend/features/searchImage/dataset"
-file_paths = []
-for root, dirs, files in os.walk(dataset_folder):
-    dirs.sort()
-    files.sort()
-    for file in files:
-        if file.lower().endswith((".jpg", ".jpeg", ".png")):
-            rel_path = os.path.relpath(
-                os.path.join(root, file), dataset_folder
-            ).replace("\\", "/")
-            file_paths.append(rel_path)
+paths_path = os.path.join(os.path.dirname(__file__), "image_paths.pt")
 
+try:
+    file_paths = torch.load(paths_path)
+
+    # convert to relative path for API (IMPORTANT)
+    dataset_folder = "backend/features/searchImage/dataset"
+    file_paths = [
+        os.path.relpath(p, dataset_folder).replace("\\", "/")
+        for p in file_paths
+    ]
+
+    logger.info(f"Paths loaded: {len(file_paths)}")
+except Exception as e:
+    logger.critical(f"Failed to load paths: {e}")
+    raise
 logger.info(f"Dataset loaded: {len(file_paths)} images found")
 
 # ─────────────────────────────────────────────────────────────
@@ -112,10 +116,13 @@ async def img_based_search(img: UploadFile = File(...)):
 
         # Build results
         results = []
-        for idx in I[0]:
+        for dist, idx in zip(D[0], I[0]):
+            similarity_percent = round(float(dist) * 100, 1)  # cosine score → percentage
+            #print("💡Similarity:", similarity_percent)
             results.append({
-                "label":     all_labels[idx],
-                "image_url": f"/dataset/{file_paths[idx]}"
+                "label":            all_labels[idx],
+                "image_url":        f"/dataset/{file_paths[idx]}",
+                "similarity":       similarity_percent         
             })
 
         logger.info(f"Image search completed — {len(results)} results for {img.filename}")

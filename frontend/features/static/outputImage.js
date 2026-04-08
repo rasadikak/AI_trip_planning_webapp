@@ -42,8 +42,15 @@ document.getElementById("ImageSearchForm").addEventListener("submit", async func
             label.innerText = item.label || "Unknown";
             label.style.textAlign = "center";
 
+            const similarity = document.createElement("p");
+            similarity.innerText = `Similarity: ${item.similarity}%`;
+            similarity.style.textAlign = "center";
+            similarity.style.fontSize = "0.9em";
+            similarity.style.color = "#555";
+
             div.appendChild(img);
             div.appendChild(label);
+            div.appendChild(similarity);
             resultDiv.appendChild(div);
         
         });
