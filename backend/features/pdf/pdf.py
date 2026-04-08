@@ -81,6 +81,7 @@ def pdf_generate(data: str):
 async def download_pdf(request: PDFRequest):
     #print("api loaded")
     logger.info("PDF generation requested")
+    
     try:
         pdf_data = pdf_generate(request.text)
         logger.info("PDF generated successfully")
