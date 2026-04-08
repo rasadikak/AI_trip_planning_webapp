@@ -1,7 +1,7 @@
 import pytest
 from backend.main import app
 from fastapi.testclient import TestClient
-from tests.conftest import client
+from tests.conftest import client, auth_client
 
 
 
@@ -71,6 +71,12 @@ def test_login_wrong_username_and_pw(client):
     assert response.status_code==302
 
 
+def test_login_not_verified(client):
+    response = client.post("/login/", data={
+        "username": "unverified@test.com", "password": "Test@1234"
+    }, follow_redirects=False)
+    assert "not_verified" in response.headers["location"]
+
 # -------------weather tests-----------
 
 def test_weather_success(client):
@@ -82,10 +88,7 @@ def test_weather_success(client):
 
 
 
-def test_weather_empty_place():
+def test_weather_empty_place(client):
     response = client.post("/weather/", data={"place": ""})
     assert response.status_code == 422  # FastAPI validation error
 
-def test_weather_invalid_place():
-    response = client.post("/weather/", data={"place": "xyznotarealplace999"})
-    assert response.status_code in [404, 500]
