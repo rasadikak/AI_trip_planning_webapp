@@ -18,8 +18,8 @@ def test_planner_unsuccess_empty_invalid_days(client):
     assert response.status_code==422
 
 
-#Basic prompt injection detection test
-def test_chatbot_unsuccess_two(client):
+
+def test_planner_unsuccess_invalid_days(client):
     response= client.post("/planner_api/", data=
                           {"destinationType":"city",
                             "budget":"low",
