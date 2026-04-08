@@ -1,0 +1,13 @@
+2026-04-08 21:17:28 | INFO     | serendib                  | Database engine created successfully
+2026-04-08 21:17:28 | INFO     | serendib                  | Database tables verified/created successfully
+2026-04-08 21:17:37 | INFO     | serendib                  | Image search using device: cpu
+2026-04-08 21:17:47 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-08 21:17:47 | CRITICAL | serendib                  | Failed to load FAISS index: Error in struct faiss::Index *__cdecl faiss::read_index(struct faiss::IOReader *,int) at D:\a\faiss-wheels\faiss-wheels\third-party\faiss\faiss\impl\index_read.cpp:727: Error: 'ret == (1)' failed: read error in C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss: 0 != 1 (No error)
+2026-04-08 21:17:47 | INFO     | serendib                  | Image search using device: cpu
+2026-04-08 21:17:56 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-08 21:17:56 | CRITICAL | serendib                  | Failed to load FAISS index: Error in struct faiss::Index *__cdecl faiss::read_index(struct faiss::IOReader *,int) at D:\a\faiss-wheels\faiss-wheels\third-party\faiss\faiss\impl\index_read.cpp:727: Error: 'ret == (1)' failed: read error in C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss: 0 != 1 (No error)
+2026-04-08 21:19:27 | INFO     | serendib                  | Database engine created successfully
+2026-04-08 21:19:27 | INFO     | serendib                  | Database tables verified/created successfully
+2026-04-08 21:19:35 | INFO     | serendib                  | Image search using device: cpu
+2026-04-08 21:19:43 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-08 21:19:43 | CRITICAL | serendib                  | Failed to load FAISS index: Error in struct faiss::Index *__cdecl faiss::read_index(struct faiss::IOReader *,int) at D:\a\faiss-wheels\faiss-wheels\third-party\faiss\faiss\impl\index_read.cpp:727: Error: 'ret == (1)' failed: read error in C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss: 0 != 1 (No error)
