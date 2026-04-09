@@ -13,5 +13,6 @@ mycode.txt
 /node_modules
 .pytest_cache/
 __pycache__/
-backend/features/searchImage/
-
+backend/features/searchImage/dataset/
+*.pt
+/tests/logs/
