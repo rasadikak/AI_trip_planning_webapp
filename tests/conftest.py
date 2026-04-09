@@ -9,26 +9,9 @@ def client():
     with TestClient(app) as c:
         yield c  #This creates a basic test client.
 
-#4️⃣ What about auth_client?=Sometimes you want a client that is already logged in,
+#4️ What about auth_client?=Sometimes you want a client that is already logged in,
 #  so you don’t have to log in every time.
-@pytest.fixture(scope="module")
-def auth_client():
-    # Returns a client with a logged-in session cookie
-    with TestClient(app) as c: #Creates a test client connected to your FastAPI app.
-       # register a test User
-       c.post("/register/", data={
-           "name": "test user",
-           "email":"testUser@gmail.com",
-           "password":"admin123@J",
-           "confirm_password":"admin123@J"
-       })
 
-       #login
-       c.post("/login/",data={
-           "username":"testUser@gmail.com",
-           "password":"admin123@J"
-       })
-       yield c
 
        #So this client is now: Logged-in client
 
