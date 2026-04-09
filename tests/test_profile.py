@@ -1,5 +1,5 @@
 import pytest
-
+import random,string
 
 
 
@@ -13,11 +13,12 @@ def test_get_profile_success(auth_client_logged_in):
     response= auth_client_logged_in.get("/profile/")
     assert response.status_code==200
 
-
+def random_name():
+    return "NewName " + ''.join(random.choices(string.ascii_letters, k=5))
 
 
 def test_editName_auth(auth_client_logged_in):
-    response= auth_client_logged_in.patch("/profile/editName", data={"new_name": "New Name"})
+    response= auth_client_logged_in.patch("/profile/editName", data={"new_name": random_name()})
     assert response.status_code==200
 
 

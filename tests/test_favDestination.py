@@ -4,7 +4,7 @@ import uuid
 
 # Tests WITH login — should SUCCEED (200)
 def test_add_favDestination_success(auth_client_logged_in):
-    response = auth_client_logged_in.post("/favDestination/", data={"destination": "mirissa_{uuid.uuid4()}"})
+    response = auth_client_logged_in.post("/favDestination/", data={"destination": f"mirissa_{uuid.uuid4()}"})
     assert response.status_code == 200
 
 def test_get_favDestination_success(auth_client_logged_in):

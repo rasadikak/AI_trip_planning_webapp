@@ -5,7 +5,7 @@ import uuid
 
 def test_add_savedPlans_auth(auth_client_logged_in):
     response= auth_client_logged_in.post("/savedPlans/", data=
-                          {"destination":"mirissa_{uuid.uuid4()}", "plan":"my plan_{uuid.uuid4()}"})
+                          {"destination":"mirissa_{uuid.uuid4()}", "plan":f"my plan_{uuid.uuid4()}"})
     assert response.status_code==200
     
 
