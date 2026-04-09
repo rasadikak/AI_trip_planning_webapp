@@ -15,4 +15,4 @@ mycode.txt
 __pycache__/
 backend/features/searchImage/dataset/
 *.pt
-/tests/logs/
+tests/logs/
