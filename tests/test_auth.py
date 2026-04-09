@@ -1,7 +1,7 @@
 import pytest
 from backend.main import app
 from fastapi.testclient import TestClient
-from tests.conftest import client, auth_client
+
 
 
 
