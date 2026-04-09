@@ -1,0 +1,48 @@
+2026-04-09 09:07:54 | INFO     | serendib                  | Database engine created successfully
+2026-04-09 09:07:54 | INFO     | serendib                  | Database tables verified/created successfully
+2026-04-09 09:08:01 | INFO     | serendib                  | Image search using device: cpu
+2026-04-09 09:08:10 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-09 09:08:10 | INFO     | serendib                  | FAISS index loaded: 4024 vectors from C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss
+2026-04-09 09:08:10 | INFO     | serendib                  | Labels loaded: 4024 labels
+2026-04-09 09:08:10 | INFO     | serendib                  | Paths loaded: 4024
+2026-04-09 09:08:10 | INFO     | serendib                  | Dataset loaded: 4024 images found
+2026-04-09 09:09:27 | INFO     | serendib                  | Database engine created successfully
+2026-04-09 09:09:27 | INFO     | serendib                  | Database tables verified/created successfully
+2026-04-09 09:09:32 | INFO     | serendib                  | Image search using device: cpu
+2026-04-09 09:09:39 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-09 09:09:39 | INFO     | serendib                  | FAISS index loaded: 4024 vectors from C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss
+2026-04-09 09:09:39 | INFO     | serendib                  | Labels loaded: 4024 labels
+2026-04-09 09:09:39 | INFO     | serendib                  | Paths loaded: 4024
+2026-04-09 09:09:39 | INFO     | serendib                  | Dataset loaded: 4024 images found
+2026-04-09 09:13:18 | INFO     | serendib                  | Database engine created successfully
+2026-04-09 09:13:18 | INFO     | serendib                  | Database tables verified/created successfully
+2026-04-09 09:13:23 | INFO     | serendib                  | Image search using device: cpu
+2026-04-09 09:13:30 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-09 09:13:30 | INFO     | serendib                  | FAISS index loaded: 4024 vectors from C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss
+2026-04-09 09:13:30 | INFO     | serendib                  | Labels loaded: 4024 labels
+2026-04-09 09:13:30 | INFO     | serendib                  | Paths loaded: 4024
+2026-04-09 09:13:30 | INFO     | serendib                  | Dataset loaded: 4024 images found
+2026-04-09 09:25:46 | INFO     | serendib                  | Database engine created successfully
+2026-04-09 09:25:46 | INFO     | serendib                  | Database tables verified/created successfully
+2026-04-09 09:25:59 | INFO     | serendib                  | Image search using device: cpu
+2026-04-09 09:26:04 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-09 09:26:04 | INFO     | serendib                  | FAISS index loaded: 4024 vectors from C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss
+2026-04-09 09:26:04 | INFO     | serendib                  | Labels loaded: 4024 labels
+2026-04-09 09:26:04 | INFO     | serendib                  | Paths loaded: 4024
+2026-04-09 09:26:04 | INFO     | serendib                  | Dataset loaded: 4024 images found
+2026-04-09 09:31:03 | INFO     | serendib                  | Database engine created successfully
+2026-04-09 09:31:03 | INFO     | serendib                  | Database tables verified/created successfully
+2026-04-09 09:31:06 | INFO     | serendib                  | Image search using device: cpu
+2026-04-09 09:31:11 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-09 09:31:11 | INFO     | serendib                  | FAISS index loaded: 4024 vectors from C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss
+2026-04-09 09:31:12 | INFO     | serendib                  | Labels loaded: 4024 labels
+2026-04-09 09:31:12 | INFO     | serendib                  | Paths loaded: 4024
+2026-04-09 09:31:12 | INFO     | serendib                  | Dataset loaded: 4024 images found
+2026-04-09 09:31:45 | INFO     | serendib                  | Database engine created successfully
+2026-04-09 09:31:45 | INFO     | serendib                  | Database tables verified/created successfully
+2026-04-09 09:31:49 | INFO     | serendib                  | Image search using device: cpu
+2026-04-09 09:31:54 | INFO     | serendib                  | CLIP model loaded: ViT-L/14
+2026-04-09 09:31:54 | INFO     | serendib                  | FAISS index loaded: 4024 vectors from C:\Users\User\Desktop\my_folder\my_projects\AI_trip_planning_webapp\backend\features\searchImage\image_index.faiss
+2026-04-09 09:31:54 | INFO     | serendib                  | Labels loaded: 4024 labels
+2026-04-09 09:31:54 | INFO     | serendib                  | Paths loaded: 4024
+2026-04-09 09:31:54 | INFO     | serendib                  | Dataset loaded: 4024 images found

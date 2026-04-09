@@ -16,7 +16,7 @@ def auth_client():
     # Returns a client with a logged-in session cookie
     with TestClient(app) as c: #Creates a test client connected to your FastAPI app.
        # register a test User
-       c.post("/register/", {
+       c.post("/register/", data={
            "name": "test user",
            "email":"testUser@gmail.com",
            "password":"admin123@J",
@@ -24,7 +24,7 @@ def auth_client():
        })
 
        #login
-       c.post("/login/",{
+       c.post("/login/",data={
            "username":"testUser@gmail.com",
            "password":"admin123@J"
        })
@@ -38,3 +38,20 @@ def auth_client():
 #scope="module" =This means:
 # Create this client once per test file
 # Not every test
+
+
+
+@pytest.fixture(scope="module")
+def auth_client_logged_in():
+    with TestClient(app,cookies={}) as c:
+        response=c.post("/login/", data={
+            "username": "new@test.com",  # ← already exists + already verified in your DB
+            "password": "Test@1234"
+        }, follow_redirects=False)
+
+        print("\n--- LOGIN DEBUG ---")
+        print("Status code:", response.status_code)
+        print("Redirect to:", response.headers.get("location"))
+        print("Cookies:", c.cookies.jar.__dict__)
+        print("-------------------")
+        yield c

@@ -71,10 +71,25 @@ def test_login_wrong_username_and_pw(client):
     assert response.status_code==302
 
 
+    
+
 def test_login_not_verified(client):
-    response = client.post("/login/", data={
-        "username": "unverified@test.com", "password": "Test@1234"
+    # Register a fresh unverified user
+    email = f"unverified_{uuid.uuid4()}@test.com"
+    client.post("/register/", data={
+        "name": "Unverified User",
+        "email": email,
+        "password": "Test@1234",
+        "confirm_password": "Test@1234"
     }, follow_redirects=False)
+
+    # Now try to login without verifying email
+    response = client.post("/login/", data={
+        "username": email,
+        "password": "Test@1234"
+    }, follow_redirects=False)
+
+    print(f"⭐ redirect: {response.headers['location']}")
     assert "not_verified" in response.headers["location"]
 
 
