@@ -1,40 +1,46 @@
-#Creates a normal test client and a logged-in test client so your tests can call FastAPI endpoints easily
-
 import pytest
 from fastapi.testclient import TestClient
-from backend.main import app  #So now pytest can test your real API routes.
+from backend.main import app
+from backend.login.database import SessionLocal
+from backend.login import orm_model
+from backend.login.utils import hash_password
+
+
+def create_test_user():
+    db = SessionLocal()
+    try:
+        existing = db.query(orm_model.User).filter_by(email="new@test.com").first()
+        if not existing:
+            user = orm_model.User(
+                name="Test User",
+                email="new@test.com",
+                password=hash_password("Test@1234"),
+                is_verified=True
+            )
+            db.add(user)
+            db.commit()
+            print("Test user created")
+    finally:
+        db.close()
+
 
 @pytest.fixture(scope="module")
 def client():
+    create_test_user()
     with TestClient(app) as c:
-        yield c  #This creates a basic test client.
-
-#4️ What about auth_client?=Sometimes you want a client that is already logged in,
-#  so you don’t have to log in every time.
-
-
-       #So this client is now: Logged-in client
-
-#TestClient-It lets you simulate API requests like: client.get("/home/")
-#without running the real server.
-
-#scope="module" =This means:
-# Create this client once per test file
-# Not every test
-
+        yield c
 
 
 @pytest.fixture(scope="module")
 def auth_client_logged_in():
-    with TestClient(app,cookies={}) as c:
-        response=c.post("/login/", data={
-            "username": "new@test.com",  # ← already exists + already verified in your DB
+    create_test_user()
+    with TestClient(app, cookies={}) as c:
+        response = c.post("/login/", data={
+            "username": "new@test.com",
             "password": "Test@1234"
         }, follow_redirects=False)
-
         print("\n--- LOGIN DEBUG ---")
         print("Status code:", response.status_code)
         print("Redirect to:", response.headers.get("location"))
-        print("Cookies:", c.cookies.jar.__dict__)
         print("-------------------")
         yield c

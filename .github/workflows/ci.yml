@@ -63,34 +63,7 @@ jobs:
             - name: Set Python path
               run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
 
-            - name: Create test user script
-              run: |
-                cat > create_test_user.py << 'PYEOF'
-                import sys
-                sys.path.insert(0, '.')
-                from dotenv import load_dotenv
-                load_dotenv()
-                from backend.login.database import SessionLocal
-                from backend.login import orm_model
-                from backend.login.utils import hash_password
-                db = SessionLocal()
-                existing = db.query(orm_model.User).filter_by(email="new@test.com").first()
-                if not existing:
-                    user = orm_model.User(
-                        name="Test User",
-                        email="new@test.com",
-                        password=hash_password("Test@1234"),
-                        is_verified=True
-                    )
-                    db.add(user)
-                    db.commit()
-                    print("Test user created")
-                else:
-                    print("Test user already exists")
-                db.close()
-                PYEOF
-                PYTHONPATH=$GITHUB_WORKSPACE python create_test_user.py
-
+            
             - name: Run tests
               run: pytest tests/ -v  --tb=short
 
