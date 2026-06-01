@@ -60,6 +60,9 @@ jobs:
                 echo "MAIL_SSL_TLS=False" >> .env
                 cat .env >> $GITHUB_ENV
 
+            - name: Set Python path
+              run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+
             - name: Create test user in database
               run: |
                 cat > create_test_user.py << 'PYEOF'
