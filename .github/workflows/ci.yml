@@ -65,5 +65,5 @@ jobs:
 
             
             - name: Run tests
-              run: pytest tests/ -v  --tb=short
+              run: PYTHONPATH=$GITHUB_WORKSPACE pytest tests/ -v --tb=short
 
