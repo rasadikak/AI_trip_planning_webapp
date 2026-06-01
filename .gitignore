@@ -9,7 +9,7 @@ backend/alembic.ini
 mycode.txt
 *.faiss
 /logs
-backend/logger.py
+
 mycode.txt
 /node_modules
 .pytest_cache/
