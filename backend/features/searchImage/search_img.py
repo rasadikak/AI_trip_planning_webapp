@@ -26,28 +26,29 @@ logger.info(f"Image search using device: {device}")
 # ─────────────────────────────────────────────────────────────
 # Load CLIP model
 # ─────────────────────────────────────────────────────────────
+model, preprocess = None, None
 try:
     model, preprocess = clip.load(CLIP_MODEL, device=device)
     model.eval()
     logger.info(f"CLIP model loaded: {CLIP_MODEL}")
 except Exception as e:
-    logger.critical(f"Failed to load CLIP model: {e}")
-    raise
+    logger.warning(f"CLIP model not loaded: {e}")
 
 # ─────────────────────────────────────────────────────────────
 # Load FAISS index
 # ─────────────────────────────────────────────────────────────
+index = None
 try:
     index_path = os.path.join(os.path.dirname(__file__), "image_index.faiss")
     index = faiss.read_index(index_path)
     logger.info(f"FAISS index loaded: {index.ntotal} vectors from {index_path}")
 except Exception as e:
-    logger.critical(f"Failed to load FAISS index: {e}")
-    raise
+    logger.warning(f"FAISS index not loaded: {e}")
 
 # ─────────────────────────────────────────────────────────────
 # Load labels
 # ─────────────────────────────────────────────────────────────
+all_labels = []
 try:
     labels_path = os.path.join(os.path.dirname(__file__), "image_labels.pt")
     all_labels = torch.load(labels_path)
@@ -55,38 +56,36 @@ try:
         all_labels = all_labels.tolist()
     logger.info(f"Labels loaded: {len(all_labels)} labels")
 except Exception as e:
-    logger.critical(f"Failed to load labels: {e}")
-    raise
+    logger.warning(f"Labels not loaded: {e}")
 
 # ─────────────────────────────────────────────────────────────
-# Collect file paths (for returning image URLs)
+# Load file paths
 # ─────────────────────────────────────────────────────────────
-paths_path = os.path.join(os.path.dirname(__file__), "image_paths.pt")
-
+file_paths = []
 try:
+    paths_path = os.path.join(os.path.dirname(__file__), "image_paths.pt")
     file_paths = torch.load(paths_path)
-
-    # convert to relative path for API (IMPORTANT)
     dataset_folder = "backend/features/searchImage/dataset"
     file_paths = [
         os.path.relpath(p, dataset_folder).replace("\\", "/")
         for p in file_paths
     ]
-
     logger.info(f"Paths loaded: {len(file_paths)}")
 except Exception as e:
-    logger.critical(f"Failed to load paths: {e}")
-    raise
-logger.info(f"Dataset loaded: {len(file_paths)} images found")
+    logger.warning(f"Paths not loaded: {e}")
+
+# Only log dataset info if loaded successfully
+if file_paths:
+    logger.info(f"Dataset loaded: {len(file_paths)} images found")
 
 # ─────────────────────────────────────────────────────────────
-# Sanity check — catch mismatches before any request hits
+# Sanity check
 # ─────────────────────────────────────────────────────────────
-if index.ntotal != len(all_labels):
-    logger.critical(
-        f"Mismatch: FAISS has {index.ntotal} vectors but labels has {len(all_labels)}"
-    )
-    raise RuntimeError("FAISS index and labels are out of sync. Re-run dataprocessing.py.")
+if index is not None and len(all_labels) > 0:
+    if index.ntotal != len(all_labels):
+        logger.critical(
+            f"Mismatch: FAISS has {index.ntotal} vectors but labels has {len(all_labels)}"
+        )
 
 # ─────────────────────────────────────────────────────────────
 # Router
@@ -96,7 +95,16 @@ router = APIRouter(prefix="/img_based_search", tags=["img_based_search"])
 
 @router.post("/")
 async def img_based_search(img: UploadFile = File(...)):
+
+    # Check if model and index are loaded
+    if model is None or index is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Image search is not available — model not loaded."
+        )
+
     logger.info(f"Image search requested — file: {img.filename}")
+
     try:
         # Read uploaded bytes → PIL image
         img_bytes = await img.read()
@@ -117,12 +125,11 @@ async def img_based_search(img: UploadFile = File(...)):
         # Build results
         results = []
         for dist, idx in zip(D[0], I[0]):
-            similarity_percent = round(float(dist) * 100, 1)  # cosine score → percentage
-            #print("💡Similarity:", similarity_percent)
+            similarity_percent = round(float(dist) * 100, 1)
             results.append({
-                "label":            all_labels[idx],
-                "image_url":        f"/dataset/{file_paths[idx]}",
-                "similarity":       similarity_percent         
+                "label":      all_labels[idx],
+                "image_url":  f"/dataset/{file_paths[idx]}",
+                "similarity": similarity_percent
             })
 
         logger.info(f"Image search completed — {len(results)} results for {img.filename}")
