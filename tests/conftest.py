@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from backend.main import app
 from backend.login.database import SessionLocal
 from backend.login import orm_model
-from backend.login.utils import hash_password
+from backend.login.utils import hash
 
 
 def create_test_user():
@@ -14,7 +14,7 @@ def create_test_user():
             user = orm_model.User(
                 name="Test User",
                 email="new@test.com",
-                password=hash_password("Test@1234"),
+                password=hash("Test@1234"),
                 is_verified=True
             )
             db.add(user)
