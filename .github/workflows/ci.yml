@@ -1,0 +1,92 @@
+name : Serendib AI - CI Pipeline
+
+#triggers
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres:15
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: serendib
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Setup python
+              uses: actions/setup-python@v4
+              with:
+                    python-version: '3.10'
+
+            - name: Install dependencies
+              run: pip install -r requirements.txt
+
+            - name: Create .env file
+              run:
+                echo "SQLALCHEMY_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/serendib" >> .env
+                echo "SECRET_KEY=testsecretkey123" >> .env
+                echo "SECRET_KEY2=testsecretkey2" >> .env
+                echo "SECRET_KEY3=testsecretkey3" >> .env
+                echo "ALGORITHM=HS256" >> .env
+                echo "ALGORITHM2=HS256" >> .env
+                echo "ALGORITHM3=HS256" >> .env
+                echo "ACCESS_TOKEN_EXPIRE_MINUTES=30" >> .env
+                echo "ACCESS_TOKEN_EXPIRE_TIME2=15" >> .env
+                echo "ACCESS_TOKEN_EXPIRE_MINUTES3=30" >> .env
+                echo "BASE_URL=http://localhost:8000" >> .env
+                echo "HF_TOKEN=dummy" >> .env
+                echo "WEATHER_API=dummy" >> .env
+                echo "MAIL_USERNAME=test@test.com" >> .env
+                echo "MAIL_PASSWORD=dummy" >> .env
+                echo "MAIL_FROM=test@test.com" >> .env
+                echo "MAIL_PORT=587" >> .env
+                echo "MAIL_SERVER=smtp.gmail.com" >> .env
+                echo "MAIL_STARTTLS=True" >> .env
+                echo "MAIL_SSL_TLS=False" >> .env
+
+            - name: Create test user in database
+              run: |
+                cat > create_test_user.py << 'PYEOF'
+                import sys
+                sys.path.insert(0, '.')
+                from dotenv import load_dotenv
+                load_dotenv()
+                from backend.login.database import SessionLocal
+                from backend.login import orm_model
+                from backend.login.utils import hash_password
+                db = SessionLocal()
+                existing = db.query(orm_model.User).filter_by(email="new@test.com").first()
+                if not existing:
+                    user = orm_model.User(
+                        name="Test User",
+                        email="new@test.com",
+                        password=hash_password("Test@1234"),
+                        is_verified=True
+                    )
+                    db.add(user)
+                    db.commit()
+                    print("Test user created")
+                else:
+                    print("Test user already exists")
+                db.close()
+                PYEOF
+                python create_test_user.py
+
+            - name: Run tests
+              run: pytest tests/ -v  --tb=short
+
