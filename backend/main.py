@@ -14,7 +14,7 @@ from backend.features.chatbot import chatbot
 from backend.features.tripManagement import favDestination, savedPlans
 from backend.config import BASE_URL
 import time
-
+import os
 from backend.limiter_file import limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -85,9 +85,15 @@ app.add_middleware(
 )
 
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
-app.mount("/dataset", StaticFiles(directory="backend/features/searchImage/dataset"), name='dataset')
+
 app.mount("/backend", StaticFiles(directory="backend"), name="backend")
 app.mount("/static", StaticFiles(directory="frontend/static"), name="static_shared")
+
+dataset_dir = "backend/features/searchImage/dataset"
+if os.path.exists(dataset_dir):
+    app.mount("/dataset", StaticFiles(directory=dataset_dir), name='dataset')
+else:
+    logger.warning("Dataset directory not found — image serving disabled")
 
 
 app.include_router(user_register.router)
