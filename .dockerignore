@@ -1,0 +1,14 @@
+# Never copy these into the container
+.env
+.git
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo
+logs/
+node_modules/
+env/
+venv/
+*.txt.bak
+mycode.txt
+my_notes.txt

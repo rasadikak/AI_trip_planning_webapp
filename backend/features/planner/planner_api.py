@@ -12,10 +12,11 @@ from backend.logger import logger
 from typing import List
 from langchain_huggingface import HuggingFaceEndpoint
 from langchain_classic.agents import AgentExecutor, create_react_agent
-from langchain_classic import hub
+#from langchain_classic import hub
 from langchain_core.tools import Tool
 from langchain_huggingface import ChatHuggingFace
 #from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
 
 
@@ -41,7 +42,26 @@ llm = ChatHuggingFace(llm=base_llm)
 #{input}
 #"""
 
-prompt = hub.pull("hwchase17/react")
+#prompt = hub.pull("hwchase17/react", dangerously_pull_public_prompt=True)
+prompt = PromptTemplate.from_template("""Answer the following questions as best you can. You have access to the following tools:
+
+{tools}
+
+Use the following format:
+
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action: the action to take, should be one of [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Thought: I now know the final answer
+Final Answer: the final answer to the original input question
+
+Begin!
+
+Question: {input}
+Thought:{agent_scratchpad}""")
 
 
 

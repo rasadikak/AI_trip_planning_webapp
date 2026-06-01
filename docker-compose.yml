@@ -1,0 +1,46 @@
+#Tells Docker Compose "here are all the containers I want to run".
+services:
+  app:    #Name of your first container — your FastAPI app. You can call it anything.
+    build: .  #Build the image using the Dockerfile in current folder (. means current folder).
+    container_name: serendib_ai #The actual name of the running container.
+    ports:
+      - "8000:8000" #"your_pc_port:container_port"
+    env_file:
+      - .env.docker #Pass all variables from your .env file into the containe
+    depends_on:
+      db:
+        condition: service_healthy   #Don't start the app container until db container is healthy
+          
+    volumes:
+      - ./logs:/app/logs
+    #your_pc_path:container_path — syncs your local logs/ folder with /app/logs inside the container
+
+
+#Your second container — PostgreSQL database.
+  db:
+    image: postgres:15
+    #Instead of building from a Dockerfile, just download the official 
+    #PostgreSQL 15 image from Docker Hub. No Dockerfile needed for this one.
+    container_name: serendib_db  #Name of the database container.
+    environment:  #These 3 variables create the database automatically when the container first starts
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: serendib
+    ports:
+      - "5432:5432"
+    #Your PC's port 5432 connects to container's PostgreSQL port 5432.
+    # Lets you connect to the DB from your PC using pgAdmin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    #Saves your database data to a Docker volume called postgres_data. Without this,
+    # every time the container stops, ALL your data is deleted. 
+    healthcheck:
+      #Runs pg_isready command inside the container every few seconds to check 
+      #if PostgreSQL is actually ready to accept connections.
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s  #Check every 10 seconds.
+      timeout: 5s #If the check takes more than 5 seconds, count it as failed.
+      retries: 5 #Try 5 times before declaring the container unhealthy.
+
+volumes:
+  postgres_data:  #Declares the named volume postgres_data
