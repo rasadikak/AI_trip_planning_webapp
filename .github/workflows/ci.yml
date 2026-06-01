@@ -63,7 +63,7 @@ jobs:
             - name: Set Python path
               run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
 
-            - name: Create test user in database
+            - name: Create test user script
               run: |
                 cat > create_test_user.py << 'PYEOF'
                 import sys
@@ -89,7 +89,7 @@ jobs:
                     print("Test user already exists")
                 db.close()
                 PYEOF
-                python create_test_user.py
+                PYTHONPATH=$GITHUB_WORKSPACE python create_test_user.py
 
             - name: Run tests
               run: pytest tests/ -v  --tb=short
