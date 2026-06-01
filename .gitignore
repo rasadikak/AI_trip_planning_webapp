@@ -1,4 +1,5 @@
 .env
+.env.docker
 my_notes.txt
 alembic.ini
 alembic/
