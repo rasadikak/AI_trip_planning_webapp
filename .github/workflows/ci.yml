@@ -37,7 +37,7 @@ jobs:
               run: pip install -r requirements.txt
 
             - name: Create .env file
-              run:
+              run: |
                 echo "SQLALCHEMY_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/serendib" >> .env
                 echo "SECRET_KEY=testsecretkey123" >> .env
                 echo "SECRET_KEY2=testsecretkey2" >> .env
@@ -58,6 +58,7 @@ jobs:
                 echo "MAIL_SERVER=smtp.gmail.com" >> .env
                 echo "MAIL_STARTTLS=True" >> .env
                 echo "MAIL_SSL_TLS=False" >> .env
+                cat .env >> $GITHUB_ENV
 
             - name: Create test user in database
               run: |
