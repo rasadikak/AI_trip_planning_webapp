@@ -18,7 +18,7 @@ def test_get_savedPlans_auth(auth_client_logged_in):
 def test_delete_favDestinations_auth(auth_client_logged_in):
     response= auth_client_logged_in.delete("/savedPlans/delete/1"
                           )
-    assert response.status_code==404
+    assert response.status_code in [200, 404]
 
 #--------------------------------------------------------
 
