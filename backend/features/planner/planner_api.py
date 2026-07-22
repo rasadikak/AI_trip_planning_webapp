@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, Form, HTTPException
 import httpx
 
@@ -6,34 +7,30 @@ from fastapi import Request
 
 import requests
 
-from backend.config import HF_TOKEN #WEATHER_API
+from dotenv import load_dotenv
 from backend.logger import logger
 
 from typing import List
-from langchain_huggingface import HuggingFaceEndpoint
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_classic.agents import AgentExecutor, create_react_agent
 #from langchain_classic import hub
 from langchain_core.tools import Tool
-from langchain_huggingface import ChatHuggingFace
 #from langchain.prompts import PromptTemplate
 from langchain_core.prompts import PromptTemplate
 
-
+load_dotenv()
 
 router= APIRouter(prefix="/planner_api", tags=['planner_api'])
 
-url ="https://router.huggingface.co/v1"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-
-base_llm = HuggingFaceEndpoint(
-    repo_id="meta-llama/Llama-3.1-8B-Instruct",
-    huggingfacehub_api_token=HF_TOKEN,
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",
+    google_api_key=GEMINI_API_KEY,
     temperature=0.7,
-    max_new_tokens=4096,
-    provider="novita" 
+    max_output_tokens=4096,
 )
 
-llm = ChatHuggingFace(llm=base_llm)
 #template = """
 #You are a professional Sri Lanka travel planner ✈️🌴.
 #Plan realistic itineraries for the given trip request.
@@ -258,8 +255,8 @@ IMPORTANT
         return {"response": response["output"]}
 
     except httpx.ConnectError:
-        # Network issue — can't reach HuggingFace API
-        logger.error(f"HuggingFace unreachable — type:{destinationType} days:{numDays}")
+        # Network issue — can't reach Gemini API
+        logger.error(f"Gemini API unreachable — type:{destinationType} days:{numDays}")
         raise HTTPException(
             status_code=503,
             detail="Cannot connect to AI service. Please check your internet connection and try again."
@@ -267,7 +264,7 @@ IMPORTANT
 
     except httpx.TimeoutException:
         # Request took too long
-        logger.error(f"HuggingFace timeout — type:{destinationType} days:{numDays}")
+        logger.error(f"Gemini API timeout — type:{destinationType} days:{numDays}")
         raise HTTPException(
             status_code=504,
             detail="AI service timed out. Please try again."
@@ -308,6 +305,5 @@ IMPORTANT
 
 
 
-    #pip install huggingface-hub
-    #pip install langchain_huggingface
+    #pip install langchain-google-genai
     #pip install langchain_classic
