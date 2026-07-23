@@ -19,7 +19,7 @@ Serendib AI is a full-stack web application that helps travelers plan personaliz
 
 ### 🤖 AI Trip Planner
 - Generates detailed, day-by-day itineraries using a **LangChain ReAct Agent**
-- Powered by **Meta Llama 3.1 8B Instruct** (via HuggingFace Inference / Novita provider)
+- Powered by **Gemini API**
 - Considers destination type, budget, number of travelers, accommodation, and food preferences
 - Includes cost estimates in LKR, transport options, accommodation suggestions, and Google Maps links
 - Integrated **weather tool** the agent calls automatically for the main destination
@@ -35,7 +35,7 @@ Serendib AI is a full-stack web application that helps travelers plan personaliz
 ### 🖼️ Image-Based Destination Search
 - Upload any photo and identify the matching Sri Lankan destination
 - Powered by **OpenAI CLIP (ViT-B/32)** for image embeddings
-- Similarity search via vector indexing (FAISS )
+- Similarity search via vector indexing (FAISS)
 - Returns top-matching destinations with confidence scores
 
 ### 🌤️ Live Weather
@@ -111,7 +111,6 @@ Serendib AI is a full-stack web application that helps travelers plan personaliz
 | **OpenAI CLIP (ViT-B/32)** | Image embedding generation for visual search |
 | **FAISS** | Vector similarity search for image-based destination matching |
 
-
 ### Frontend
 | Technology | Purpose |
 |---|---|
@@ -125,7 +124,6 @@ Serendib AI is a full-stack web application that helps travelers plan personaliz
 ### External APIs
 | API | Purpose |
 |---|---|
-| **HuggingFace Router** | LLM inference (Llama 3.1 8B) |
 | **wttr.in** | Weather data |
 | **open.er-api.com** | Currency exchange rates |
 | **Nominatim (OpenStreetMap)** | Geocoding |
@@ -141,8 +139,9 @@ Serendib AI is a full-stack web application that helps travelers plan personaliz
 
 ---
 
- ## 🔑 Authentication Flow
+## 🔑 Authentication Flow
 
+```
 Register → Email verification link sent → User verifies → Can log in
 
 Login    → Credentials validated → JWT issued → Stored in httponly cookie
@@ -150,6 +149,7 @@ Login    → Credentials validated → JWT issued → Stored in httponly cookie
 Request  → Cookie sent automatically → JWT verified → current_user resolved
 
 Logout   → Cookie cleared → Redirect to home
+```
 
 Three isolated JWT scopes are used:
 - **Login sessions** — short-lived access tokens
@@ -207,112 +207,7 @@ SECRET_KEY3=your_email_verification_secret
 ALGORITHM3=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES3=30
 
-HF_TOKEN=your_huggingface_token
-BASE_URL=http://127.0.0.1:8000
-
-MAIL_USERNAME=your_email@gmail.com
-MAIL_PASSWORD=your_app_password
-MAIL_FROM=your_email@gmail.com
-MAIL_PORT=587
-MAIL_SERVER=smtp.gmail.com
-MAIL_STARTTLS=True
-MAIL_SSL_TLS=False
-```
-
-### Database Setup
-
-```bash
-alembic upgrade head
-```
-
-### Run the Application
-
-```bash
-uvicorn backend.main:app --reload
-```
-
-Visit `http://127.0.0.1:8000/frontend/home/home.html`
-
----
-
-## 🧪 Testing
-
-```bash
-pytest tests/ -v
-```
-
-Test coverage includes:
-- Authentication flows (registration validation, login errors)
-- Weather endpoint (valid/invalid destinations)
-- Trip planner input validation
-- Authorization checks (401 responses on protected routes)
-- PDF generation
-
----
-
-## 📦 Deployment
-
-This project is configured for CI/CD via **GitHub Actions**:
-
-1. Push to `main` triggers automated tests
-2. Tailwind CSS is rebuilt and minified
-Three isolated JWT scopes are used:
-- **Login sessions** — short-lived access tokens
-- **Password reset** — single-use, time-limited tokens (15 min expiry)
-- **Email verification** — single-use, time-limited tokens (30 min expiry)
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Python 3.10+
-- PostgreSQL
-- Node.js (for Tailwind CSS build)
-- HuggingFace API token
-- SMTP credentials (for email sending)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/serendib-ai.git
-cd serendib-ai
-
-# Create virtual environment
-python -m venv env
-source env/bin/activate      # Windows: env\Scripts\activate
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Install frontend dependencies
-npm install
-
-# Build Tailwind CSS
-npx tailwindcss -i ./frontend/static/css/input.css -o ./frontend/static/css/output.css --watch
-```
-
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```env
-SQLALCHEMY_DATABASE_URL=postgresql://user:password@localhost/serendib_db
-
-SECRET_KEY=your_secret_key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-SECRET_KEY2=your_reset_password_secret
-ALGORITHM2=HS256
-ACCESS_TOKEN_EXPIRE_TIME2=15
-
-SECRET_KEY3=your_email_verification_secret
-ALGORITHM3=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES3=30
-
-HF_TOKEN=your_huggingface_token
+GEMINI_API_KEY=your_gemini_api_key
 BASE_URL=http://127.0.0.1:8000
 
 MAIL_USERNAME=your_email@gmail.com
@@ -370,6 +265,3 @@ See `.github/workflows/deploy.yml` for the full pipeline.
 ## 📝 License
 
 This project is licensed under the MIT License.
-
----
-
