@@ -22,7 +22,7 @@ ALGORITHM3=os.getenv("ALGORITHM3")
 SECRET_KEY3=os.getenv("SECRET_KEY3")
 ACCESS_TOKEN_EXPIRE_MINUTES3=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES3", "30"))
 
-HF_TOKEN=os.getenv("HF_TOKEN")
+GEMINI_API_KEY=os.getenv("GEMINI_API_KEY")
 
 WEATHER_API=os.getenv("WEATHER_API")
 
@@ -52,7 +52,7 @@ class Settings(BaseSettings):
     SECRET_KEY3: str
     ACCESS_TOKEN_EXPIRE_MINUTES3: int
 
-    HF_TOKEN:str
+    GEMINI_API_KEY:str
 
     WEATHER_API:str
 
