@@ -260,6 +260,9 @@ This project is configured for CI/CD via **GitHub Actions**:
 
 See `.github/workflows/deploy.yml` for the full pipeline.
 
+
+LIve Demo `https://serendib-ai-902076322619.asia-south1.run.app/frontend/home/home.html`
+
 ---
 
 ## 📝 License
