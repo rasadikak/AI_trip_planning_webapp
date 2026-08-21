@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async function(){
 
 async function deletePlan(plan_id){
     try{
-        const response = await fetch(`http://127.0.0.1:8000/savedPlans/delete/${plan_id}`, {
+        const response = await fetch(`${API_BASE}/savedPlans/delete/${plan_id}`, {
             method: "DELETE",
             credentials: "include"
         });
@@ -66,7 +66,7 @@ async function deletePlan(plan_id){
         if (response.status==401){
             showToast("⚠️ Session timed out — please log in again","error");
             setTimeout(()=>{
-                window.location.href="http://127.0.0.1:8000/frontend/home/login.html";
+                window.location.href=`${API_BASE}/frontend/home/login.html`;
 
             }, 2000); //// redirect to login after 2 seconds
             return;
@@ -94,7 +94,7 @@ async function downloadPDF(plan){
     
     
     try{
-        const response = await fetch("http://127.0.0.1:8000/pdf/", {
+        const response = await fetch(`${API_BASE}/pdf/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: plan })
