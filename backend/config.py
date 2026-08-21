@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings
 load_dotenv()
 
 SQLALCHEMY_DATABASE_URL= os.getenv("SQLALCHEMY_DATABASE_URL")
+DATABASE_URL= os.getenv("DATABASE_URL")
 
 #for login
 ACCESS_TOKEN_EXPIRE_MINUTES= int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
@@ -38,6 +39,7 @@ class Settings(BaseSettings):
     MAIL_SSL_TLS: bool = False
      # Login JWT
     SQLALCHEMY_DATABASE_URL: str
+    DATABASE_URL:str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     ALGORITHM: str
     SECRET_KEY: str

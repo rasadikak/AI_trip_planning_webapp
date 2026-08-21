@@ -15,7 +15,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 try:
-    Base.metadata.create_all(bind=engine)
+    #Base.metadata.create_all(bind=engine)
     logger.info("Database tables verified/created successfully")
 except Exception as e:
     logger.critical(f"Failed to create database tables: {e}")

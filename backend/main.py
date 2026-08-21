@@ -19,13 +19,14 @@ from backend.limiter_file import limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi import _rate_limit_exceeded_handler
+from backend.login.database import Base, engine
 
 
 app = FastAPI()
 router = APIRouter(prefix="/test")
 
 
-
+Base.metadata.create_all(bind=engine)
 
 app.state.limiter = limiter
 
