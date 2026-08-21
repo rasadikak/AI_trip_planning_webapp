@@ -262,7 +262,7 @@ See `.github/workflows/deploy.yml` for the full pipeline.
 
 Deployed using GCP
 
-LIve Demo `https://serendib-ai-902076322619.asia-south1.run.app/frontend/home/home.html`
+[LIve Demo](https://serendib-ai-902076322619.asia-south1.run.app/frontend/home/home.html)
 
 ---
 
