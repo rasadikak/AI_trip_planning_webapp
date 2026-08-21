@@ -1,0 +1,17 @@
+.gcloudignore
+.git
+.gitignore
+
+# Local dev files we genuinely don't want in the build
+.env
+.env.docker
+my_notes.txt
+mycode.txt
+alembic.ini
+alembic/
+env/
+__pycache__/
+.pytest_cache/
+node_modules/
+logs/
+tests/logs/
