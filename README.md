@@ -126,7 +126,7 @@ Serendib AI is a full-stack web application that helps travelers plan personaliz
 |---|---|
 | **wttr.in** | Weather data |
 | **open.er-api.com** | Currency exchange rates |
-| **Nominatim (OpenStreetMap)** | Geocoding |
+
 
 ### DevOps & Tooling
 | Tool | Purpose |
@@ -260,6 +260,7 @@ This project is configured for CI/CD via **GitHub Actions**:
 
 See `.github/workflows/deploy.yml` for the full pipeline.
 
+Deployed using GCP
 
 LIve Demo `https://serendib-ai-902076322619.asia-south1.run.app/frontend/home/home.html`
 
