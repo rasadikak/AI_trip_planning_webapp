@@ -152,9 +152,10 @@ from datasets import load_dataset
 
 ds = load_dataset("kaushaniR/Sri-lankan_attraction_places")
 
-[dataset_link-HuggingFace](https://huggingface.co/datasets/kaushaniR/Sri-lankan_attraction_places)
+
 
 ```
+[dataset_link-HuggingFace](https://huggingface.co/datasets/kaushaniR/Sri-lankan_attraction_places)
 
 ---
 
