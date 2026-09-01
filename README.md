@@ -127,7 +127,6 @@ Serendib AI is a full-stack web application that helps travelers plan personaliz
 | **wttr.in** | Weather data |
 | **open.er-api.com** | Currency exchange rates |
 
-
 ### DevOps & Tooling
 | Tool | Purpose |
 |---|---|
@@ -139,15 +138,32 @@ Serendib AI is a full-stack web application that helps travelers plan personaliz
 
 ---
 
+## 🗂️ Dataset
+
+The Image-Based Destination Search feature is powered by a custom-curated dataset of Sri Lankan tourist attractions, published on Hugging Face:
+
+- **Dataset:** [Sri Lankan Attraction Places](https://huggingface.co/datasets/kaushaniR/Sri-lankan_attraction_places)
+- **Size:** 3,938 images across 45 locations
+- **Categories:** beach, city, cultural, hill_country, wildlife
+- **Format:** organized as `category/location/image.jpg`, license MIT
+
+```python
+from datasets import load_dataset
+
+ds = load_dataset("kaushaniR/Sri-lankan_attraction_places")
+
+[dataset link- Hugging Face](https://huggingface.co/datasets/kaushaniR/Sri-lankan_attraction_places)
+
+```
+
+---
+
 ## 🔑 Authentication Flow
 
 ```
 Register → Email verification link sent → User verifies → Can log in
-
 Login    → Credentials validated → JWT issued → Stored in httponly cookie
-
 Request  → Cookie sent automatically → JWT verified → current_user resolved
-
 Logout   → Cookie cleared → Redirect to home
 ```
 
@@ -194,7 +210,6 @@ Create a `.env` file in the project root:
 
 ```env
 SQLALCHEMY_DATABASE_URL=postgresql://user:password@localhost/serendib_db
-
 SECRET_KEY=your_secret_key
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
